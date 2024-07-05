@@ -1,0 +1,39 @@
+﻿@model RenkSilViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section RenkSil {
+    <form asp-action="RenkSil" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col">
+                <select asp-for="Id" class="form-control" id="mySelect">
+                    <option selected disabled>Silinecek Rengi Seçiniz</option>
+                    @foreach (var item in Model.Renkler)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Sil</button>
+        </div>
+        <div class="col">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
+            </span>
+        </div>
+    </form>
+
+    @if (TempData["RenkSilindi"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["RenkSilindi"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+
+}

@@ -1,0 +1,36 @@
+﻿@model RenkEkleViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section RenkEkle {
+    <form asp-action="RenkEkle" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col">
+                <input asp-for="renk" class="form-control" placeholder="Renk">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Ekle</button>
+        </div>
+        <div class="col">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="renk">
+            </span>
+        </div>
+    </form>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["Success"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+
+}
+
+

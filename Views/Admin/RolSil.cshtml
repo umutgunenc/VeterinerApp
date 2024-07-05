@@ -1,0 +1,42 @@
+﻿@model RolSilViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+@section RolSil{
+    <form asp-action="RolSil" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col">
+                <select asp-for="RolId" class="form-control">
+                    <option selected disabled>Silinecek Rolü Seçiniz</option>
+                    @foreach (var rol in Model.Roller)
+                    {
+                        <option value="@rol.Value">@rol.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Sil</button>
+        </div>
+        <div class="col">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId">
+            </span>
+
+        </div>
+    </form>
+
+    @if (TempData["RolSilindi"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["RolSilindi"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+
+}
+

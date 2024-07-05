@@ -1,0 +1,85 @@
+﻿@model Insan
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section calisanEkle {
+
+    <form asp-action="calisanEkle" asp-controller="Admin" method="post">
+        <div class="form-col">
+            <div class="row mb-2">
+                <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanAdi">
+            </span>
+            <div class="row mb-2">
+                <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanSoyadi">
+            </span>
+            <div class="row mb-2">
+                <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+            </span>
+            <div class="row mb-2">
+                <input type="email" asp-for="InsanMail" class="form-control" placeholder="Mail Adresi">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanMail">
+            </span>
+            <div class="row mb-2">
+                <input type="tel" asp-for="InsanTel" class="form-control" placeholder="Telefon Numarası">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTel">
+            </span>
+            <div class="row mb-2">
+                <input type="text" asp-for="DiplomaNo" class="form-control" placeholder="Diploma Seri No">
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="DiplomaNo">
+            </span>
+            <div class="row mb-2">
+                <select class="custom-select" asp-for="RolId">
+                    <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
+                    @foreach (var rol in @ViewBag.roller)
+                    {
+                        <option value="@rol.RolId">@rol.RolAdi</option>
+                    }
+                </select>
+            </div>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId">
+            </span>
+            @if (!string.IsNullOrEmpty(ViewBag.Hata))
+            {
+                <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
+                    @ViewBag.Hata
+                </span>
+
+            }
+        </div>
+        <button type="submit" class="row btn btn-primary mb-2">Ekle</button>
+
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {<span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
+
+                <text>@error.ErrorMessage</text>
+            </span>
+
+        }
+
+    </form>
+
+
+
+    @if (TempData["CalısanEklendi"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="CalısanEklendi">
+            @TempData["CalısanEklendi"]
+        </div>
+        <script>
+            setTimeout(function () {
+                var message = document.getElementById("CalısanEklendi");
+                message.remove();
+            }, 5000);
+        </script>
+    }
+}

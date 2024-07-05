@@ -1,0 +1,57 @@
+﻿@model (List<Cins>, Cins)
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section CinsSil{
+    <form asp-action="CinsSil" asp-controller="Admin" method="post" onsubmit="return validateSelection()">
+        <div class="form-row">
+            <div class="col">
+                <select asp-for="Item2.cins" class="form-control" name="SecilenCins" id="mySelect">
+                    <option value="mySelect">Silinecek Cinsi Seçiniz</option>
+                    @foreach (var item in Model.Item1)
+                    {
+                        <option value="@item.cins">@item.cins</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Sil</button>
+
+        </div>
+        <div class="col">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Item2.cins">
+            </span>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" id="Error">
+            </span>
+        </div>
+
+    </form>
+
+    @if (TempData["CinsSilindi"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["CinsSilindi"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+    <script>
+        function validateSelection() {
+            var selectElement = document.getElementById('mySelect');
+            var selectedValue = selectElement.value;
+
+            if (selectedValue === 'mySelect') {
+                document.getElementById('Error').innerText = 'Lütfen bir cins seçiniz.';
+                return false; // Form submit işlemi durdurulacak
+            }
+
+            // Hata yoksa, form submit işlemine izin ver
+            document.getElementById('Error').innerText = ''; // Hata mesajını temizle
+            return true;
+        }
+    </script>
+}

@@ -1,0 +1,46 @@
+﻿@model (List<int>, List<string>, List<string>, TurCins)
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section CinsTurSil {
+    <form asp-action="CinsTurSil" asp-controller="Admin" method="post" >
+        <div class="form-row">
+            <div class="col">
+                <select asp-for="Item4" class="form-control" name="idValue" id="mySelect">
+                    <option value="">Kaldırılacak eşlemeyi Seçiniz</option>
+                    @for (int i = 0; i < Model.Item1.Count; i++)
+                    {
+                        <option value="@Model.Item1[i]">@($"{Model.Item2[i]} - {Model.Item3[i]}")</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">Eşleştirmeyi Kaldır</button>
+        </div>
+
+        <div class="col">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {<span class="row font-weight-bold bg-light text-danger rounded mb-1">
+                    <text>@error.ErrorMessage</text>
+                </span>
+            }
+        </div>
+    </form>
+
+    @if (TempData["EslemeKaldiridi"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="EslemeKaldiridi">
+            @TempData["EslemeKaldiridi"]
+        </div>
+        <script>
+            setTimeout(function () {
+                var message = document.getElementById("EslemeKaldiridi");
+                message.remove();
+            }, 2500);
+        </script>
+    }
+
+
+}

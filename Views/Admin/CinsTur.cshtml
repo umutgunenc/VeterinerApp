@@ -1,0 +1,56 @@
+﻿@model (List<Cins>, Cins, List<Tur>, Tur)
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section CinsTur {
+    <form asp-action="CinsTur" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col">
+                <select asp-for="Item2.cins" class="form-control" name="CinsAdi" id="mySelect">
+                    <option value="defaultCins">Eşleşecek Cinsi Seçiniz</option>
+                    @foreach (var item in Model.Item1)
+                    {
+                        <option value="@item.cins">@item.cins</option>
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <select asp-for="Item4.tur" class="form-control" name="TurAdi" id="mySelect2">
+                    <option value="defaultTur">Eşleşecek Türü Seçiniz</option>
+                    @foreach (var item in Model.Item3)
+                    {
+                        <option value="@item.tur">@item.tur</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Eşleştir</button>
+        </div>
+
+        <div class="col">
+
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {<span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
+                    <text>@error.ErrorMessage</text>
+             </span>
+            }
+            
+        </div>
+    </form>
+
+    @if (TempData["CinsTurEklendi"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="CinsTurEklendi">
+            @TempData["CinsTurEklendi"]
+        </div>
+        <script>
+            setTimeout(function () {
+                var message = document.getElementById("CinsTurEklendi");
+                message.remove();
+            }, 2500);
+        </script>
+    }
+
+
+}

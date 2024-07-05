@@ -1,0 +1,36 @@
+﻿@model Rol
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section RolEkle {
+    <form asp-action="RolEkle" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col">
+                <input asp-for="RolAdi" class="form-control" placeholder="Çalışan Türü">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Ekle</button>
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RolAdi">
+        </span>
+        <div class="col">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {<span class="row font-weight-bold bg-light text-danger rounded mb-1">
+                    <text>@error.ErrorMessage</text>
+                </span>
+            }
+        </div>
+    </form>
+
+    @if (TempData["RolEklendi"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["RolEklendi"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+}
