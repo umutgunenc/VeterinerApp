@@ -1,19 +1,17 @@
 ﻿using FluentValidation;
-using SQLitePCL;
-using System.Collections.Generic;
 using System.Linq;
 using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.ViewModel.Admin;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class TurValidators :AbstractValidator<Tur>
+    public partial class TurEkleValidators :AbstractValidator<TurEkleViewModel>
     {
         private readonly VeterinerContext _context;
 
-        public TurValidators(VeterinerContext context)
+        public TurEkleValidators(VeterinerContext context)
         {
             _context = context;
 

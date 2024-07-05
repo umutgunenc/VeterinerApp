@@ -1,19 +1,16 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
-using System.Collections.Generic;
 using System.Linq;
 using VeterinerApp.Data;
-
-using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.ViewModel.Admin;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class CinsValidators : AbstractValidator<Cins>
+    public partial class CinsEkleValidators : AbstractValidator<CinsEkleViewModel>
     {
         private readonly VeterinerContext _veterinerContext;
-        public CinsValidators(VeterinerContext veterinerContext)
+        public CinsEkleValidators(VeterinerContext veterinerContext)
         {
             _veterinerContext = veterinerContext;
             RuleFor(x => x.cins)

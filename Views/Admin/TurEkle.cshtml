@@ -1,4 +1,4 @@
-﻿@model Tur
+﻿@model TurEkleViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -15,12 +15,6 @@
         </div>
         <div class="col">
             <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="tur">
-            </span>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <text>@error.ErrorMessage</text>
-                }
             </span>
         </div>
     </form>

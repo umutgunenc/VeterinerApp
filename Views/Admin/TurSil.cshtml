@@ -1,27 +1,25 @@
-﻿@model (List<Tur>, Tur)
+﻿@model TurSilViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
 @section TurSil {
-    <form asp-action="TurSil" asp-controller="Admin" method="post" onsubmit="return validateSelection()">
+    <form asp-action="TurSil" asp-controller="Admin" method="post">
         <div class="form-row">
             <div class="col">
-                <select asp-for="Item2.tur" class="form-control" name="secilenTur" id="mySelect">
-                    <option value="mySelect">Silinecek Rengi Seçiniz</option>
-                    @foreach (var item in Model.Item1)
+                <select asp-for="Id" class="form-control" id="mySelect">
+                    <option selected disabled>Silinecek Rengi Seçiniz</option>
+                    @foreach (var turler in Model.Turler)
                     {
-                        <option value="@item.tur">@item.tur</option>
+                        <option value="@turler.Value">@turler.Text</option>
                     }
                 </select>
             </div>
             <button type="submit" class="btn btn-primary mb-2">Sil</button>
         </div>
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Item2.tur">
-            </span>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded" id="Error">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
             </span>
         </div>
     </form>
@@ -37,19 +35,4 @@
         </script>
     }
 
-    <script>
-        function validateSelection() {
-            var selectElement = document.getElementById('mySelect');
-            var selectedValue = selectElement.value;
-
-            if (selectedValue === 'mySelect') {
-                document.getElementById('Error').innerText = 'Lütfen bir tür seçiniz.';
-                return false; // Form submit işlemi durdurulacak
-            }
-
-            // Hata yoksa, form submit işlemine izin ver
-            document.getElementById('Error').innerText = ''; // Hata mesajını temizle
-            return true;
-        }
-    </script>
 }

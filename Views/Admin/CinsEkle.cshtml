@@ -1,4 +1,4 @@
-﻿@model Cins
+﻿@model CinsEkleViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -16,13 +16,7 @@
         <div class="col">
             <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="cins">
             </span>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <text>@error.ErrorMessage</text>
-                }
-            </span>
-        </div>
+         </div>
 
     </form>
 

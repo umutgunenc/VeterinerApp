@@ -20,16 +20,13 @@ namespace VeterinerApp.Controllers
     public class AdminController : Controller
     {
         private readonly VeterinerContext _veterinerDbContext;
-        private readonly IValidator<RenkEkleViewModel> _renkEkleValidator;
-
-        private readonly IValidator<RolSilViewModel> _rolSilValidator;
 
 
-        public AdminController(VeterinerContext veterinerDbContext, IValidator<RolSilViewModel> rolSilValidator, IValidator<RenkEkleViewModel> renkEkleValidator)
+
+        public AdminController(VeterinerContext veterinerDbContext)
         {
             _veterinerDbContext = veterinerDbContext;
-            _rolSilValidator = rolSilValidator;
-            _renkEkleValidator = renkEkleValidator;
+
         }
 
 
@@ -107,13 +104,7 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
-                if(model.Id is string)
-                {
-                    foreach (var erros in result.Errors)
-                    {
-                        ModelState.AddModelError("sadsad", erros.ErrorMessage);
-                    }
-                }
+
                 model = new RenkSilViewModel
                 {
                     Renkler = _veterinerDbContext.Renks.Select(r => new SelectListItem
@@ -143,12 +134,14 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CinsEkle(string cins)
+        public IActionResult CinsEkle(CinsEkleViewModel model)
         {
-            cins = cins.ToUpper();
-            Cins cinsEntity = new Cins { cins = cins };
-            CinsValidators Validator = new CinsValidators(_veterinerDbContext);
-            ValidationResult result = Validator.Validate(cinsEntity);
+
+            string cinsAdi = model.cins.ToUpper();
+            var cinsEntity = new Cins { cins = cinsAdi };
+
+            CinsEkleValidators validator = new CinsEkleValidators(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
             _veterinerDbContext.Cins.Add(cinsEntity);
 
@@ -163,7 +156,7 @@ namespace VeterinerApp.Controllers
             }
             _veterinerDbContext.SaveChanges();
 
-            TempData["CinsEklendi"] = $"{cins} cinsi eklendi";
+            TempData["CinsEklendi"] = $"{cinsAdi} cinsi eklendi";
 
             return RedirectToAction();
 
@@ -172,49 +165,54 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CinsSil()
         {
-            var cinsler = _veterinerDbContext.Cins.ToList();
-            var cins = new Cins();
-            var model = (cinsler, cins);
+            CinsSilViewModel model = new CinsSilViewModel()
+            {
+                Cinsler = _veterinerDbContext.Cins.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.cins,
+                }).ToList()
+            };
             return View(model);
-
         }
 
         [HttpPost]
-        public IActionResult CinsSil(string SecilenCins)
+        public IActionResult CinsSil(CinsSilViewModel model)
         {
-            var cinsler = _veterinerDbContext.Cins.ToList();
+            var silinecekCinsAdı = _veterinerDbContext.Cins
+                    .Where(x => x.Id == model.Id)
+                    .Select(x => x.cins).FirstOrDefault();
 
-            if (SecilenCins == "null" || SecilenCins == "NULL")
-            {
-                SecilenCins = "";
-            }
-            else
-            {
-                SecilenCins = SecilenCins.ToUpper();
-            }
+            var cinsEntity = new Cins { Id = model.Id, cins = silinecekCinsAdı };
 
-            var cins = new Cins { cins = SecilenCins };
-            CinsSilValidator CinsValidator = new CinsSilValidator(_veterinerDbContext);
-            ValidationResult result = CinsValidator.Validate(cins);
+            CinsSilValidator validator = new(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
+                foreach (var erros in result.Errors)
                 {
-                    ModelState.AddModelError("Item2.cins", error.ErrorMessage);
+                    ModelState.AddModelError("", erros.ErrorMessage);
                 }
-                return View((cinsler, cins));
-            }
 
-            var Cins = _veterinerDbContext.Cins.FirstOrDefault(r => r.cins == SecilenCins);
-            if (Cins != null)
-            {
-                _veterinerDbContext.Cins.Remove(Cins);
-                TempData["CinsSilindi"] = $"{Cins.cins} cinsi silindi";
-                _veterinerDbContext.SaveChanges();
+                model = new CinsSilViewModel
+                {
+                    Cinsler = _veterinerDbContext.Cins.Select(r => new SelectListItem
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.cins,
+                    }).ToList()
+                };
+                return View(model);
+
             }
+            _veterinerDbContext.Cins.Remove(cinsEntity);
+            _veterinerDbContext.SaveChanges();
+
+            TempData["CinsSilindi"] = $"{cinsEntity.cins} başarı ile silindi.";
 
             return RedirectToAction();
+
         }
 
         [HttpGet]
@@ -224,12 +222,13 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult TurEkle(string tur)
+        public IActionResult TurEkle(TurEkleViewModel model)
         {
-            tur = tur.ToUpper();
-            Tur turEntity = new Tur { tur = tur };
-            TurValidators Validator = new TurValidators(_veterinerDbContext);
-            ValidationResult result = Validator.Validate(turEntity);
+            string turAdi = model.tur.ToUpper();
+            var turEntity = new Tur { tur = turAdi };
+
+            TurEkleValidators validator = new TurEkleValidators(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
             _veterinerDbContext.Turs.Add(turEntity);
 
@@ -244,54 +243,62 @@ namespace VeterinerApp.Controllers
             }
             _veterinerDbContext.SaveChanges();
 
-            TempData["TurEklendi"] = $"{tur} türü eklendi";
+            TempData["TurEklendi"] = $"{turAdi} türü eklendi";
 
             return RedirectToAction();
+
         }
 
         [HttpGet]
         public IActionResult TurSil()
         {
-            var turler = _veterinerDbContext.Turs.ToList();
-            var tur = new Tur();
-            var model = (turler, tur);
+
+            var model = new TurSilViewModel
+            {
+                Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
+                {
+                    Value = r.Id.ToString(),
+                    Text = r.tur,
+                }).ToList()
+            };
             return View(model);
+
         }
 
         [HttpPost]
-        public IActionResult TurSil(string secilenTur)
+        public IActionResult TurSil(TurSilViewModel model)
         {
-            var turler = _veterinerDbContext.Turs.ToList();
+            var silinecekTurAdı = _veterinerDbContext.Turs
+                    .Where(x => x.Id == model.Id)
+                    .Select(x => x.tur).FirstOrDefault();
 
-            if (secilenTur == "null" || secilenTur == "NULL")
-            {
-                secilenTur = "";
-            }
-            else
-            {
-                secilenTur = secilenTur.ToUpper();
-            }
+            var turEntity = new Tur { Id = model.Id, tur = silinecekTurAdı };
 
-            var tur = new Tur { tur = secilenTur };
-            TurSilValidator turValidator = new TurSilValidator(_veterinerDbContext);
-            ValidationResult result = turValidator.Validate(tur);
+            TurSilValidator validator = new(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
+                foreach (var erros in result.Errors)
                 {
-                    ModelState.AddModelError("Item2.tur", error.ErrorMessage);
+                    ModelState.AddModelError("", erros.ErrorMessage);
                 }
-                return View((turler, tur));
-            }
 
-            var Tur = _veterinerDbContext.Turs.FirstOrDefault(r => r.tur == secilenTur);
-            if (Tur != null)
-            {
-                _veterinerDbContext.Turs.Remove(Tur);
-                TempData["TurSilindi"] = $"{Tur.tur} türü silindi";
-                _veterinerDbContext.SaveChanges();
+                model = new TurSilViewModel
+                {
+                    Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.tur,
+                    }).ToList()
+                };
+                return View(model);
+
             }
+            _veterinerDbContext.Turs.Remove(turEntity);
+            _veterinerDbContext.SaveChanges();
+
+            TempData["TurSilindi"] = $"{turEntity.tur} başarı ile silindi.";
 
             return RedirectToAction();
         }
