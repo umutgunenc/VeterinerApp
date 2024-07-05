@@ -9,7 +9,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public class RenkEkleValidators : AbstractValidator<RenkViewModel>
+    public class RenkEkleValidators : AbstractValidator<RenkEkleViewModel>
     {
         private readonly VeterinerContext _dbContext;
 

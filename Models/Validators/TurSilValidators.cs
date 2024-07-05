@@ -8,7 +8,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public class TurSilValidator : AbstractValidator<TurViewModel>
+    public class TurSilValidator : AbstractValidator<TurSilViewModel>
     {   private readonly VeterinerContext _contex;
 
         public TurSilValidator(VeterinerContext context)

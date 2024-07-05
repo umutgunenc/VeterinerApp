@@ -5,38 +5,28 @@ using System.Data;
 using System.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.ViewModel.Admin;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class TurCinsSilValidators : AbstractValidator<TurCins>
+    public partial class TurCinsSilValidators : AbstractValidator<TurCinsSilViewModel>
     {
         private readonly VeterinerContext _context;
         public TurCinsSilValidators(VeterinerContext context)
         {
             _context = context;
 
-                      
-
-                RuleFor(x => x.Id)
-                    .NotNull().WithMessage("ID boş olamaz.")
-                    .NotEmpty().WithMessage("ID boş olamaz.");
-
-                RuleFor(x => x)
-                    .NotEmpty().WithMessage("Bir kayıt seçiniz.")
-                    .NotNull().WithMessage("Bir kayıt seçiniz.")
-                    .Must(BeUniqueTurCins).WithMessage("Seçilen kayıt sistemde bulunamadı.");
-
-            
+            RuleFor(x => x.Id)
+                .NotNull().WithMessage("Bir kayıt seçiniz.")
+                .NotEmpty().WithMessage("Bir kayıt seçiniz.")
+                .Must(beTurCins).WithMessage("Seçilen Kayıt sisteme kayıtlı olmalı.");         
         }
 
-        private bool BeUniqueTurCins(TurCins model)
+        private bool beTurCins(int id)
         {
-            var cinsId = model.CinsId;
-            var turId = model.TurId;
-
-            return _context.TurCins.Any(x => x.CinsId == cinsId && x.TurId == turId);
+            return _context.TurCins.Any(x => x.Id == id);
         }
     }
 }

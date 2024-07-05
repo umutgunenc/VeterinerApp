@@ -7,7 +7,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class TurCinsEkleValidators : AbstractValidator<TurCinsViewModel>
+    public partial class TurCinsEkleValidators : AbstractValidator<TurCinsEkleViewModel>
     {
         private readonly VeterinerContext _context;
         public TurCinsEkleValidators(VeterinerContext context)

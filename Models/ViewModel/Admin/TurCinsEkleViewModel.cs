@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class TurCinsViewModel
+    public class TurCinsEkleViewModel
     {
         public int Id { get; set; }
         public int TurId { get; set; }
@@ -11,5 +11,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public List<SelectListItem> Turler { get; set; } 
         public List<SelectListItem> Cinsler { get; set; } 
+        public List<SelectListItem> TurlerCinsler { get; set; }
     }
 }

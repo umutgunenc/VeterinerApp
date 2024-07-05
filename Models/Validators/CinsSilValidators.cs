@@ -9,7 +9,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public class CinsSilValidator : AbstractValidator<CinsViewModel>
+    public class CinsSilValidator : AbstractValidator<CinsSilViewModel>
     {   private readonly VeterinerContext _context;
 
         public CinsSilValidator(VeterinerContext context)
