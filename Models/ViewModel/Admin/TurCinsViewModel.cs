@@ -11,5 +11,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public List<SelectListItem> Turler { get; set; } 
         public List<SelectListItem> Cinsler { get; set; } 
+        public List<SelectListItem> TurlerCinsler { get; set; }
     }
 }

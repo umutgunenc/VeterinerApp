@@ -306,10 +306,10 @@ namespace VeterinerApp.Controllers
         {
             var model = new TurCinsViewModel
             {
-                Cinsler= _veterinerDbContext.Cins.Select(r=> new SelectListItem
+                Cinsler = _veterinerDbContext.Cins.Select(r => new SelectListItem
                 {
-                    Value=r.Id.ToString(),
-                    Text=r.cins
+                    Value = r.Id.ToString(),
+                    Text = r.cins
                 }).ToList(),
 
                 Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
@@ -373,67 +373,47 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CinsTurSil()
         {
-            TurCins turCins = new();
+            var model = new TurCinsViewModel
+            {
+                TurlerCinsler = _veterinerDbContext.TurCins.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = $"{x.Cins.cins.ToUpper()} - {x.Tur.tur.ToUpper()}" 
+                }).ToList(),
 
-            var turCinsList = _veterinerDbContext.TurCins
-                    .Join(
-                        _veterinerDbContext.Cins,
-                        turCins => turCins.CinsId,
-                        cins => cins.Id,
-                        (turCins, cins) => new { turCins.Id, turCins.TurId, CinsAdi = cins.cins }
-                    )
-                    .Join(
-                        _veterinerDbContext.Turs,
-                        turCinsWithCins => turCinsWithCins.TurId,
-                        tur => tur.Id,
-                        (turCinsWithCins, tur) => new { turCinsWithCins.Id, turCinsWithCins.CinsAdi, TurAdi = tur.tur }
-                    )
-                    .ToList();
+            };
 
-            var turCinsIdList = turCinsList.Select(item => item.Id).ToList();
-            var cinsAdlariList = turCinsList.Select(item => item.CinsAdi).ToList();
-            var turAdlariList = turCinsList.Select(item => item.TurAdi).ToList();
-
-            var model = (turCinsIdList, cinsAdlariList, turAdlariList, turCins);
             return View(model);
 
         }
 
         [HttpPost]
 
-        public IActionResult CinsTurSil(string idValue)
+        public IActionResult CinsTurSil(TurCinsViewModel model)
         {
-            int.TryParse(idValue, out int id);
+            var silinecekCinsId = _veterinerDbContext.TurCins
+                .Where(x=>x.Id == model.Id)
+                .Select(x=>x.CinsId).FirstOrDefault();
+            var silinecekTurId = _veterinerDbContext.TurCins
+                .Where(x => x.Id == model.Id)
+                .Select(x => x.TurId).FirstOrDefault();
 
-            var eslemesiKaldirilacakTurCins = new TurCins { Id = id };
+            string silinecekCinsAdi = _veterinerDbContext.Cins
+                .Where(x => x.Id == silinecekCinsId)
+                .Select(x => x.cins).FirstOrDefault();
 
+            string silinecekTurAdi = _veterinerDbContext.Turs
+                .Where(x => x.Id == silinecekTurId)
+                .Select(x => x.tur).FirstOrDefault();
 
-            var turCinsList = _veterinerDbContext.TurCins
-                    .Join(
-                        _veterinerDbContext.Cins,
-                        turCins => turCins.CinsId,
-                        cins => cins.Id,
-                        (turCins, cins) => new { turCins.Id, turCins.TurId, CinsAdi = cins.cins }
-                    )
-                    .Join(
-                        _veterinerDbContext.Turs,
-                        turCinsWithCins => turCinsWithCins.TurId,
-                        tur => tur.Id,
-                        (turCinsWithCins, tur) => new { turCinsWithCins.Id, turCinsWithCins.CinsAdi, TurAdi = tur.tur }
-                    )
-                    .ToList();
-
-
-            var turCinsIdList = turCinsList.Select(item => item.Id).ToList();
-            var cinsAdlariList = turCinsList.Select(item => item.CinsAdi).ToList();
-            var turAdlariList = turCinsList.Select(item => item.TurAdi).ToList();
-
-            TurCins turCins = new();
-
+            var turCinsEntity = new TurCins{ 
+                Id = model.Id, 
+                CinsId = silinecekCinsId , 
+                TurId= silinecekTurId 
+            };
 
             TurCinsSilValidators validator = new(_veterinerDbContext);
-            ValidationResult result = validator.Validate(eslemesiKaldirilacakTurCins);
-
+            ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
             {
@@ -441,31 +421,22 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                return View((turCinsIdList, cinsAdlariList, turAdlariList, turCins));
+                model = new TurCinsViewModel
+                {
+                    TurlerCinsler = _veterinerDbContext.TurCins.Select(x => new SelectListItem
+                    {
+                        Value = x.Id.ToString(),
+                        Text = $"{x.Cins.cins.ToUpper()} - {x.Tur.tur.ToUpper()}"
+                    }).ToList(),
 
+                };
+                return View(model);
             }
 
-            var turCinsInfo = _veterinerDbContext.TurCins
-                .Where(x => x.Id == id)
-                .Join(
-                    _veterinerDbContext.Cins,
-                    tc => tc.CinsId,
-                    c => c.Id,
-                    (tc, c) => new { tc.Id, tc.TurId, CinsAdi = c.cins }
-                )
-                .Join(
-                    _veterinerDbContext.Turs,
-                    tc => tc.TurId,
-                    t => t.Id,
-                    (tc, t) => new { tc.Id, CinsAdi = tc.CinsAdi, TurAdi = t.tur }
-                )
-                .FirstOrDefault();
-
-            _veterinerDbContext.TurCins.Remove(eslemesiKaldirilacakTurCins);
+            _veterinerDbContext.TurCins.Remove(turCinsEntity);
             _veterinerDbContext.SaveChanges();
 
-
-            TempData["EslemeKaldiridi"] = $"{turCinsInfo.CinsAdi} cinsi ve {turCinsInfo.TurAdi} türü arasındaki eşleştirme kaldırıldı.";
+            TempData["EslemeKaldiridi"] = $"{silinecekCinsAdi} cinsi ve {silinecekTurAdi} türü arasındaki eşleştirme kaldırıldı.";
 
             return RedirectToAction();
         }

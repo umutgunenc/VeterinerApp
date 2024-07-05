@@ -1,31 +1,25 @@
-﻿@model (List<int>, List<string>, List<string>, TurCins)
-
+﻿@model TurCinsViewModel
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
 @section CinsTurSil {
-    <form asp-action="CinsTurSil" asp-controller="Admin" method="post" >
+    <form asp-action="CinsTurSil" asp-controller="Admin" method="post">
         <div class="form-row">
             <div class="col">
-                <select asp-for="Item4" class="form-control" name="idValue" id="mySelect">
-                    <option value="">Kaldırılacak eşlemeyi Seçiniz</option>
-                    @for (int i = 0; i < Model.Item1.Count; i++)
+                <select asp-for="Id" class="form-control">
+                    <option selected disabled>Kaldırılacak eşlemeyi Seçiniz</option>
+                    @foreach (var item in Model.TurlerCinsler)
                     {
-                        <option value="@Model.Item1[i]">@($"{Model.Item2[i]} - {Model.Item3[i]}")</option>
+                        <option value="@item.Value">@item.Text</option>
                     }
                 </select>
             </div>
-
             <button type="submit" class="btn btn-primary mb-2">Eşleştirmeyi Kaldır</button>
         </div>
-
         <div class="col">
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {<span class="row font-weight-bold bg-light text-danger rounded mb-1">
-                    <text>@error.ErrorMessage</text>
-                </span>
-            }
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
+            </span>
         </div>
     </form>
 
@@ -41,6 +35,4 @@
             }, 2500);
         </script>
     }
-
-
 }
