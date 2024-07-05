@@ -7,7 +7,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public class RenkSilValidator : AbstractValidator<RenkSilViewModel>
+    public class RenkSilValidator : AbstractValidator<RenkViewModel>
     {
         private readonly VeterinerContext _contex;
 

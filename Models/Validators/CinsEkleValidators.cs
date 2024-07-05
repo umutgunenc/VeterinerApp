@@ -7,7 +7,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class CinsEkleValidators : AbstractValidator<CinsEkleViewModel>
+    public partial class CinsEkleValidators : AbstractValidator<CinsViewModel>
     {
         private readonly VeterinerContext _veterinerContext;
         public CinsEkleValidators(VeterinerContext veterinerContext)

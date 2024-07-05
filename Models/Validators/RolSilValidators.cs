@@ -5,7 +5,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class RolSilValidators :AbstractValidator<RolSilViewModel>
+    public partial class RolSilValidators :AbstractValidator<RolViewModel>
     {
         private readonly VeterinerContext _context;
 

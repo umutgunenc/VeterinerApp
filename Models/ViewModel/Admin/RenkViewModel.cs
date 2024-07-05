@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class TurEkleViewModel
+    public class RenkViewModel
     {
         public int Id { get; set; }
-        public string tur { get; set; }
-        public List<SelectListItem> Turler { get; set; }
+        public string renk { get; set; }
+        public List<SelectListItem> Renkler { get; set; }
     }
 }

@@ -5,8 +5,6 @@ using System.Linq;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators;
 using VeterinerApp.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Fonksiyonlar.MailGonderme;
 using FluentValidation;
@@ -45,7 +43,7 @@ namespace VeterinerApp.Controllers
 
 
         [HttpPost]
-        public IActionResult RenkEkle(RenkEkleViewModel model)
+        public IActionResult RenkEkle(RenkViewModel model)
         {
             string renk = model.renk.ToUpper();
             var renkEntity = new Renk { renk = renk };
@@ -73,7 +71,7 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult RenkSil()
         {
-            RenkSilViewModel model = new RenkSilViewModel()
+            RenkViewModel model = new RenkViewModel()
             {
                 Renkler = _veterinerDbContext.Renks.Select(r => new SelectListItem
                 {
@@ -86,7 +84,7 @@ namespace VeterinerApp.Controllers
 
         }
         [HttpPost]
-        public IActionResult RenkSil(RenkSilViewModel model)
+        public IActionResult RenkSil(RenkViewModel model)
         {
 
             var silinecekRenkAdı = _veterinerDbContext.Renks
@@ -105,7 +103,7 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new RenkSilViewModel
+                model = new RenkViewModel
                 {
                     Renkler = _veterinerDbContext.Renks.Select(r => new SelectListItem
                     {
@@ -134,7 +132,7 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CinsEkle(CinsEkleViewModel model)
+        public IActionResult CinsEkle(CinsViewModel model)
         {
 
             string cinsAdi = model.cins.ToUpper();
@@ -165,7 +163,7 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CinsSil()
         {
-            CinsSilViewModel model = new CinsSilViewModel()
+            CinsViewModel model = new CinsViewModel()
             {
                 Cinsler = _veterinerDbContext.Cins.Select(x => new SelectListItem
                 {
@@ -177,7 +175,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CinsSil(CinsSilViewModel model)
+        public IActionResult CinsSil(CinsViewModel model)
         {
             var silinecekCinsAdı = _veterinerDbContext.Cins
                     .Where(x => x.Id == model.Id)
@@ -195,7 +193,7 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new CinsSilViewModel
+                model = new CinsViewModel
                 {
                     Cinsler = _veterinerDbContext.Cins.Select(r => new SelectListItem
                     {
@@ -222,7 +220,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult TurEkle(TurEkleViewModel model)
+        public IActionResult TurEkle(TurViewModel model)
         {
             string turAdi = model.tur.ToUpper();
             var turEntity = new Tur { tur = turAdi };
@@ -253,7 +251,7 @@ namespace VeterinerApp.Controllers
         public IActionResult TurSil()
         {
 
-            var model = new TurSilViewModel
+            var model = new TurViewModel
             {
                 Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
                 {
@@ -266,7 +264,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult TurSil(TurSilViewModel model)
+        public IActionResult TurSil(TurViewModel model)
         {
             var silinecekTurAdı = _veterinerDbContext.Turs
                     .Where(x => x.Id == model.Id)
@@ -284,7 +282,7 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new TurSilViewModel
+                model = new TurViewModel
                 {
                     Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
                     {
@@ -306,43 +304,41 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CinsTur()
         {
-            var cinsler = _veterinerDbContext.Cins.ToList();
-            var cins = new Cins();
-            var turler = _veterinerDbContext.Turs.ToList();
-            var tur = new Tur();
-            var model = (cinsler, cins, turler, tur);
+            var model = new TurCinsViewModel
+            {
+                Cinsler= _veterinerDbContext.Cins.Select(r=> new SelectListItem
+                {
+                    Value=r.Id.ToString(),
+                    Text=r.cins
+                }).ToList(),
+
+                Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
+                {
+                    Value = r.Id.ToString(),
+                    Text = r.tur,
+                }).ToList()
+            };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult CinsTur(String CinsAdi, String TurAdi)
+        public IActionResult CinsTur(TurCinsViewModel model)
         {
+            string turAdi = _veterinerDbContext.Turs
+                .Where(x => x.Id == model.TurId)
+                .Select(x => x.tur).FirstOrDefault();
+            string cinsAdi = _veterinerDbContext.Cins
+                .Where(x => x.Id == model.CinsId)
+                .Select(x => x.cins).FirstOrDefault();
 
-            var cinsler = _veterinerDbContext.Cins.ToList();
-            var cins = new Cins();
-            var turler = _veterinerDbContext.Turs.ToList();
-            var tur = new Tur();
+            TurCins turCinsEntity = new TurCins()
+            {
+                TurId = model.TurId,
+                CinsId = model.CinsId,
+            };
 
-
-            var cinsId = _veterinerDbContext.Cins
-                .Where(x => x.cins.ToUpper() == CinsAdi.ToUpper())
-                .Select(x => x.Id)
-                .FirstOrDefault();
-
-            var turId = _veterinerDbContext.Turs
-                .Where(x => x.tur.ToUpper() == TurAdi.ToUpper())
-                .Select(x => x.Id)
-                .FirstOrDefault();
-
-            var turCinsId = _veterinerDbContext.TurCins
-                .Where(x => x.CinsId == cinsId && x.TurId == turId)
-                .Select(x => x.Id)
-                .FirstOrDefault();
-
-            var turCins = new TurCins { CinsId = cinsId, TurId = turId };
-
-            TurCinsValidators validator = new TurCinsValidators(_veterinerDbContext);
-            ValidationResult result = validator.Validate(turCins);
+            TurCinsEkleValidators validator = new(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
             {
@@ -350,12 +346,26 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                return View((cinsler, cins, turler, tur));
+                model = new TurCinsViewModel
+                {
+                    Cinsler = _veterinerDbContext.Cins.Select(r => new SelectListItem
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.cins
+                    }).ToList(),
+
+                    Turler = _veterinerDbContext.Turs.Select(r => new SelectListItem
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.tur,
+                    }).ToList()
+                };
+                return View(model);
             }
 
-            _veterinerDbContext.TurCins.Add(turCins);
+            _veterinerDbContext.TurCins.Add(turCinsEntity);
             _veterinerDbContext.SaveChanges();
-            TempData["CinsTurEklendi"] = $"{CinsAdi} cinsi ve {TurAdi} türü eşleştirildi";
+            TempData["CinsTurEklendi"] = $"{cinsAdi} cinsi ve {turAdi} türü eşleştirildi";
 
             return RedirectToAction();
         }
@@ -505,7 +515,7 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult RolSil()
         {
-            var model = new RolSilViewModel
+            var model = new RolViewModel
             {
                 Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
                 {
@@ -518,7 +528,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult RolSil(RolSilViewModel model)
+        public IActionResult RolSil(RolViewModel model)
         {
 
             var silinecekRolAdı = _veterinerDbContext.Rols
@@ -539,7 +549,7 @@ namespace VeterinerApp.Controllers
 
                 }
 
-                model = new RolSilViewModel
+                model = new RolViewModel
                 {
                     Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
                     {

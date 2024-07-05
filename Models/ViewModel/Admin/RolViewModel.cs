@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class RolSilViewModel
+    public class RolViewModel
     {
         public int RolId { get; set; }
         public string RolAdi { get; set; }

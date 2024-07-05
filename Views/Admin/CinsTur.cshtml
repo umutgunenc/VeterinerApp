@@ -1,4 +1,4 @@
-﻿@model (List<Cins>, Cins, List<Tur>, Tur)
+﻿@model TurCinsViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -8,20 +8,20 @@
     <form asp-action="CinsTur" asp-controller="Admin" method="post">
         <div class="form-row">
             <div class="col">
-                <select asp-for="Item2.cins" class="form-control" name="CinsAdi" id="mySelect">
-                    <option value="defaultCins">Eşleşecek Cinsi Seçiniz</option>
-                    @foreach (var item in Model.Item1)
+                <select asp-for="CinsId" class="form-control">
+                    <option selected disabled>Eşleşecek Cinsi Seçiniz</option>
+                    @foreach (var cins in Model.Cinsler)
                     {
-                        <option value="@item.cins">@item.cins</option>
+                        <option value="@cins.Value">@cins.Text</option>
                     }
                 </select>
             </div>
             <div class="col">
-                <select asp-for="Item4.tur" class="form-control" name="TurAdi" id="mySelect2">
-                    <option value="defaultTur">Eşleşecek Türü Seçiniz</option>
-                    @foreach (var item in Model.Item3)
+                <select asp-for="TurId" class="form-control">
+                    <option selected disabled>Eşleşecek Türü Seçiniz</option>
+                    @foreach (var tur in Model.Turler)
                     {
-                        <option value="@item.tur">@item.tur</option>
+                        <option value="@tur.Value">@tur.Text</option>
                     }
                 </select>
             </div>
@@ -29,13 +29,10 @@
         </div>
 
         <div class="col">
-
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {<span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
-                    <text>@error.ErrorMessage</text>
-             </span>
-            }
-            
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="CinsId">
+            </span>
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="TurId">
+            </span>
         </div>
     </form>
 
