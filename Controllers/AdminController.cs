@@ -421,6 +421,7 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+
                 model = new TurCinsSilViewModel
                 {
                     TurlerCinsler = _veterinerDbContext.TurCins.Select(x => new SelectListItem
