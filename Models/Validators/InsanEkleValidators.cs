@@ -4,15 +4,16 @@ using VeterinerApp.Models.Entity;
 using VeterinerApp.Data;
 using System;
 using System.Linq;
+using VeterinerApp.Models.ViewModel.Admin;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class InsanValidators : AbstractValidator<Insan>
+    public partial class InsanEkleValidators : AbstractValidator<InsanEkleViewModel>
     {
         private readonly VeterinerContext _context;
-        public InsanValidators(VeterinerContext context)
+        public InsanEkleValidators(VeterinerContext context)
         {
             _context = context;
 
@@ -92,6 +93,8 @@ namespace VeterinerApp.Models.Validators
         }
         private bool BeUniqueKullaniciAdi(string kullaniciAdi)
         {
+            if (string.IsNullOrEmpty(kullaniciAdi))
+                return true;
             return !_context.Insans.Any(x => x.KullaniciAdi.ToUpper() == kullaniciAdi.ToUpper());
         }
         private bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)

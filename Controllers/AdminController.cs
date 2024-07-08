@@ -545,32 +545,43 @@ namespace VeterinerApp.Controllers
         public IActionResult CalisanEkle()
         {
 
-            ViewBag.roller = _veterinerDbContext.Rols.Select(x => x).ToList();
-            return View();
+            var model = new InsanEkleViewModel
+            {
+                Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                {
+                    Value = r.RolId.ToString(),
+                    Text = r.RolAdi
+                }).ToList(),
+
+            };
+            return View(model);
+            
         }
 
         [HttpPost]
-        public IActionResult CalisanEkle(string InsanAdi, string InsanSoyadi, string InsanTckn, string InsanMail, string InsanTel, string DiplomaNo, int RolId)
+        public IActionResult CalisanEkle(InsanEkleViewModel model)
         {
-            ViewBag.roller = _veterinerDbContext.Rols.Select(x => x).ToList();
 
             kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
-            string kullaniciAdi = username.GenerateUsername(InsanAdi, InsanSoyadi, InsanMail).ToUpper();
+            string kullaniciAdi = username.GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.InsanMail).ToUpper();
 
+            model.KullaniciAdi = kullaniciAdi;
+            model.CalisiyorMu = true;
 
             var calisan = new Insan
             {
-                InsanAdi = InsanAdi.ToUpper(),
-                InsanSoyadi = InsanSoyadi.ToUpper(),
-                InsanTckn = InsanTckn,
-                InsanMail = InsanMail.ToUpper(),
-                InsanTel = InsanTel,
-                DiplomaNo = DiplomaNo,
-                RolId = RolId,
+                InsanAdi = model.InsanAdi.ToUpper(),
+                InsanSoyadi = model.InsanSoyadi.ToUpper(),
+                InsanTckn = model.InsanTckn,
+                InsanMail = model.InsanMail.ToUpper(),
+                InsanTel = model.InsanTel,
+                DiplomaNo = model.DiplomaNo,
+                RolId = model.RolId,
                 KullaniciAdi = kullaniciAdi,
                 CalisiyorMu = true
-
             };
+
+
 
             sifre sifre = new sifre();
             string kullaniciSifresi = sifre.GeneratePassword();
@@ -585,8 +596,8 @@ namespace VeterinerApp.Controllers
 
             };
 
-            InsanValidators validator = new InsanValidators(_veterinerDbContext);
-            ValidationResult result = validator.Validate(calisan);
+            InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
 
 
             SifreValidators validatorSifre = new SifreValidators(_veterinerDbContext);
@@ -598,7 +609,16 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                return View();
+                model = new InsanEkleViewModel
+                {
+                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                    {
+                        Value = r.RolId.ToString(),
+                        Text = r.RolAdi
+                    }).ToList(),
+
+                };
+                return View(model);
             }
 
             if (!resultSifre.IsValid)
@@ -607,7 +627,16 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                return View();
+                model = new InsanEkleViewModel
+                {
+                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                    {
+                        Value = r.RolId.ToString(),
+                        Text = r.RolAdi
+                    }).ToList(),
+
+                };
+                return View(model);
             }
 
 
@@ -615,19 +644,32 @@ namespace VeterinerApp.Controllers
             _veterinerDbContext.Sifres.Add(password);
             if (_veterinerDbContext.SaveChanges() > 0)
             {
-                MailGonder mail = new MailGonder(InsanMail, kullaniciAdi, kullaniciSifresi);
+                MailGonder mail = new MailGonder(model.InsanMail, kullaniciAdi, kullaniciSifresi);
 
                 if (!mail.MailGonderHotmail(mail))
                 {
+
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
                     _veterinerDbContext.Sifres.Remove(password);
                     _veterinerDbContext.Insans.Remove(calisan);
                     _veterinerDbContext.SaveChanges();
-                    return View();
+                    model = new InsanEkleViewModel
+                    {
+                        Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                        {
+                            Value = r.RolId.ToString(),
+                            Text = r.RolAdi
+                        }).ToList(),
+
+                    };
+                    return View(model);
 
                 }
-                var rolAdi = _veterinerDbContext.Rols.Where(x => x.RolId == RolId).Select(x => x.RolAdi);
-                TempData["CalısanEklendi"] = $"{InsanAdi.ToUpper()} {InsanSoyadi.ToUpper()} isimli calisan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {InsanMail.ToUpper()} adresine gönderildi.";
+                var rolAdi = _veterinerDbContext.Rols
+                    .Where(x => x.RolId == model.RolId)
+                    .Select(x => x.RolAdi);
+
+                TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.InsanMail.ToUpper()} adresine gönderildi.";
 
             }
 
