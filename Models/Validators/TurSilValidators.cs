@@ -19,16 +19,16 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Lütfen bir tür seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir tür seçiniz.")
                 .Must(beTur).WithMessage("Listede olmayan bir türü silemezsiniz.")
-                .Must(beCins).WithMessage("Silinecek türe ait tanımlı cins olduğu için silme işlemi gerçekleştirilemedi.");
+                .Must(notTurCins).WithMessage("Silinecek türe ait tanımlı cins olduğu için silme işlemi gerçekleştirilemedi.");
         }
         private bool beTur(int id)
         {
             return _contex.Turs.Any(x=>x.Id == id);
         }
 
-        private bool beCins(int id)
+        private bool notTurCins(int id)
         {
-            return !_contex.TurCins.Any(x=>x.Id == id);
+            return !_contex.TurCins.Any(x=>x.TurId == id);
         }
     }
 }

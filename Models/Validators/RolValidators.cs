@@ -2,12 +2,13 @@
 using System.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.ViewModel.Admin;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators
 {
-    public partial class RolValidators : AbstractValidator<Rol>
+    public partial class RolValidators : AbstractValidator<RolEkleViewModel>
     {
         private readonly VeterinerContext _context;
         public RolValidators(VeterinerContext context)

@@ -1,4 +1,4 @@
-﻿@model TurEKleViewModel
+﻿@model TurSilViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -9,7 +9,7 @@
         <div class="form-row">
             <div class="col">
                 <select asp-for="Id" class="form-control" id="mySelect">
-                    <option selected disabled>Silinecek Rengi Seçiniz</option>
+                    <option selected disabled>Silinecek Türü Seçiniz</option>
                     @foreach (var turler in Model.Turler)
                     {
                         <option value="@turler.Value">@turler.Text</option>

@@ -421,6 +421,7 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+
                 model = new TurCinsSilViewModel
                 {
                     TurlerCinsler = _veterinerDbContext.TurCins.Select(x => new SelectListItem
@@ -457,13 +458,13 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult RolEkle(string RolAdi)
+        public IActionResult RolEkle(RolEkleViewModel model)
         {
-            RolAdi = RolAdi.ToUpper();
-            var rolEntity = new Rol { RolAdi = RolAdi };
+            string rolAdi = model.RolAdi.ToUpper();
+            var rolEntity = new Rol { RolAdi = rolAdi };
 
             RolValidators rolValidator = new RolValidators(_veterinerDbContext);
-            ValidationResult result = rolValidator.Validate(rolEntity);
+            ValidationResult result = rolValidator.Validate(model);
 
 
             if (!result.IsValid)
@@ -478,7 +479,7 @@ namespace VeterinerApp.Controllers
 
             _veterinerDbContext.Rols.Add(rolEntity);
             _veterinerDbContext.SaveChanges();
-            TempData["RolEklendi"] = $"Çalışanlar için {RolAdi} türünde bir rol eklendi";
+            TempData["RolEklendi"] = $"Çalışanlar için {rolAdi} türünde bir rol eklendi";
             return RedirectToAction();
 
         }
@@ -486,7 +487,7 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult RolSil()
         {
-            var model = new RolViewModel
+            var model = new RolSilViewModel
             {
                 Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
                 {
@@ -499,7 +500,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult RolSil(RolViewModel model)
+        public IActionResult RolSil(RolSilViewModel model)
         {
 
             var silinecekRolAdı = _veterinerDbContext.Rols
@@ -520,7 +521,7 @@ namespace VeterinerApp.Controllers
 
                 }
 
-                model = new RolViewModel
+                model = new RolSilViewModel
                 {
                     Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
                     {
@@ -543,6 +544,7 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CalisanEkle()
         {
+
             ViewBag.roller = _veterinerDbContext.Rols.Select(x => x).ToList();
             return View();
         }
