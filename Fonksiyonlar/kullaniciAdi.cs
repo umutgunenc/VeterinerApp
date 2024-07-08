@@ -25,13 +25,27 @@ namespace VeterinerApp.Fonksiyonlar
             string username = $"{firstName.ToUpper()}.{lastName.ToUpper()}";
             var kullaniciAdlari = KullaniciAdlariListesi();
 
+            // Kullanıcı adı zaten var mı kontrol et
             if (!kullaniciAdlari.Contains(username))
             {
                 return username;
             }
             else
             {
-                username = mail;              
+                username = mail;
+                if (kullaniciAdlari.Contains(mail))
+                {
+                    int suffix = 1;
+                    string newUsername;
+                    do
+                    {
+                        newUsername = $"{firstName.ToUpper()}.{lastName.ToUpper()}{suffix}";
+                        suffix++;
+                    }
+                    while (kullaniciAdlari.Contains(newUsername));
+
+                    return newUsername;
+                }
                 return username;
             }
         }

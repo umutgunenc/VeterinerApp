@@ -1,4 +1,4 @@
-﻿@model Insan
+﻿@model InsanEkleViewModel
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
@@ -40,9 +40,9 @@
             <div class="row mb-2">
                 <select class="custom-select" asp-for="RolId">
                     <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
-                    @foreach (var rol in @ViewBag.roller)
+                    @foreach (var rol in Model.Roller)
                     {
-                        <option value="@rol.RolId">@rol.RolAdi</option>
+                        <option value="@rol.Value">@rol.Text</option>
                     }
                 </select>
             </div>
@@ -58,13 +58,13 @@
         </div>
         <button type="submit" class="row btn btn-primary mb-2">Ekle</button>
 
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        @*@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
         {<span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
 
                 <text>@error.ErrorMessage</text>
             </span>
 
-        }
+        }*@
 
     </form>
 
