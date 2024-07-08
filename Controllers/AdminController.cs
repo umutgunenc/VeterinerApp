@@ -19,19 +19,14 @@ namespace VeterinerApp.Controllers
     {
         private readonly VeterinerContext _veterinerDbContext;
 
-
-
         public AdminController(VeterinerContext veterinerDbContext)
         {
             _veterinerDbContext = veterinerDbContext;
-
         }
-
 
         [HttpGet]
         public IActionResult AdminIndex()
         {
-
             return View();
         }
 
@@ -40,8 +35,6 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
-
         [HttpPost]
         public IActionResult RenkEkle(RenkEkleViewModel model)
         {
@@ -173,7 +166,6 @@ namespace VeterinerApp.Controllers
             };
             return View(model);
         }
-
         [HttpPost]
         public IActionResult CinsSil(CinsSilViewModel model)
         {
@@ -218,7 +210,6 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult TurEkle(TurEKleViewModel model)
         {
@@ -262,7 +253,6 @@ namespace VeterinerApp.Controllers
             return View(model);
 
         }
-
         [HttpPost]
         public IActionResult TurSil(TurSilViewModel model)
         {
@@ -320,7 +310,6 @@ namespace VeterinerApp.Controllers
             };
             return View(model);
         }
-
         [HttpPost]
         public IActionResult CinsTur(TurCinsEkleViewModel model)
         {
@@ -386,9 +375,7 @@ namespace VeterinerApp.Controllers
             return View(model);
 
         }
-
         [HttpPost]
-
         public IActionResult CinsTurSil(TurCinsSilViewModel model)
         {
             var silinecekCinsId = _veterinerDbContext.TurCins
@@ -443,20 +430,11 @@ namespace VeterinerApp.Controllers
         }
 
 
-
-
-
-
-
-
-
-
         [HttpGet]
         public IActionResult RolEkle()
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult RolEkle(RolEkleViewModel model)
         {
@@ -498,7 +476,6 @@ namespace VeterinerApp.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public IActionResult RolSil(RolSilViewModel model)
         {
@@ -540,28 +517,23 @@ namespace VeterinerApp.Controllers
             return RedirectToAction();
         }
 
-
         [HttpGet]
         public IActionResult CalisanEkle()
         {
-
             var model = new InsanEkleViewModel
             {
                 Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
                 {
                     Value = r.RolId.ToString(),
                     Text = r.RolAdi
-                }).ToList(),
-
+                }).ToList()
             };
             return View(model);
             
         }
-
         [HttpPost]
         public IActionResult CalisanEkle(InsanEkleViewModel model)
         {
-
             kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
             string kullaniciAdi = username.GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.InsanMail).ToUpper();
 
@@ -581,8 +553,6 @@ namespace VeterinerApp.Controllers
                 CalisiyorMu = true
             };
 
-
-
             sifre sifre = new sifre();
             string kullaniciSifresi = sifre.GeneratePassword();
 
@@ -598,7 +568,6 @@ namespace VeterinerApp.Controllers
 
             InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
             ValidationResult result = validator.Validate(model);
-
 
             SifreValidators validatorSifre = new SifreValidators(_veterinerDbContext);
             ValidationResult resultSifre = validatorSifre.Validate(password);
@@ -639,7 +608,6 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
-
             _veterinerDbContext.Insans.Add(calisan);
             _veterinerDbContext.Sifres.Add(password);
             if (_veterinerDbContext.SaveChanges() > 0)
@@ -648,7 +616,6 @@ namespace VeterinerApp.Controllers
 
                 if (!mail.MailGonderHotmail(mail))
                 {
-
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
                     _veterinerDbContext.Sifres.Remove(password);
                     _veterinerDbContext.Insans.Remove(calisan);
@@ -663,19 +630,14 @@ namespace VeterinerApp.Controllers
 
                     };
                     return View(model);
-
                 }
                 var rolAdi = _veterinerDbContext.Rols
                     .Where(x => x.RolId == model.RolId)
                     .Select(x => x.RolAdi);
 
                 TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.InsanMail.ToUpper()} adresine gönderildi.";
-
             }
-
             return RedirectToAction();
-
-
         }
 
 
