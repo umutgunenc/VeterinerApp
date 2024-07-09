@@ -1,0 +1,66 @@
+﻿@model List<CalisanListeleViewModel>
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section calisanListele {
+    <form asp-action="calisanListele" asp-controller="Admin" method="post" id="calisanListeleForm">
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Adı</th>
+                    <th scope="col">Soyadı</th>
+                    <th scope="col">TCKN</th>
+                    <th scope="col">Çalışma Durumu</th>
+                    <th scope="col">Görevi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="clickable-row" role="button" data-tckn="@item.InsanTckn">
+                        <td>@item.InsanAdi</td>
+                        <td>@item.InsanSoyadi</td>
+                        <td>@item.InsanTckn</td>
+                        <td>
+                            @if (item.CalisiyorMu.Value)
+                            {
+                                @:Çalışıyor
+                            }
+                            else
+                            {
+                                @:Çalışmıyor
+                            }
+                        </td>
+                        <td>@item.RolAdi</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+
+    @if (ViewBag.SecilenKisi != null)
+    {
+        @await Component.InvokeAsync("CalisanlarListele", ViewBag.SecilenKisi)
+    }
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('.clickable-row');
+        const form = document.getElementById('calisanListeleForm');
+
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                const tckn = row.getAttribute('data-tckn');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'secilenKisiTCKN';
+                input.value = tckn;
+                form.appendChild(input);
+                form.submit();
+            });
+        });
+    });
+</script>
