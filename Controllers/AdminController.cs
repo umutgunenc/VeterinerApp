@@ -10,6 +10,10 @@ using VeterinerApp.Fonksiyonlar.MailGonderme;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinerApp.Models.ViewModel.Admin;
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
+using VeterinerApp.ViewComponents;
+using System.Threading.Tasks;
 
 
 
@@ -58,7 +62,7 @@ namespace VeterinerApp.Controllers
             _veterinerDbContext.SaveChanges();
             TempData["Success"] = $"{renk} rengi eklendi";
 
-            return RedirectToAction();
+            return View();
         }
 
         [HttpGet]
@@ -367,7 +371,7 @@ namespace VeterinerApp.Controllers
                 TurlerCinsler = _veterinerDbContext.TurCins.Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
-                    Text = $"{x.Cins.cins.ToUpper()} - {x.Tur.tur.ToUpper()}" 
+                    Text = $"{x.Cins.cins.ToUpper()} - {x.Tur.tur.ToUpper()}"
                 }).ToList(),
 
             };
@@ -379,8 +383,8 @@ namespace VeterinerApp.Controllers
         public IActionResult CinsTurSil(TurCinsSilViewModel model)
         {
             var silinecekCinsId = _veterinerDbContext.TurCins
-                .Where(x=>x.Id == model.Id)
-                .Select(x=>x.CinsId).FirstOrDefault();
+                .Where(x => x.Id == model.Id)
+                .Select(x => x.CinsId).FirstOrDefault();
             var silinecekTurId = _veterinerDbContext.TurCins
                 .Where(x => x.Id == model.Id)
                 .Select(x => x.TurId).FirstOrDefault();
@@ -393,10 +397,11 @@ namespace VeterinerApp.Controllers
                 .Where(x => x.Id == silinecekTurId)
                 .Select(x => x.tur).FirstOrDefault();
 
-            var turCinsEntity = new TurCins{ 
-                Id = model.Id, 
-                CinsId = silinecekCinsId , 
-                TurId= silinecekTurId 
+            var turCinsEntity = new TurCins
+            {
+                Id = model.Id,
+                CinsId = silinecekCinsId,
+                TurId = silinecekTurId
             };
 
             TurCinsSilValidators validator = new(_veterinerDbContext);
@@ -529,7 +534,7 @@ namespace VeterinerApp.Controllers
                 }).ToList()
             };
             return View(model);
-            
+
         }
         [HttpPost]
         public IActionResult CalisanEkle(InsanEkleViewModel model)
@@ -545,7 +550,7 @@ namespace VeterinerApp.Controllers
                 InsanAdi = model.InsanAdi.ToUpper(),
                 InsanSoyadi = model.InsanSoyadi.ToUpper(),
                 InsanTckn = model.InsanTckn,
-                InsanMail = model.InsanMail.ToUpper(),
+                InsanMail = model.InsanMail.ToLower(),
                 InsanTel = model.InsanTel,
                 DiplomaNo = model.DiplomaNo,
                 RolId = model.RolId,
@@ -640,7 +645,86 @@ namespace VeterinerApp.Controllers
             return RedirectToAction();
         }
 
+        [HttpGet]
+        public IActionResult CalisanSec()
+        {
 
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CalisanSec(InsanSecViewModel model)
+        {
+            var insanSec = new InsanSecViewModel() { InsanTckn = model.InsanTckn };
+            var secilenKisi = _veterinerDbContext.Insans
+                .Where(x => x.InsanTckn == insanSec.InsanTckn)
+                .Select(x => new InsanDuzenleViewModel
+                {
+                    InsanAdi = x.InsanAdi,
+                    InsanSoyadi = x.InsanSoyadi,
+                    InsanTckn = x.InsanTckn,
+                    InsanMail = x.InsanMail,
+                    InsanTel = x.InsanTel,
+                    DiplomaNo = x.DiplomaNo,
+                    KullaniciAdi = x.KullaniciAdi,
+                    CalisiyorMu = x.CalisiyorMu,
+                    Maas = x.Maas,
+                    RolId = x.RolId,
+                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                    {
+                        Value = r.RolId.ToString(),
+                        Text = r.RolAdi
+                    }).ToList(),
+                    RolAdi = _veterinerDbContext.Rols
+                        .Where(r => r.RolId == x.RolId)
+                        .Select(r => r.RolAdi)
+                        .FirstOrDefault()
+                }).FirstOrDefault();
+
+            if (secilenKisi == null)
+            {
+                return View(model);
+            }
+
+            ViewBag.SecilenKisi = secilenKisi;
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CalisanDuzenle(InsanDuzenleViewModel model)
+        {
+            var insan = _veterinerDbContext.Insans.FirstOrDefault(x => x.InsanTckn == model.InsanTckn);
+
+            if (insan == null)
+            {
+                return View("CalisanSec");
+            }
+            InsanDuzenleValidators validator = new(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View("CalisanSec");
+            }
+
+            insan.InsanAdi = model.InsanAdi;
+            insan.InsanSoyadi = model.InsanSoyadi;
+            insan.InsanMail = model.InsanMail.ToLower();
+            insan.InsanTel = model.InsanTel;
+            insan.DiplomaNo = model.DiplomaNo;
+            insan.KullaniciAdi = model.KullaniciAdi;
+            insan.CalisiyorMu = model.CalisiyorMu;
+            insan.Maas = model.Maas;
+            insan.RolId = model.RolId;
+
+            _veterinerDbContext.SaveChanges();
+            TempData["KisiGuncellendi"] = $"{insan.InsanAdi} {insan.InsanSoyadi} adlı kişinin bilgileri başarı ile güncellendi.";
+            return View("CalisanSec");
+        }
     }
 }
 

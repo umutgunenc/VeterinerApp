@@ -1,0 +1,43 @@
+﻿@model InsanSecViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section CalisanSec{
+    <form asp-action="CalisanSec" asp-controller="Admin" method="post">
+        <div class="form-row">
+            <div class="col mb-2">
+                <input asp-for="InsanTckn" class="form-control" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
+                </input>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2" form-col>Seç</button>
+        </div>
+        <div class="col">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+            </span>
+            <div asp-validation-summary="ModelOnly" class="font-weight-bold text-danger bg-light text-danger rounded mb-2">            
+            
+            </div>
+
+        </div>
+    </form>
+    @if (ViewBag.SecilenKisi != null)
+    {
+        @await Component.InvokeAsync("Insanlar", ViewBag.SecilenKisi)
+    }
+
+    @if (TempData["KisiGuncellendi"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["KisiGuncellendi"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+
+
+}

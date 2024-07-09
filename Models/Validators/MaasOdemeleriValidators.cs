@@ -35,16 +35,13 @@ namespace VeterinerApp.Models.Validators
 
         private bool MustBeCalisan(string TCKN)
         {
-            // İlk olarak, belirtilen TCKN'ye sahip kişiyi getir
             var person = _context.Insans.Include(i => i.Rol).FirstOrDefault(x => x.InsanTckn == TCKN & x.CalisiyorMu==true);
 
-            // Eğer kişi bulunamazsa, false döner
             if (person == null)
             {
                 return false;
             }
 
-            // Kişinin rolünün uygun olup olmadığını kontrol eder
             return person.Rol.RolAdi.ToUpper() == "ADMIN" ||
                    person.Rol.RolAdi.ToUpper() == "ÇALIŞAN" ||
                    person.Rol.RolAdi.ToUpper() == "VETERİNER";

@@ -22,7 +22,7 @@ namespace VeterinerApp.Models.Entity
         public string InsanMail { get; set; }
         public int RolId { get; set; }
         public string DiplomaNo { get; set; }
-        public bool? CalisiyorMu { get; set; }
+        public bool CalisiyorMu { get; set; }
         public double? Maas { get; set; }
         public string KullaniciAdi { get; set; }
 

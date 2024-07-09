@@ -1,0 +1,103 @@
+﻿@model InsanDuzenleViewModel
+
+<form asp-action="CalisanDuzenle" asp-controller="Admin" method="post">
+    <div class="col">
+        <div class="form-group row mb-3">
+            <label asp-for="InsanAdi" class="col-md-3 col-form-label">Adı</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanAdi"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="InsanSoyadi" class="col-md-3 col-form-label">Soyadı</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanSoyadi"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group row mb-3">
+            <label asp-for="InsanMail" class="col-md-3 col-form-label">Mail Adresi</label>
+            <div class="col-md-9">
+                <input type="email" asp-for="InsanMail" class="form-control" placeholder="Mail Adresi">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanMail"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="InsanTel" class="col-md-3 col-form-label">Telefon Numarası</label>
+            <div class="col-md-9">
+                <input type="tel" asp-for="InsanTel" class="form-control" placeholder="Telefon Numarası">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTel"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="DiplomaNo" class="col-md-3 col-form-label">Diploma Seri No</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="DiplomaNo" class="form-control" placeholder="Diploma Seri No">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="DiplomaNo"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="RolId" class="col-md-3 col-form-label">Çalışan Kişinin Görevi</label>
+            <div class="col-md-9">
+                <select class="custom-select" asp-for="RolId">
+                    <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
+                    @foreach (var rol in Model.Roller)
+                    {
+                        <option value="@rol.Value">@rol.Text</option>
+                    }
+                </select>
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId"></span>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Hata))
+        {
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
+                @ViewBag.Hata
+            </span>
+        }
+
+        <div class="form-group row mb-3">
+            <label asp-for="CalisiyorMu" class="col-md-3 col-form-label">Çalışıyor mu?</label>
+            <div class="col-md-9">
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio1" name="CalisiyorMu" class="custom-control-input" asp-for="CalisiyorMu" value="true">
+                    <label class="custom-control-label" for="customRadio1">EVET</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio2" name="CalisiyorMu" class="custom-control-input" asp-for="CalisiyorMu" value="false">
+                    <label class="custom-control-label" for="customRadio2">HAYIR</label>
+                </div>
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="CalisiyorMu"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="KullaniciAdi" class="col-md-3 col-form-label">Kullanıcı Adı</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="KullaniciAdi" class="form-control" placeholder="Kullanıcı Adı">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="KullaniciAdi"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="Maas" class="col-md-3 col-form-label">Maaş</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="Maas" class="form-control" placeholder="Maaş" />
+                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Maas"></span>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="InsanTckn" />
+
+    <button type="submit" class="col btn btn-primary mb-2">Düzenle</button>
+</form>
+
+

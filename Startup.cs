@@ -1,10 +1,12 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 using VeterinerApp.Data;
 
 namespace VeterinerApp
@@ -24,7 +26,7 @@ namespace VeterinerApp
             //validation için servis cagirildi
             services.AddControllersWithViews().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());   
             services.AddDbContext<VeterinerContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
-          
+
 
         }
 
@@ -46,6 +48,19 @@ namespace VeterinerApp
                 pattern: "{controller=Home}/{action=Index}/{id?}"
                );
             });
+
+
+            var cultureInfo = new CultureInfo("tr-TR");
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ",";
+            cultureInfo.NumberFormat.NumberGroupSeparator = ".";
+            var supportedCultures = new[] { cultureInfo };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(cultureInfo),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
         }
     }
 }

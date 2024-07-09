@@ -22,7 +22,6 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Lütfen bir renk giriniz.")
                 .MaximumLength(50).WithMessage("En fazla 50 karakter uzunluğunda değer girilebilir.")
                 .Must(BeUnique).WithMessage("Girdiğiniz renk zaten sisteme kayıtlı.");
-
         }
 
         private bool BeUnique(string girilenDeger)
