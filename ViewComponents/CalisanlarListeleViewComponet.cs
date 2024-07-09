@@ -17,10 +17,6 @@ public class CalisanlarListeleViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync(CalisanListeleViewModel model)
     {
-        if (model == null)
-        {
-            return View("Default", new List<CalisanListeleViewModel>());
-        }
 
         var secilenKisiTCKN = model.InsanTckn;
         var secilenKisi = await _veterinerDbContext.Insans
