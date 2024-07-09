@@ -6,24 +6,24 @@
 
 @section calisanListele {
     <form asp-action="calisanListele" asp-controller="Admin" method="post" id="calisanListeleForm">
-        <table class="table table-hover table-dark">
+        <table class="table table-hover table-dark text-center">
             <thead>
                 <tr>
-                    <th scope="col">Adı</th>
-                    <th scope="col">Soyadı</th>
-                    <th scope="col">TCKN</th>
-                    <th scope="col">Çalışma Durumu</th>
-                    <th scope="col">Görevi</th>
+                    <th scope="col" class="text-center">Adı</th>
+                    <th scope="col" class="text-center">Soyadı</th>
+                    <th scope="col" class="text-center">TCKN</th>
+                    <th scope="col" class="text-center">Çalışma Durumu</th>
+                    <th scope="col" class="text-center">Görevi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr class="clickable-row" role="button" data-tckn="@item.InsanTckn">
-                        <td>@item.InsanAdi</td>
-                        <td>@item.InsanSoyadi</td>
-                        <td>@item.InsanTckn</td>
-                        <td>
+                        <td class="text-center">@item.InsanAdi</td>
+                        <td class="text-center">@item.InsanSoyadi</td>
+                        <td class="text-center">@item.InsanTckn</td>
+                        <td class="text-center">
                             @if (item.CalisiyorMu.Value)
                             {
                                 @:Çalışıyor
