@@ -123,7 +123,6 @@ namespace VeterinerApp.Controllers
 
         }
 
-
         [HttpGet]
         public IActionResult CinsEkle()
         {
@@ -753,32 +752,28 @@ namespace VeterinerApp.Controllers
 
         }
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> calisanListele(string secilenKisiTCKN)
         {
-            if (string.IsNullOrEmpty(secilenKisiTCKN))
-            {
-                var calisanlar = await _veterinerDbContext.Insans.ToListAsync();
-                var viewModel = calisanlar.Select(insan => new CalisanListeleViewModel
-                {
-                    InsanTckn = insan.InsanTckn,
-                    InsanAdi = insan.InsanAdi,
-                    InsanSoyadi = insan.InsanSoyadi,
-                    InsanTel = insan.InsanTel,
-                    InsanMail = insan.InsanMail,
-                    RolId = insan.RolId,
-                    DiplomaNo = insan.DiplomaNo,
-                    CalisiyorMu = insan.CalisiyorMu,
-                    Maas = insan.Maas,
-                    KullaniciAdi = insan.KullaniciAdi,
-                    RolAdi = _veterinerDbContext.Rols
-                        .Where(x => x.RolId == insan.RolId)
-                        .Select(x => x.RolAdi)
-                        .FirstOrDefault()
-                }).ToList();
 
-                return View(viewModel);
-            }
+            var calisanlar = await _veterinerDbContext.Insans.ToListAsync();
+            var viewModel = calisanlar
+                .Select(x => new CalisanListeleViewModel
+                {
+                    InsanTckn = x.InsanTckn,
+                    InsanAdi = x.InsanAdi,
+                    InsanSoyadi = x.InsanSoyadi,
+                    InsanTel = x.InsanTel,
+                    InsanMail = x.InsanMail,
+                    RolId = x.RolId,
+                    DiplomaNo = x.DiplomaNo,
+                    CalisiyorMu = x.CalisiyorMu,
+                    Maas = x.Maas,
+                    KullaniciAdi = x.KullaniciAdi,
+                    RolAdi = _veterinerDbContext.Rols
+                    .Where(r => r.RolId == x.RolId)
+                    .Select(r => r.RolAdi)
+                    .FirstOrDefault()
+                }).ToList();
 
             var secilenKisi = await _veterinerDbContext.Insans
                 .Where(x => x.InsanTckn == secilenKisiTCKN)
@@ -802,26 +797,7 @@ namespace VeterinerApp.Controllers
 
             ViewBag.SecilenKisi = secilenKisi;
 
-            var calisanlarList = await _veterinerDbContext.Insans.ToListAsync();
-            var viewModelList = calisanlarList.Select(insan => new CalisanListeleViewModel
-            {
-                InsanTckn = insan.InsanTckn,
-                InsanAdi = insan.InsanAdi,
-                InsanSoyadi = insan.InsanSoyadi,
-                InsanTel = insan.InsanTel,
-                InsanMail = insan.InsanMail,
-                RolId = insan.RolId,
-                DiplomaNo = insan.DiplomaNo,
-                CalisiyorMu = insan.CalisiyorMu,
-                Maas = insan.Maas,
-                KullaniciAdi = insan.KullaniciAdi,
-                RolAdi = _veterinerDbContext.Rols
-                    .Where(x => x.RolId == insan.RolId)
-                    .Select(x => x.RolAdi)
-                    .FirstOrDefault()
-            }).ToList();
-
-            return View(viewModelList);
+            return View(viewModel);
         }
 
     }

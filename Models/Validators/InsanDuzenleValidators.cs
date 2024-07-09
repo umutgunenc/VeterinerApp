@@ -67,8 +67,11 @@ namespace VeterinerApp.Models.Validators
 
             RuleFor(x => x.Maas)
                 .NotNull().WithMessage("Maaş bilgisi boş olamaz.")
-                .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
                 .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
+
+            RuleFor(x => x.Maas)
+                .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
+                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu && x.Maas.HasValue);
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Müşteriler için maaş bilgisi girilemez")

@@ -18,9 +18,8 @@ public class CalisanlarListeleViewComponent : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync(CalisanListeleViewModel model)
     {
 
-        var secilenKisiTCKN = model.InsanTckn;
         var secilenKisi = await _veterinerDbContext.Insans
-            .Where(x => x.InsanTckn == secilenKisiTCKN)
+            .Where(x => x.InsanTckn == model.InsanTckn)
             .Select(x => new CalisanListeleViewModel
             {
                 InsanAdi = x.InsanAdi,
