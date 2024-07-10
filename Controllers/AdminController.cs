@@ -12,11 +12,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinerApp.Models.ViewModel.Admin;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 
 
 namespace VeterinerApp.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly VeterinerContext _veterinerDbContext;
@@ -27,6 +29,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
+
         public IActionResult AdminIndex()
         {
             return View();

@@ -5,7 +5,11 @@ using VeterinerApp.Models.ViewModel.Login;
 using FluentValidation.Results;
 using System.Linq;
 using VeterinerApp.Models.Entity;
-using FluentValidation;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 
 namespace VeterinerApp.Controllers
@@ -28,7 +32,7 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             string kullaniciAdi = model.KullaniciAdi;
             Sifre sifreBilgileri = _context.Sifres.FirstOrDefault(x => x.KullaniciAdi == kullaniciAdi);
@@ -42,7 +46,17 @@ namespace VeterinerApp.Controllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.ErrorMessage);
+                return View();
             }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, model.KullaniciAdi)
+            };
+
+            var userIdentity = new ClaimsIdentity(claims, "login");
+            ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("AdminIndex", "Admin");
         }

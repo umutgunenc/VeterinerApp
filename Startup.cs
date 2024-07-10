@@ -33,10 +33,13 @@ namespace VeterinerApp
 
             //Authentication kullanımı için servis cagirildi
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(x =>
-            {
-                x.LoginPath = "/Home/Login";
-            });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Home/Login"; // Oturum açma sayfasının yolu
+                });
+
+            // Authorization kullanımı için servis cagirildi
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +52,8 @@ namespace VeterinerApp
 
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
