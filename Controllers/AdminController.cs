@@ -10,11 +10,8 @@ using VeterinerApp.Fonksiyonlar.MailGonderme;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinerApp.Models.ViewModel.Admin;
-using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
-using VeterinerApp.ViewComponents;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 
 
