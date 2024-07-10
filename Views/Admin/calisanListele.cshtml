@@ -34,9 +34,21 @@
                                 @:Çalışmıyor
                             }
                         </td>
-                        <td>@item.RolAdi</td>
+                        <td class="text-center">@item.RolAdi</td>
                     </tr>
                 }
+
+                @for (int i = 0; i < 4 - Model.Elemanlar.Count(); i++)
+                {
+                    <tr>
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                    </tr>
+                }
+
             </tbody>
         </table>
         <div class="d-flex justify-content-between align-items-center table-dark mb-3 p-2">
