@@ -29,7 +29,9 @@ namespace VeterinerApp.Models.Validators
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
-                .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.");
+                .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
+                .Must(UniqueEmail)
+                .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.InsanTel)
                 .MaximumLength(11).WithMessage("Telefon numarası maksimum 11 karakter olabilir.")
@@ -138,5 +140,13 @@ namespace VeterinerApp.Models.Validators
             var role = _context.Rols.Find(rolId);
             return role != null && validRoles.Contains(role.RolAdi.ToUpper());
         }
+        private bool UniqueEmail(string insanMail)
+        {
+            if (string.IsNullOrEmpty(insanMail))
+                return true;
+
+            return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper());
+        }
+
     }
 }

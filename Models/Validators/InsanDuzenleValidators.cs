@@ -37,8 +37,8 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-           .Must((model, insanMail) => UniqueEmail(model.InsanTckn, insanMail))
-           .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
+                .Must((model, insanMail) => UniqueEmailSelf(model.InsanTckn, insanMail))
+                .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.DiplomaNo)
                 .MaximumLength(11).WithMessage("Diploma numarası en fazla 11 karakter olabilir.")
@@ -123,14 +123,6 @@ namespace VeterinerApp.Models.Validators
 
             return !_context.Insans.Any(x => x.InsanTel == insanTel && x.InsanTckn != InsanTckn);
         }
-        private bool notUniqueTCKN(string girilenTCKN)
-        {
-            if (string.IsNullOrEmpty(girilenTCKN))
-            {
-                return false;
-            }
-            return _context.Insans.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
-        }
         private bool TcDogrula(string tcKimlikNo)
         {
             bool returnvalue = false;
@@ -169,7 +161,7 @@ namespace VeterinerApp.Models.Validators
             var role = _context.Rols.Find(rolId);
             return role != null && validRoles.Contains(role.RolAdi.ToUpper());
         }
-        private bool UniqueEmail(string InsanTckn, string insanMail)
+        private bool UniqueEmailSelf(string InsanTckn, string insanMail)
         {
             if (string.IsNullOrEmpty(insanMail))
                 return true;
