@@ -32,25 +32,36 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="Login" asp-controller="Home">
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <div class="kullaniciAdi">
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                <input asp-for="KullaniciAdi" type="text" class="form-control" placeholder="Kullanıcı Adı">
                             </div>
-                            <input asp-for="KullaniciAdi" type="text" class="form-control" placeholder="Kullanıcı Adı">
-                        </div>
-                        <div class="form-group">
-                            <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="KullaniciAdi"></span>
-                        </div>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <div class="form-group">
+                                <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="KullaniciAdi"></span>
                             </div>
-                            <input asp-for="sifre" type="password" class="form-control" placeholder="Şifre">
                         </div>
-                        <div class="form-group">
-                            <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="sifre"></span>
-                            <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="SifreGecerlilikTarihi"></span>
+                        <div class="sifre">
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                </div>
+                                <input asp-for="sifre" type="password" class="form-control" placeholder="Şifre">
+                            </div>
+                            <div class="form-group">
+                                <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="sifre"></span>
+                            </div>
                         </div>
+                        <div class="sifreGecerlilikTarihi">
+                            <div class="form-group">
+                                <input asp-for="SifreGecerlilikTarihi" type="hidden" class="form-control">
+                                <span class="row font-weight-bold bg-transparent text-light rounded mb-2 w-100" asp-validation-for="SifreGecerlilikTarihi"></span>
+                            </div>
+                        </div>
+
+
                         <div class="form-group row">
                             <div class="col-6">
                                 <div class="form-check">
