@@ -5,23 +5,20 @@
 }
 
 @section CalisanSec{
-    <form asp-action="CalisanSec" asp-controller="Admin" method="post">
-        <div class="form-row">
-            <div class="col mb-2">
-                <input asp-for="InsanTckn" class="form-control" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
-                </input>
-            </div>
-            <button type="submit" class="btn btn-primary mb-2" form-col>Seç</button>
-        </div>
-        <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
-            </span>
-            <div asp-validation-summary="ModelOnly" class="font-weight-bold text-danger bg-light text-danger rounded mb-2">            
-            
-            </div>
-
+    <form asp-action="CalisanSec" asp-controller="Admin" method="post" class="form-inline input-group p-0 col-12">
+        <input asp-for="InsanTckn" class="form-control mr-sm-0 rounded-left" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
+        <div class="input-group-append">
+            <button class="btn btn-primary rounded-right px-3" type="submit">Seç</button>
         </div>
     </form>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+        </span>
+        <div asp-validation-summary="ModelOnly" class="font-weight-bold text-danger bg-light text-danger rounded mb-2">
+
+        </div>
+
+    </div>
     @if (ViewBag.SecilenKisi != null)
     {
         @await Component.InvokeAsync("Insanlar", ViewBag.SecilenKisi)
