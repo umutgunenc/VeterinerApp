@@ -1,28 +1,29 @@
-﻿@model List<CalisanListeleViewModel>
+﻿@model SayfalamaListesi<CalisanListeleViewModel>
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
 @section calisanListele {
-    <form asp-action="calisanListele" asp-controller="Admin" method="post" id="calisanListeleForm">
-        <table class="table table-hover table-dark text-center">
+    <form asp-action="CalisanListele" asp-controller="Admin" method="post" id="calisanListeleForm">
+        <input type="hidden" name="sayfaNumarasi" value="@Model.SayfaNumarasi" />
+        <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
             <thead>
                 <tr>
+                    <th scope="col" class="text-center">TCKN</th>
                     <th scope="col" class="text-center">Adı</th>
                     <th scope="col" class="text-center">Soyadı</th>
-                    <th scope="col" class="text-center">TCKN</th>
                     <th scope="col" class="text-center">Çalışma Durumu</th>
                     <th scope="col" class="text-center">Görevi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Elemanlar)
                 {
                     <tr class="clickable-row" role="button" data-tckn="@item.InsanTckn">
+                        <td class="text-center">@item.InsanTckn</td>
                         <td class="text-center">@item.InsanAdi</td>
                         <td class="text-center">@item.InsanSoyadi</td>
-                        <td class="text-center">@item.InsanTckn</td>
                         <td class="text-center">
                             @if (item.CalisiyorMu.Value)
                             {
@@ -38,14 +39,57 @@
                 }
             </tbody>
         </table>
+        <div class="d-flex justify-content-between align-items-center table-dark mb-3 p-2">
+            <div class="text-center">
+                Toplam @ViewBag.ToplamKayit kayıt var, @Model.Elemanlar.Count() tanesi gösteriliyor.
+            </div>
+            <div>
+                <nav aria-label="Sayfalama">
+                    <ul class="pagination mb-0">
+                        @if (Model.OncekiSayfaVar)
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="1">İlk</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi - 1)">Önceki</a>
+                            </li>
+                        }
+
+                        @for (int i = Model.SayfaNumarasi - 2; i <= Model.SayfaNumarasi + 2; i++)
+                        {
+                            @if (i > 0 && i <= Model.ToplamSayfa)
+                            {
+                                <li class="page-item @(i == Model.SayfaNumarasi ? "active" : "")">
+                                    <a class="page-link text-light bg-dark border-dark @(i == Model.SayfaNumarasi ? "bg-primary text-white" : "")" asp-action="CalisanListele" asp-route-sayfaNumarasi="@i">@i</a>
+                                </li>
+                            }
+                        }
+
+                        @if (Model.SonrakiSayfaVar)
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi + 1)">Sonraki</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.ToplamSayfa)">Son</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </form>
+
+
+
 
     @if (ViewBag.SecilenKisi != null)
     {
         @await Component.InvokeAsync("CalisanlarListele", ViewBag.SecilenKisi)
     }
-}
 
+}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const rows = document.querySelectorAll('.clickable-row');
@@ -60,6 +104,7 @@
                 input.value = tckn;
                 form.appendChild(input);
                 form.submit();
+
             });
         });
     });

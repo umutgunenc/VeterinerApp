@@ -45,6 +45,11 @@ namespace VeterinerApp.Models.Validators
                 .Must((model, diplomaNo) => BeUniqueOrNullDiplomaNo(model.InsanTckn, diplomaNo))
                 .WithMessage("Girilen diploma numarası zaten sistemde kayıtlı.");
 
+            RuleFor(x => x.DiplomaNo)
+                .NotNull().WithMessage("Diploma numarası giriniz.")
+                .When(x => IsRoleMatching(x.RolId, new List<string> { "VETERİNER" }));
+
+
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
                 .NotEmpty().WithMessage("Çalışanın ismini giriniz.")

@@ -725,11 +725,11 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult calisanListele()
+        public IActionResult CalisanListele(int sayfaNumarasi = 1)
         {
-            var calisanlar = _veterinerDbContext.Insans.ToList();
-
-            var viewModel = calisanlar.Select(insan => new CalisanListeleViewModel
+            int sayfaBoyutu = 4;
+            var toplamKayit = _veterinerDbContext.Insans.Count();
+            var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
             {
                 InsanTckn = insan.InsanTckn,
                 InsanAdi = insan.InsanAdi,
@@ -742,63 +742,68 @@ namespace VeterinerApp.Controllers
                 Maas = insan.Maas,
                 KullaniciAdi = insan.KullaniciAdi,
                 RolAdi = _veterinerDbContext.Rols
-                    .Where(x => x.RolId == insan.RolId)
-                    .Select(x => x.RolAdi)
+                    .Where(rol => rol.RolId == insan.RolId)
+                    .Select(rol => rol.RolAdi)
                     .FirstOrDefault()
+            });
 
-            }).ToList();
-
+            var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
+            ViewBag.ToplamKayit = toplamKayit; 
             return View(viewModel);
-
         }
         [HttpPost]
-        public async Task<IActionResult> calisanListele(string secilenKisiTCKN)
+        public async Task<IActionResult> CalisanListele(string secilenKisiTckn, int sayfaNumarasi = 1)
         {
-
-            var calisanlar = await _veterinerDbContext.Insans.ToListAsync();
-            var viewModel = calisanlar
-                .Select(x => new CalisanListeleViewModel
-                {
-                    InsanTckn = x.InsanTckn,
-                    InsanAdi = x.InsanAdi,
-                    InsanSoyadi = x.InsanSoyadi,
-                    InsanTel = x.InsanTel,
-                    InsanMail = x.InsanMail,
-                    RolId = x.RolId,
-                    DiplomaNo = x.DiplomaNo,
-                    CalisiyorMu = x.CalisiyorMu,
-                    Maas = x.Maas,
-                    KullaniciAdi = x.KullaniciAdi,
-                    RolAdi = _veterinerDbContext.Rols
-                    .Where(r => r.RolId == x.RolId)
-                    .Select(r => r.RolAdi)
+            int sayfaBoyutu = 4;
+            var toplamKayit = _veterinerDbContext.Insans.Count();
+            var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
+            {
+                InsanTckn = insan.InsanTckn,
+                InsanAdi = insan.InsanAdi,
+                InsanSoyadi = insan.InsanSoyadi,
+                InsanTel = insan.InsanTel,
+                InsanMail = insan.InsanMail,
+                RolId = insan.RolId,
+                DiplomaNo = insan.DiplomaNo,
+                CalisiyorMu = insan.CalisiyorMu,
+                Maas = insan.Maas,
+                KullaniciAdi = insan.KullaniciAdi,
+                RolAdi = _veterinerDbContext.Rols
+                    .Where(rol => rol.RolId == insan.RolId)
+                    .Select(rol => rol.RolAdi)
                     .FirstOrDefault()
-                }).ToList();
+            });
+
+            var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
 
             var secilenKisi = await _veterinerDbContext.Insans
-                .Where(x => x.InsanTckn == secilenKisiTCKN)
-                .Select(x => new CalisanListeleViewModel
+                .Where(insan => insan.InsanTckn == secilenKisiTckn)
+                .Select(insan => new CalisanListeleViewModel
                 {
-                    InsanAdi = x.InsanAdi,
-                    InsanSoyadi = x.InsanSoyadi,
-                    InsanTckn = x.InsanTckn,
-                    InsanMail = x.InsanMail.ToLower(),
-                    InsanTel = x.InsanTel,
-                    DiplomaNo = x.DiplomaNo,
-                    KullaniciAdi = x.KullaniciAdi,
-                    CalisiyorMu = x.CalisiyorMu,
-                    Maas = x.Maas,
-                    RolId = x.RolId,
+                    InsanAdi = insan.InsanAdi,
+                    InsanSoyadi = insan.InsanSoyadi,
+                    InsanTckn = insan.InsanTckn,
+                    InsanMail = insan.InsanMail.ToLower(),
+                    InsanTel = insan.InsanTel,
+                    DiplomaNo = insan.DiplomaNo,
+                    KullaniciAdi = insan.KullaniciAdi,
+                    CalisiyorMu = insan.CalisiyorMu,
+                    Maas = insan.Maas,
+                    RolId = insan.RolId,
                     RolAdi = _veterinerDbContext.Rols
-                        .Where(r => r.RolId == x.RolId)
-                        .Select(r => r.RolAdi)
+                        .Where(rol => rol.RolId == insan.RolId)
+                        .Select(rol => rol.RolAdi)
                         .FirstOrDefault()
-                }).FirstOrDefaultAsync();
+                })
+                .FirstOrDefaultAsync();
 
             ViewBag.SecilenKisi = secilenKisi;
+            ViewBag.ToplamKayit = toplamKayit; 
 
             return View(viewModel);
         }
+
+
 
     }
 }
