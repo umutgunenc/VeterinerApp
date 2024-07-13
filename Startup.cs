@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using VeterinerApp.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 
 
 namespace VeterinerApp
@@ -36,6 +37,8 @@ namespace VeterinerApp
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Home/Login"; // Oturum açma sayfasının yolu
+                    options.ExpireTimeSpan = TimeSpan.FromSeconds(10); // Oturumun açık süresi
+                    options.SlidingExpiration = true; // istek gönderince oturum açık kalma süresi sıfırlanır
                 });
 
             // Authorization kullanımı için servis cagirildi

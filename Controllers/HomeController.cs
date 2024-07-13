@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 
 
 namespace VeterinerApp.Controllers
@@ -37,8 +38,12 @@ namespace VeterinerApp.Controllers
             string kullaniciAdi = model.KullaniciAdi;
             Sifre sifreBilgileri = _context.Sifres.FirstOrDefault(x => x.KullaniciAdi == kullaniciAdi);
 
-            model.SifreGecerlilikTarihi = sifreBilgileri.SifreGecerlilikTarihi;
+            if (sifreBilgileri == null) { 
+                ModelState.AddModelError("sifre", "Kullanıcı adı veya şifre hatalı."); 
+                return View(); 
+            }
 
+            model.SifreGecerlilikTarihi = sifreBilgileri.SifreGecerlilikTarihi;
 
             LoginValidators validator = new LoginValidators(_context);
             ValidationResult result = validator.Validate(model);

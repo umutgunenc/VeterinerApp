@@ -748,7 +748,7 @@ namespace VeterinerApp.Controllers
             });
 
             var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
-            ViewBag.ToplamKayit = toplamKayit; 
+            ViewBag.ToplamKayit = toplamKayit;
             return View(viewModel);
         }
         [HttpPost]
@@ -798,7 +798,7 @@ namespace VeterinerApp.Controllers
                 .FirstOrDefaultAsync();
 
             ViewBag.SecilenKisi = secilenKisi;
-            ViewBag.ToplamKayit = toplamKayit; 
+            ViewBag.ToplamKayit = toplamKayit;
 
             return View(viewModel);
         }

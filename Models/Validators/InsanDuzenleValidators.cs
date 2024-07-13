@@ -49,7 +49,6 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Diploma numarası giriniz.")
                 .When(x => IsRoleMatching(x.RolId, new List<string> { "VETERİNER" }));
 
-
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
                 .NotEmpty().WithMessage("Çalışanın ismini giriniz.")
@@ -166,7 +165,10 @@ namespace VeterinerApp.Models.Validators
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper() && x.InsanTckn != InsanTckn);
+            return !_context.Insans
+                .Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper()
+                || x.InsanMail.ToLower() == insanMail.ToLower()
+                && x.InsanTckn != InsanTckn);
         }
     }
 }

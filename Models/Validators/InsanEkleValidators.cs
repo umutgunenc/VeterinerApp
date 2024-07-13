@@ -30,8 +30,7 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must(UniqueEmail)
-                .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
+                .Must(UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.InsanTel)
                 .MaximumLength(11).WithMessage("Telefon numarası maksimum 11 karakter olabilir.")
@@ -145,7 +144,7 @@ namespace VeterinerApp.Models.Validators
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper());
+            return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper() || x.InsanMail.ToLower()==insanMail.ToLower());
         }
 
     }
