@@ -37,7 +37,7 @@ namespace VeterinerApp
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Home/Login"; // Oturum açma sayfasının yolu
-                    options.ExpireTimeSpan = TimeSpan.FromSeconds(10); // Oturumun açık süresi
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // Oturumun açık süresi
                     options.SlidingExpiration = true; // istek gönderince oturum açık kalma süresi sıfırlanır
                 });
 
