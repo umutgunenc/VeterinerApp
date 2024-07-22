@@ -1,6 +1,9 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using VeterinerApp.Models;
 using VeterinerApp.Models.Entity;
 
 #nullable disable
@@ -485,7 +488,14 @@ namespace VeterinerApp.Data
                     .HasConstraintName("FK__Tur_Cins__TurId__628FA481");
             });
 
-            OnModelCreatingPartial(modelBuilder);
+            //modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
+
+            //modelBuilder.Entity<IdentityUserRole<string>>()
+            //            .HasKey(r => new { r.UserId, r.RoleId });
+
+            //modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
+
+            //OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

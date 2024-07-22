@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VeterinerApp.Controllers
 {
-    [Authorize]
+    //[Authorize(Roles ="admin")]
     public class AdminController : Controller
     {
         private readonly VeterinerContext _veterinerDbContext;

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 
-namespace VeterinerApp.Models.ViewModel.Login
+namespace VeterinerApp.Models
 {
-    public class LoginViewModel
+    public class ApplicationUser : IdentityUser
     {
         public int Id { get; set; }
         public string KullaniciAdi { get; set; }

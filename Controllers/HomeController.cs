@@ -27,43 +27,49 @@ namespace VeterinerApp.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            string kullaniciAdi = model.KullaniciAdi;
-            Sifre sifreBilgileri = _context.Sifres.FirstOrDefault(x => x.KullaniciAdi == kullaniciAdi);
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> Login(LoginViewModel model)
+        //{
+        //    string kullaniciAdi = model.KullaniciAdi;
+        //    Sifre sifreBilgileri = _context.Sifres.FirstOrDefault(x => x.KullaniciAdi == kullaniciAdi);
 
-            if (sifreBilgileri == null) { 
-                ModelState.AddModelError("sifre", "Kullanıcı adı veya şifre hatalı."); 
-                return View(); 
-            }
+        //    if (sifreBilgileri == null) { 
+        //        ModelState.AddModelError("sifre", "Kullanıcı adı veya şifre hatalı."); 
+        //        return View(); 
+        //    }
 
-            model.SifreGecerlilikTarihi = sifreBilgileri.SifreGecerlilikTarihi;
+        //    model.SifreGecerlilikTarihi = sifreBilgileri.SifreGecerlilikTarihi;
 
-            LoginValidators validator = new LoginValidators(_context);
-            ValidationResult result = validator.Validate(model);
+        //    LoginValidators validator = new LoginValidators(_context);
+        //    ValidationResult result = validator.Validate(model);
 
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.ErrorMessage);
-                return View();
-            }
+        //    foreach (var error in result.Errors)
+        //    {
+        //        ModelState.AddModelError("", error.ErrorMessage);
+        //        return View();
+        //    }
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, model.KullaniciAdi)
-            };
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.Name, model.KullaniciAdi)
+        //    };
 
-            var userIdentity = new ClaimsIdentity(claims, "login");
-            ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        //    var userIdentity = new ClaimsIdentity(claims, "login");
+        //    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+        //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return RedirectToAction("AdminIndex", "Admin");
-        }
+
+        //    return RedirectToAction("AdminIndex", "Admin");
+        //}
+        //public async Task<IActionResult> Logout()
+        //{
+        //    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //    return RedirectToAction("Index", "Home");
+        //}
     }
 }
