@@ -5,6 +5,7 @@ using VeterinerApp.Data;
 using System;
 using System.Linq;
 using VeterinerApp.Models.ViewModel.Admin;
+using Microsoft.AspNetCore.Identity;
 
 #nullable disable
 
@@ -24,7 +25,7 @@ namespace VeterinerApp.Models.Validators
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
                 .Must(TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
 
-            RuleFor(x => x.InsanTel)
+            RuleFor(x => x.PhoneNumber)
                 .MaximumLength(11).WithMessage("Telefon numarası maksimum 11 karakter olabilir.")
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
@@ -32,7 +33,7 @@ namespace VeterinerApp.Models.Validators
                 .Must((model, insanTel) => UniqueTel(model.InsanTckn, insanTel))
                 .WithMessage("Girilen telefon numarası zaten sisteme kayıtlı.");
 
-            RuleFor(x => x.InsanMail)
+            RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
@@ -59,7 +60,7 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Çalışanın soyismini giriniz.")
                 .NotNull().WithMessage("Çalışanın soyismini giriniz.");
 
-            RuleFor(x => x.KullaniciAdi)
+            RuleFor(x => x.UserName)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")
                 .NotEmpty().WithMessage("Çalışanın kullanıcı adını giriniz.")
                 .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
@@ -71,7 +72,7 @@ namespace VeterinerApp.Models.Validators
 
             RuleFor(x => x.Maas)
                 .NotNull().WithMessage("Maaş bilgisi boş olamaz.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
+                .When(x => IsRoleMatching(x.RolId,new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
 
             RuleFor(x => x.Maas)
                 .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
@@ -106,21 +107,21 @@ namespace VeterinerApp.Models.Validators
             if (string.IsNullOrEmpty(kullaniciAdi))
                 return true;
 
-            return !_context.Insans.Any(x => x.KullaniciAdi.ToUpper() == kullaniciAdi.ToUpper() && x.InsanTckn != InsanTckn);
+            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper() && x.InsanTckn != InsanTckn);
         }
         private bool BeUniqueOrNullDiplomaNo(string InsanTckn, string diplomaNo)
         {
             if (string.IsNullOrEmpty(diplomaNo))
                 return true;
 
-            return !_context.Insans.Any(x => x.DiplomaNo == diplomaNo && x.InsanTckn != InsanTckn);
+            return !_context.Users.Any(x => x.DiplomaNo == diplomaNo && x.InsanTckn.ToUpper() != InsanTckn.ToUpper());
         }
         private bool UniqueTel(string InsanTckn, string insanTel)
         {
             if (string.IsNullOrEmpty(insanTel))
                 return true;
 
-            return !_context.Insans.Any(x => x.InsanTel == insanTel && x.InsanTckn != InsanTckn);
+            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.InsanTckn != InsanTckn);
         }
         private bool TcDogrula(string tcKimlikNo)
         {
@@ -155,19 +156,19 @@ namespace VeterinerApp.Models.Validators
             }
             return returnvalue;
         }
-        private bool IsRoleMatching(int rolId, List<string> validRoles)
+        private bool IsRoleMatching(string rolId, List<string> validRoles)
         {
-            var role = _context.Rols.Find(rolId);
-            return role != null && validRoles.Contains(role.RolAdi.ToUpper());
+            var userRole = _context.Roles.Find(rolId);
+            return userRole != null && validRoles.Contains(userRole.Name.ToUpper());
         }
         private bool UniqueEmailSelf(string InsanTckn, string insanMail)
         {
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Insans
-                .Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper()
-                || x.InsanMail.ToLower() == insanMail.ToLower()
+            return !_context.Users
+                .Any(x => x.Email.ToUpper() == insanMail.ToUpper()
+                || x.Email.ToLower() == insanMail.ToLower()
                 && x.InsanTckn != InsanTckn);
         }
     }

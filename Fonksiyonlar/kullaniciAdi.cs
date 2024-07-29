@@ -1,53 +1,53 @@
-﻿using System.Collections.Generic;
-using System;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
-using System.Linq;
+﻿//using System.Collections.Generic;
+//using System;
+//using VeterinerApp.Models.Entity;
+//using VeterinerApp.Data;
+//using System.Linq;
 
-namespace VeterinerApp.Fonksiyonlar
-{
-    public class kullaniciAdi
-    {
-        private readonly VeterinerContext _context;
+//namespace VeterinerApp.Fonksiyonlar
+//{
+//    public class kullaniciAdi
+//    {
+//        private readonly VeterinerContext _context;
 
-        public kullaniciAdi(VeterinerContext context)
-        {
-            _context = context;
-        }
+//        public kullaniciAdi(VeterinerContext context)
+//        {
+//            _context = context;
+//        }
 
-        private List<string> KullaniciAdlariListesi()
-        {
-            return _context.Insans.Select(x => x.KullaniciAdi).ToList();
-        }
+//        private List<string> KullaniciAdlariListesi()
+//        {
+//            return _context.Insans.Select(x => x.KullaniciAdi).ToList();
+//        }
 
-        public string GenerateUsername(string firstName, string lastName, string mail)
-        {
-            string username = $"{firstName.ToUpper()}.{lastName.ToUpper()}";
-            var kullaniciAdlari = KullaniciAdlariListesi();
+//        public string GenerateUsername(string firstName, string lastName, string mail)
+//        {
+//            string username = $"{firstName.ToUpper()}.{lastName.ToUpper()}";
+//            var kullaniciAdlari = KullaniciAdlariListesi();
 
-            // Kullanıcı adı zaten var mı kontrol et
-            if (!kullaniciAdlari.Contains(username))
-            {
-                return username;
-            }
-            else
-            {
-                username = mail;
-                if (kullaniciAdlari.Contains(mail))
-                {
-                    int suffix = 1;
-                    string newUsername;
-                    do
-                    {
-                        newUsername = $"{firstName.ToUpper()}.{lastName.ToUpper()}{suffix}";
-                        suffix++;
-                    }
-                    while (kullaniciAdlari.Contains(newUsername));
+//            // Kullanıcı adı zaten var mı kontrol et
+//            if (!kullaniciAdlari.Contains(username))
+//            {
+//                return username;
+//            }
+//            else
+//            {
+//                username = mail;
+//                if (kullaniciAdlari.Contains(mail))
+//                {
+//                    int suffix = 1;
+//                    string newUsername;
+//                    do
+//                    {
+//                        newUsername = $"{firstName.ToUpper()}.{lastName.ToUpper()}{suffix}";
+//                        suffix++;
+//                    }
+//                    while (kullaniciAdlari.Contains(newUsername));
 
-                    return newUsername;
-                }
-                return username;
-            }
-        }
-    }
-}
+//                    return newUsername;
+//                }
+//                return username;
+//            }
+//        }
+//    }
+//}

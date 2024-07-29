@@ -28,7 +28,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool notUniqueTCKN(string girilenTCKN)
         {
-            return _context.Insans.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
+            return _context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
         }
         private bool TcDogrula(string tcKimlikNo)
         {

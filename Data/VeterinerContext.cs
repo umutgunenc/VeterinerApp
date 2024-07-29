@@ -1,16 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using VeterinerApp.Models;
 using VeterinerApp.Models.Entity;
 
 #nullable disable
 
 namespace VeterinerApp.Data
 {
-    public partial class VeterinerContext :DbContext
+    public partial class VeterinerContext : IdentityDbContext<Insan>
     {
         public VeterinerContext()
         {
@@ -33,7 +29,6 @@ namespace VeterinerApp.Data
         public virtual DbSet<Renk> Renks { get; set; }
         public virtual DbSet<Rol> Rols { get; set; }
         public virtual DbSet<SahipHayvan> SahipHayvans { get; set; }
-        public virtual DbSet<Sifre> Sifres { get; set; }
         public virtual DbSet<Stok> Stoks { get; set; }
         public virtual DbSet<StokHareket> StokHarekets { get; set; }
         public virtual DbSet<Tedavi> Tedavis { get; set; }
@@ -179,17 +174,8 @@ namespace VeterinerApp.Data
                 entity.HasIndex(e => e.DiplomaNo, "UQ__Insan__04869AE378B9FE0E")
                     .IsUnique();
 
-                entity.HasIndex(e => e.InsanMail, "UQ__Insan__532F6402494E54C9")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.InsanTel, "UQ__Insan__7925D860278E5A3B")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.KullaniciAdi, "UQ_insan_kullaniciAdi")
-                    .IsUnique();
-
                 entity.Property(e => e.InsanTckn)
-                    .HasMaxLength(11)
+                    .HasMaxLength(450)
                     .IsUnicode(false)
                     .HasColumnName("InsanTCKN");
 
@@ -202,30 +188,11 @@ namespace VeterinerApp.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.InsanMail)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
                 entity.Property(e => e.InsanSoyadi)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.InsanTel)
-                    .IsRequired()
-                    .HasMaxLength(11)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.KullaniciAdi)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-
-                entity.HasOne(d => d.Rol)
-                    .WithMany(p => p.Insans)
-                    .HasForeignKey(d => d.RolId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Insan__RolId__6D0D32F4");
             });
 
             modelBuilder.Entity<MaasOdemeleri>(entity =>
@@ -236,7 +203,7 @@ namespace VeterinerApp.Data
                 entity.ToTable("MaasOdemeleri");
 
                 entity.Property(e => e.CalisanTckn)
-                    .HasMaxLength(11)
+                    .HasMaxLength(450)
                     .IsUnicode(false)
                     .HasColumnName("CalisanTCKN");
 
@@ -248,6 +215,19 @@ namespace VeterinerApp.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__MaasOdeme__Calis__6477ECF3");
             });
+
+            modelBuilder.Entity<MaasOdemeleri>(entity =>
+            {
+                entity.ToTable("MaasOdemeleri");
+
+                entity.HasKey(m => new { m.CalisanTckn, m.OdemeTarihi });
+
+                entity.HasOne(m => m.CalisanTcknNavigation)
+                    .WithMany(u => u.MaasOdemeleris)
+                    .HasForeignKey(m => m.CalisanTckn)
+                    .HasPrincipalKey(u => u.Id);
+
+            });                
 
             modelBuilder.Entity<Muayene>(entity =>
             {
@@ -262,7 +242,7 @@ namespace VeterinerApp.Data
 
                 entity.Property(e => e.HekimkTckn)
                     .IsRequired()
-                    .HasMaxLength(11)
+                    .HasMaxLength(450)
                     .IsUnicode(false)
                     .HasColumnName("HekimkTCKN");
 
@@ -316,18 +296,6 @@ namespace VeterinerApp.Data
                     .HasColumnName("Renk");
             });
 
-            modelBuilder.Entity<Rol>(entity =>
-            {
-                entity.ToTable("Rol");
-
-                entity.HasIndex(e => e.RolAdi, "UQ__Rol__85F2635DB978E5AD")
-                    .IsUnique();
-
-                entity.Property(e => e.RolAdi)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
             modelBuilder.Entity<SahipHayvan>(entity =>
             {
                 entity.HasKey(e => new { e.SahipTckn, e.HayvanId })
@@ -357,35 +325,6 @@ namespace VeterinerApp.Data
                     .HasConstraintName("FK__SahipHayv__Sahip__6FE99F9F");
             });
 
-            modelBuilder.Entity<Sifre>(entity =>
-            {
-                entity.ToTable("Sifre");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
-
-                entity.Property(e => e.KullaniciAdi)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("kullaniciAdi");
-
-                entity.Property(e => e.sifre)
-                    .IsRequired()
-                    .HasMaxLength(60)
-                    .HasColumnName("sifre");
-
-                entity.Property(e => e.SifreGecerlilikTarihi).HasColumnType("date");
-
-                entity.Property(e => e.SifreOlusturmaTarihi).HasColumnType("date");
-
-                entity.HasOne(d => d.KullaniciAdiNavigation)
-                    .WithMany(p => p.Sifres)
-                    .HasPrincipalKey(p => p.KullaniciAdi)
-                    .HasForeignKey(d => d.KullaniciAdi)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_KullaniciAdi");
-            });
 
             modelBuilder.Entity<Stok>(entity =>
             {
@@ -452,6 +391,8 @@ namespace VeterinerApp.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Tedavi_Mu__Tedav__70DDC3D8");
             });
+
+
 
             modelBuilder.Entity<Tur>(entity =>
             {

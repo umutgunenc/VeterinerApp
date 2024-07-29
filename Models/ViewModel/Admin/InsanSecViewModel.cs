@@ -4,8 +4,8 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class InsanSecViewModel
+    public class InsanSecViewModel : Insan
     {
-        public string InsanTckn { get; set; }
+
     }
 }

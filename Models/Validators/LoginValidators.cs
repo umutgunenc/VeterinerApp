@@ -16,20 +16,20 @@ namespace VeterinerApp.Models.Validators
             RuleFor(x => x.KullaniciAdi)
                 .NotEmpty().WithMessage("Kullanıcı adı boş olamaz.");
 
-            RuleFor(x => x.sifre)
-                .NotEmpty().WithMessage("Şifre boş olamaz.") 
-                .Must((model, sifre) => _context.Sifres.Any(x => x.KullaniciAdi == model.KullaniciAdi && x.sifre == sifre))
-                .WithMessage("Kullanıcı adı veya şifre hatalı.");
+            //RuleFor(x => x.sifre)
+            //    .NotEmpty().WithMessage("Şifre boş olamaz.") 
+            //    .Must((model, sifre) => _context.Sifres.Any(x => x.KullaniciAdi == model.KullaniciAdi && x.sifre == sifre))
+            //    .WithMessage("Kullanıcı adı veya şifre hatalı.");
 
-            RuleFor(x => x.sifre)
-                .Must((user, sifre) => _context.Sifres.Any(y => y.KullaniciAdi == user.KullaniciAdi && y.SifreGecerlilikTarihi >= DateTime.Now))
-                .WithMessage("Şifre geçerlilik süresi dolmuş. Lütfen şifrenizi değiştiriniz.")
-                .When(user => _context.Sifres.Any(y => y.KullaniciAdi == user.KullaniciAdi && y.sifre == user.sifre));
+            //RuleFor(x => x.sifre)
+            //    .Must((user, sifre) => _context.Sifres.Any(y => y.KullaniciAdi == user.KullaniciAdi && y.SifreGecerlilikTarihi >= DateTime.Now))
+            //    .WithMessage("Şifre geçerlilik süresi dolmuş. Lütfen şifrenizi değiştiriniz.")
+            //    .When(user => _context.Sifres.Any(y => y.KullaniciAdi == user.KullaniciAdi && y.sifre == user.sifre));
         }
 
-        private bool beKullanici(string kullaniciAdi)
-        {
-            return _context.Sifres.Any(x => x.KullaniciAdi == kullaniciAdi);
-        }
+        //private bool beKullanici(string kullaniciAdi)
+        //{
+        //    return _context.Sifres.Any(x => x.KullaniciAdi == kullaniciAdi);
+        //}
     }
 }

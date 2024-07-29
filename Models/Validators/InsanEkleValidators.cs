@@ -21,31 +21,31 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")
-                .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
-                .Must(UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
-                .Must(TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
+                .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.");
+                //.Must(UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
+                //.Must(TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
 
-            RuleFor(x => x.InsanMail)
-                .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
-                .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
-                .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
-                .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must(UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
+            //RuleFor(x => x.InsanMail)
+            //    .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
+            //    .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
+            //    .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
+            //    .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
+            //    .Must(UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.InsanTel)
                 .MaximumLength(11).WithMessage("Telefon numarası maksimum 11 karakter olabilir.")
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
-                .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must(UniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
+                .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.");
+                //.Must(UniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
 
             RuleFor(x => x.DiplomaNo)
                 .MaximumLength(11).WithMessage("Diploma numarası en fazla 11 karakter olabilir.")
                 .Must(BeUniqueOrNullDiplomaNo).WithMessage("Girilen diploma numarası zaten sistemde kayıtlı.");
 
-            RuleFor(x=> x.DiplomaNo)
-                .NotNull().WithMessage("Diploma numarası giriniz.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "VETERİNER" }));
+            //RuleFor(x=> x.DiplomaNo)
+            //    .NotNull().WithMessage("Diploma numarası giriniz.")
+            //    .When(x => IsRoleMatching(x.RolId, new List<string> { "VETERİNER" }));
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -57,38 +57,38 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Çalışanın soyismini giriniz.")
                 .NotNull().WithMessage("Çalışanın soyismini giriniz.");
 
-            RuleFor(x => x.KullaniciAdi)
-                .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")
-                .NotEmpty().WithMessage("Çalışanın kullanıcı adını giriniz.")
-                .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
-                .Must(BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
+            //RuleFor(x => x.KullaniciAdi)
+            //    .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")
+            //    .NotEmpty().WithMessage("Çalışanın kullanıcı adını giriniz.")
+            //    .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
+            //    .Must(BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
             RuleFor(x => x.CalisiyorMu)
                 .NotNull().WithMessage("Çalışan için çalışma durumu seçiniz.")
                 .NotEmpty().WithMessage("Çalışan için çalışma durumu seçiniz.")
                 .Must(x => x == true || x == false).WithMessage("Çalışan için çalışma durumu seçiniz.");
 
-            RuleFor(x => x.RolId)
-                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
+            //RuleFor(x => x.RolId)
+            //    .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
+            //    .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
+            //    .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
 
-            RuleFor(x => x.RolId)
-                .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-                .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "MÜŞTERİ" }));
+            //RuleFor(x => x.RolId)
+            //    .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
+            //    .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
+            //    .When(x => IsRoleMatching(x.RolId, new List<string> { "MÜŞTERİ" }));
 
             RuleFor(x => x.RolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.");
 
         }
-        private bool BeUniqueKullaniciAdi(string kullaniciAdi)
-        {
-            if (string.IsNullOrEmpty(kullaniciAdi))
-                return true;
-            return !_context.Insans.Any(x => x.KullaniciAdi.ToUpper() == kullaniciAdi.ToUpper());
-        }
+        //private bool BeUniqueKullaniciAdi(string kullaniciAdi)
+        //{
+        //    if (string.IsNullOrEmpty(kullaniciAdi))
+        //        return true;
+        //    return !_context.Insans.Any(x => x.KullaniciAdi.ToUpper() == kullaniciAdi.ToUpper());
+        //}
         private bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
         {
             if (string.IsNullOrEmpty(diplomaNumarasi))
@@ -97,10 +97,10 @@ namespace VeterinerApp.Models.Validators
             }
             return !_context.Insans.Any(x => x.DiplomaNo.ToUpper() == diplomaNumarasi.ToUpper());
         }
-        private bool UniqueTel(string TelNo)
-        {
-            return !_context.Insans.Any(x => x.InsanTel.ToUpper() == TelNo.ToUpper());
-        }
+        //private bool UniqueTel(string TelNo)
+        //{
+        //    return !_context.Insans.Any(x => x.InsanTel.ToUpper() == TelNo.ToUpper());
+        //}
         private bool UniqueTCKN(string girilenTCKN)
         {
             return !_context.Insans.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
@@ -134,18 +134,18 @@ namespace VeterinerApp.Models.Validators
             }
             return returnvalue;
         }
-        private bool IsRoleMatching(int rolId, List<string> validRoles)
-        {
-            var role = _context.Rols.Find(rolId);
-            return role != null && validRoles.Contains(role.RolAdi.ToUpper());
-        }
-        private bool UniqueEmail(string insanMail)
-        {
-            if (string.IsNullOrEmpty(insanMail))
-                return true;
+        //private bool IsRoleMatching(int rolId, List<string> validRoles)
+        //{
+        //    var role = _context.Rols.Find(rolId);
+        //    return role != null && validRoles.Contains(role.RolAdi.ToUpper());
+        //}
+        //private bool UniqueEmail(string insanMail)
+        //{
+        //    if (string.IsNullOrEmpty(insanMail))
+        //        return true;
 
-            return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper() || x.InsanMail.ToLower()==insanMail.ToLower());
-        }
+        //    return !_context.Insans.Any(x => x.InsanMail.ToUpper() == insanMail.ToUpper() || x.InsanMail.ToLower()==insanMail.ToLower());
+        //}
 
     }
 }

@@ -27,30 +27,34 @@ namespace VeterinerApp.ViewComponents
 
             var secilenKisiTCKN = model.InsanTckn;
 
-            var secilenKisi = await _veterinerDbContext.Insans
+            var secilenKisi = _veterinerDbContext.Users
                 .Where(x => x.InsanTckn == secilenKisiTCKN)
                 .Select(x => new InsanDuzenleViewModel
                 {
                     InsanAdi = x.InsanAdi,
                     InsanSoyadi = x.InsanSoyadi,
                     InsanTckn = x.InsanTckn,
-                    InsanMail = x.InsanMail.ToLower(),
-                    InsanTel = x.InsanTel,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
                     DiplomaNo = x.DiplomaNo,
-                    KullaniciAdi = x.KullaniciAdi,
+                    UserName = x.UserName,
                     CalisiyorMu = x.CalisiyorMu,
                     Maas = x.Maas,
-                    RolId = x.RolId,
-                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                    RolId = _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
+                        .Select(r => r.RoleId)
+                        .FirstOrDefault(),
+                    Roller = _veterinerDbContext.Roles.Select(r => new SelectListItem
                     {
-                        Value = r.RolId.ToString(),
-                        Text = r.RolAdi
+                        Value = r.Id.ToString(),
+                        Text = r.Name
                     }).ToList(),
-                    RolAdi = _veterinerDbContext.Rols
-                        .Where(r => r.RolId == x.RolId)
-                        .Select(r => r.RolAdi)
+                    RolAdi = _veterinerDbContext.Roles
+                        .Where(r => r.Id == _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
+                        .Select(r => r.RoleId)
+                        .FirstOrDefault())
+                        .Select(r => r.Name)
                         .FirstOrDefault()
-                }).FirstOrDefaultAsync();
+                }).FirstOrDefault();
 
 
             return View(secilenKisi);

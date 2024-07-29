@@ -42,7 +42,7 @@ namespace VeterinerApp.Models.Validators
         }
         private bool BeInsan(string TCKN)
         {
-            return _context.Insans.Any(x => x.InsanTckn == TCKN);
+            return _context.Insans.Any(x => x.InsanTckn.ToUpper() == TCKN.ToUpper());
         }
         private bool BeHayvan(int hayvanId)
         {

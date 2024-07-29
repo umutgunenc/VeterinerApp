@@ -6,15 +6,12 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class Rol
+    public partial class Rol :IdentityRole
     {
         public Rol()
         {
             Insans = new HashSet<Insan>();
         }
-
-        public int RolId { get; set; }
-        public string RolAdi { get; set; }
 
         public virtual ICollection<Insan> Insans { get; set; }
     }

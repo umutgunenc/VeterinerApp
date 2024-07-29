@@ -32,13 +32,13 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Lütfen açıklama giriniz.")
                 .NotNull().WithMessage("Lütfen açıklama giriniz.");
 
-            RuleFor(x => x.HekimkTckn)
-                .NotEmpty().WithMessage("Lütfen hekime ait TCKN'yi giriniz.")
-                .NotNull().WithMessage("Lütfen hekime ait TCKN'yi giriniz.")
-                .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
-                .Must(beInsan).WithMessage("Seçilen kişi sisteme kayıtlı değil")
-                .Must(beVet).WithMessage("Sadece veteriner sisteme giriş yapabilir.")
-                .Must(beAktifCalisan).WithMessage("Seçilen veteriner çalışmıyor.");
+            //RuleFor(x => x.HekimkTckn)
+            //    .NotEmpty().WithMessage("Lütfen hekime ait TCKN'yi giriniz.")
+            //    .NotNull().WithMessage("Lütfen hekime ait TCKN'yi giriniz.")
+            //    .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
+            //    .Must(beInsan).WithMessage("Seçilen kişi sisteme kayıtlı değil")
+            //    .Must(beVet).WithMessage("Sadece veteriner sisteme giriş yapabilir.")
+            //    .Must(beAktifCalisan).WithMessage("Seçilen veteriner çalışmıyor.");
 
             RuleFor(x => x.SonrakiMuayeneTarihi)
                 .Must(x => x is DateTime).WithMessage("Lütfen bir tarih giriniz.")
@@ -99,13 +99,13 @@ namespace VeterinerApp.Models.Validators
                 return false;
             return true;
         }
-        private bool beVet(string hekimTCKN)
-        {
-            var vet = _context.Insans.FirstOrDefault(x => x.InsanTckn.ToUpper() == hekimTCKN.ToUpper());
-            if (vet != null && vet.Rol.RolAdi.ToUpper() == "veteriner".ToUpper())
-                return true;
-            return false;
-        }
+        //private bool beVet(string hekimTCKN)
+        //{
+        //    var vet = _context.Insans.FirstOrDefault(x => x.InsanTckn.ToUpper() == hekimTCKN.ToUpper());
+        //    if (vet != null && vet.Rol.RolAdi.ToUpper() == "veteriner".ToUpper())
+        //        return true;
+        //    return false;
+        //}
         private bool BeIlac(string barkod)
         {
             return _context.Ilacs.Any(x => x.IlacBarkod.ToUpper() == barkod.ToUpper());

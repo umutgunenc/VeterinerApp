@@ -18,8 +18,8 @@ namespace VeterinerApp.Models.Validators
 
             RuleFor(x => x.CalisanTckn)
                 .NotEmpty().WithMessage("Çalışan TCKN bilgisi eksik")
-                .NotNull().WithMessage("Çalışan TCKN bilgisi eksik")
-                .Must(MustBeCalisan).WithMessage("Maaş ödemesi yapılacak kişi sisteme kayıtlı değil.");
+                .NotNull().WithMessage("Çalışan TCKN bilgisi eksik");
+                //.Must(MustBeCalisan).WithMessage("Maaş ödemesi yapılacak kişi sisteme kayıtlı değil.");
 
             RuleFor(x => x.OdemeTarihi)
                 .NotEmpty().WithMessage("Maaşın ödeme tarihini giriniz")
@@ -33,19 +33,19 @@ namespace VeterinerApp.Models.Validators
 
         }
 
-        private bool MustBeCalisan(string TCKN)
-        {
-            var person = _context.Insans.Include(i => i.Rol).FirstOrDefault(x => x.InsanTckn == TCKN & x.CalisiyorMu==true);
+        //private bool MustBeCalisan(string TCKN)
+        //{
+        //    var person = _context.Insans.Include(i => i.Rol).FirstOrDefault(x => x.InsanTckn == TCKN & x.CalisiyorMu==true);
 
-            if (person == null)
-            {
-                return false;
-            }
+        //    if (person == null)
+        //    {
+        //        return false;
+        //    }
 
-            return person.Rol.RolAdi.ToUpper() == "ADMIN" ||
-                   person.Rol.RolAdi.ToUpper() == "ÇALIŞAN" ||
-                   person.Rol.RolAdi.ToUpper() == "VETERİNER";
-        }
+        //    return person.Rol.RolAdi.ToUpper() == "ADMIN" ||
+        //           person.Rol.RolAdi.ToUpper() == "ÇALIŞAN" ||
+        //           person.Rol.RolAdi.ToUpper() == "VETERİNER";
+        //}
         private bool MustBeMaas(MaasOdemeleri maaslar, double odenenTutar)
         {
             var person = _context.Insans.FirstOrDefault(x => x.InsanTckn == maaslar.CalisanTckn);

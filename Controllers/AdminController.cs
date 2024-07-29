@@ -13,6 +13,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
 
 
 
@@ -439,250 +440,259 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult RolEkle(RolEkleViewModel model)
-        {
-            string rolAdi = model.RolAdi.ToUpper();
-            var rolEntity = new Rol { RolAdi = rolAdi };
+        //[HttpPost]
+        //public IActionResult RolEkle(RolEkleViewModel model)
+        //{
+        //    string rolAdi = model.RolAdi.ToUpper();
+        //    var rolEntity = new Rol { RolAdi = rolAdi };
 
-            RolValidators rolValidator = new RolValidators(_veterinerDbContext);
-            ValidationResult result = rolValidator.Validate(model);
-
-
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.ErrorMessage);
-                }
-
-                return View();
-            }
-
-            _veterinerDbContext.Rols.Add(rolEntity);
-            _veterinerDbContext.SaveChanges();
-            TempData["RolEklendi"] = $"Çalışanlar için {rolAdi} türünde bir rol eklendi";
-            return RedirectToAction();
-
-        }
-
-        [HttpGet]
-        public IActionResult RolSil()
-        {
-            var model = new RolSilViewModel
-            {
-                Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                {
-                    Value = r.RolId.ToString(),
-                    Text = r.RolAdi
-                }).ToList()
-            };
-
-            return View(model);
-        }
-        [HttpPost]
-        public IActionResult RolSil(RolSilViewModel model)
-        {
-
-            var silinecekRolAdı = _veterinerDbContext.Rols
-                .Where(x => x.RolId == model.RolId)
-                .Select(x => x.RolAdi).FirstOrDefault();
-
-            var rolEntity = new Rol { RolId = model.RolId, RolAdi = silinecekRolAdı };
-
-            RolSilValidators validator = new(_veterinerDbContext);
-            ValidationResult result = validator.Validate(model);
-
-            if (!result.IsValid)
-            {
-                foreach (var erros in result.Errors)
-                {
-                    ModelState.AddModelError("", erros.ErrorMessage);
+        //    RolValidators rolValidator = new RolValidators(_veterinerDbContext);
+        //    ValidationResult result = rolValidator.Validate(model);
 
 
-                }
+        //    if (!result.IsValid)
+        //    {
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.ErrorMessage);
+        //        }
 
-                model = new RolSilViewModel
-                {
-                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                    {
-                        Value = r.RolId.ToString(),
-                        Text = r.RolAdi
-                    }).ToList()
-                };
-                return View(model);
+        //        return View();
+        //    }
 
-            }
-            _veterinerDbContext.Rols.Remove(rolEntity);
-            _veterinerDbContext.SaveChanges();
+        //    _veterinerDbContext.Rols.Add(rolEntity);
+        //    _veterinerDbContext.SaveChanges();
+        //    TempData["RolEklendi"] = $"Çalışanlar için {rolAdi} türünde bir rol eklendi";
+        //    return RedirectToAction();
 
-            TempData["RolSilindi"] = $"{rolEntity.RolAdi} başarı ile silindi.";
+        //}
 
-            return RedirectToAction();
-        }
+        //[HttpGet]
+        //public IActionResult RolSil()
+        //{
+        //    var model = new RolSilViewModel
+        //    {
+        //        Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //        {
+        //            Value = r.RolId.ToString(),
+        //            Text = r.RolAdi
+        //        }).ToList()
+        //    };
 
-        [HttpGet]
-        public IActionResult CalisanEkle()
-        {
-            var model = new InsanEkleViewModel
-            {
-                Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                {
-                    Value = r.RolId.ToString(),
-                    Text = r.RolAdi
-                }).ToList()
-            };
-            return View(model);
+        //    return View(model);
+        //}
+        //[HttpPost]
+        //public IActionResult RolSil(RolSilViewModel model)
+        //{
 
-        }
-        [HttpPost]
-        public IActionResult CalisanEkle(InsanEkleViewModel model)
-        {
-            kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
-            string kullaniciAdi = username.GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.InsanMail).ToUpper();
+        //    var silinecekRolAdı = _veterinerDbContext.Rols
+        //        .Where(x => x.RolId == model.RolId)
+        //        .Select(x => x.RolAdi).FirstOrDefault();
 
-            model.KullaniciAdi = kullaniciAdi;
-            model.CalisiyorMu = true;
+        //    var rolEntity = new Rol { RolId = model.RolId, RolAdi = silinecekRolAdı };
 
-            var calisan = new Insan
-            {
-                InsanAdi = model.InsanAdi.ToUpper(),
-                InsanSoyadi = model.InsanSoyadi.ToUpper(),
-                InsanTckn = model.InsanTckn,
-                InsanMail = model.InsanMail.ToLower(),
-                InsanTel = model.InsanTel,
-                DiplomaNo = model.DiplomaNo,
-                RolId = model.RolId,
-                KullaniciAdi = kullaniciAdi,
-                CalisiyorMu = true
-            };
+        //    RolSilValidators validator = new(_veterinerDbContext);
+        //    ValidationResult result = validator.Validate(model);
 
-            sifre sifre = new sifre();
-            string kullaniciSifresi = sifre.GeneratePassword();
+        //    if (!result.IsValid)
+        //    {
+        //        foreach (var erros in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", erros.ErrorMessage);
 
-            var password = new Sifre()
-            {
-                SifreOlusturmaTarihi = DateTime.Now,
-                SifreGecerlilikTarihi = DateTime.Now.AddDays(120),
-                sifre = kullaniciSifresi,
-                KullaniciAdi = kullaniciAdi,
-                Id = _veterinerDbContext.Sifres.OrderByDescending(s => s.Id).FirstOrDefault()?.Id + 1 ?? 1
 
-            };
+        //        }
 
-            InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
-            ValidationResult result = validator.Validate(model);
+        //        model = new RolSilViewModel
+        //        {
+        //            Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //            {
+        //                Value = r.RolId.ToString(),
+        //                Text = r.RolAdi
+        //            }).ToList()
+        //        };
+        //        return View(model);
 
-            SifreValidators validatorSifre = new SifreValidators(_veterinerDbContext);
-            ValidationResult resultSifre = validatorSifre.Validate(password);
+        //    }
+        //    _veterinerDbContext.Rols.Remove(rolEntity);
+        //    _veterinerDbContext.SaveChanges();
 
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.ErrorMessage);
-                }
-                model = new InsanEkleViewModel
-                {
-                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                    {
-                        Value = r.RolId.ToString(),
-                        Text = r.RolAdi
-                    }).ToList(),
+        //    TempData["RolSilindi"] = $"{rolEntity.RolAdi} başarı ile silindi.";
 
-                };
-                return View(model);
-            }
+        //    return RedirectToAction();
+        //}
 
-            if (!resultSifre.IsValid)
-            {
-                foreach (var error in resultSifre.Errors)
-                {
-                    ModelState.AddModelError("", error.ErrorMessage);
-                }
-                model = new InsanEkleViewModel
-                {
-                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                    {
-                        Value = r.RolId.ToString(),
-                        Text = r.RolAdi
-                    }).ToList(),
+        //[HttpGet]
+        //public IActionResult CalisanEkle()
+        //{
+        //    var model = new InsanEkleViewModel
+        //    {
+        //        Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //        {
+        //            Value = r.RolId.ToString(),
+        //            Text = r.RolAdi
+        //        }).ToList()
+        //    };
+        //    return View(model);
 
-                };
-                return View(model);
-            }
+        //}
+        //[HttpPost]
+        //public IActionResult CalisanEkle(InsanEkleViewModel model)
+        //{
+        //    kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
+        //    string kullaniciAdi = username.GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.InsanMail).ToUpper();
 
-            _veterinerDbContext.Insans.Add(calisan);
-            _veterinerDbContext.Sifres.Add(password);
-            if (_veterinerDbContext.SaveChanges() > 0)
-            {
-                MailGonder mail = new MailGonder(model.InsanMail, kullaniciAdi, kullaniciSifresi);
+        //    model.KullaniciAdi = kullaniciAdi;
+        //    model.CalisiyorMu = true;
 
-                if (!mail.MailGonderHotmail(mail))
-                {
-                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
-                    _veterinerDbContext.Sifres.Remove(password);
-                    _veterinerDbContext.Insans.Remove(calisan);
-                    _veterinerDbContext.SaveChanges();
-                    model = new InsanEkleViewModel
-                    {
-                        Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
-                        {
-                            Value = r.RolId.ToString(),
-                            Text = r.RolAdi
-                        }).ToList(),
+        //    var calisan = new Insan
+        //    {
+        //        InsanAdi = model.InsanAdi.ToUpper(),
+        //        InsanSoyadi = model.InsanSoyadi.ToUpper(),
+        //        InsanTckn = model.InsanTckn,
+        //        InsanMail = model.InsanMail.ToLower(),
+        //        InsanTel = model.InsanTel,
+        //        DiplomaNo = model.DiplomaNo,
+        //        RolId = model.RolId,
+        //        KullaniciAdi = kullaniciAdi,
+        //        CalisiyorMu = true
+        //    };
 
-                    };
-                    return View(model);
-                }
-                var rolAdi = _veterinerDbContext.Rols
-                    .Where(x => x.RolId == model.RolId)
-                    .Select(x => x.RolAdi);
+        //    sifre sifre = new sifre();
+        //    string kullaniciSifresi = sifre.GeneratePassword();
 
-                TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.InsanMail.ToUpper()} adresine gönderildi.";
-            }
-            return RedirectToAction();
-        }
+        //    var password = new Sifre()
+        //    {
+        //        SifreOlusturmaTarihi = DateTime.Now,
+        //        SifreGecerlilikTarihi = DateTime.Now.AddDays(120),
+        //        sifre = kullaniciSifresi,
+        //        KullaniciAdi = kullaniciAdi,
+        //        Id = _veterinerDbContext.Sifres.OrderByDescending(s => s.Id).FirstOrDefault()?.Id + 1 ?? 1
+
+        //    };
+
+        //    InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
+        //    ValidationResult result = validator.Validate(model);
+
+        //    SifreValidators validatorSifre = new SifreValidators(_veterinerDbContext);
+        //    ValidationResult resultSifre = validatorSifre.Validate(password);
+
+        //    if (!result.IsValid)
+        //    {
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.ErrorMessage);
+        //        }
+        //        model = new InsanEkleViewModel
+        //        {
+        //            Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //            {
+        //                Value = r.RolId.ToString(),
+        //                Text = r.RolAdi
+        //            }).ToList(),
+
+        //        };
+        //        return View(model);
+        //    }
+
+        //    if (!resultSifre.IsValid)
+        //    {
+        //        foreach (var error in resultSifre.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.ErrorMessage);
+        //        }
+        //        model = new InsanEkleViewModel
+        //        {
+        //            Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //            {
+        //                Value = r.RolId.ToString(),
+        //                Text = r.RolAdi
+        //            }).ToList(),
+
+        //        };
+        //        return View(model);
+        //    }
+
+        //    _veterinerDbContext.Insans.Add(calisan);
+        //    _veterinerDbContext.Sifres.Add(password);
+        //    if (_veterinerDbContext.SaveChanges() > 0)
+        //    {
+        //        MailGonder mail = new MailGonder(model.InsanMail, kullaniciAdi, kullaniciSifresi);
+
+        //        if (!mail.MailGonderHotmail(mail))
+        //        {
+        //            ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
+        //            _veterinerDbContext.Sifres.Remove(password);
+        //            _veterinerDbContext.Insans.Remove(calisan);
+        //            _veterinerDbContext.SaveChanges();
+        //            model = new InsanEkleViewModel
+        //            {
+        //                Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+        //                {
+        //                    Value = r.RolId.ToString(),
+        //                    Text = r.RolAdi
+        //                }).ToList(),
+
+        //            };
+        //            return View(model);
+        //        }
+        //        var rolAdi = _veterinerDbContext.Rols
+        //            .Where(x => x.RolId == model.RolId)
+        //            .Select(x => x.RolAdi);
+
+        //        TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.InsanMail.ToUpper()} adresine gönderildi.";
+        //    }
+        //    return RedirectToAction();
+        //}
 
         [HttpGet]
         public IActionResult CalisanSec()
         {
-
-
             return View();
         }
         [HttpPost]
         public IActionResult CalisanSec(InsanSecViewModel model)
         {
             var insanSec = new InsanSecViewModel() { InsanTckn = model.InsanTckn };
-            var secilenKisi = _veterinerDbContext.Insans
+            var secilenKisi = _veterinerDbContext.Users
                 .Where(x => x.InsanTckn == insanSec.InsanTckn)
                 .Select(x => new InsanDuzenleViewModel
                 {
                     InsanAdi = x.InsanAdi,
                     InsanSoyadi = x.InsanSoyadi,
                     InsanTckn = x.InsanTckn,
-                    InsanMail = x.InsanMail,
-                    InsanTel = x.InsanTel,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
                     DiplomaNo = x.DiplomaNo,
-                    KullaniciAdi = x.KullaniciAdi,
+                    UserName = x.UserName,
                     CalisiyorMu = x.CalisiyorMu,
                     Maas = x.Maas,
-                    RolId = x.RolId,
-                    Roller = _veterinerDbContext.Rols.Select(r => new SelectListItem
+                    RolId = _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
+                        .Select(r => r.RoleId)
+                        .FirstOrDefault(),
+                    Roller = _veterinerDbContext.Roles.Select(r => new SelectListItem
                     {
-                        Value = r.RolId.ToString(),
-                        Text = r.RolAdi
+                        Value = r.Id.ToString(),
+                        Text = r.Name
                     }).ToList(),
-                    RolAdi = _veterinerDbContext.Rols
-                        .Where(r => r.RolId == x.RolId)
-                        .Select(r => r.RolAdi)
+                    RolAdi = _veterinerDbContext.Roles
+                        .Where(r => r.Id == _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
+                        .Select(r => r.RoleId)
+                        .FirstOrDefault())
+                        .Select(r => r.Name)
                         .FirstOrDefault()
                 }).FirstOrDefault();
 
-            if (secilenKisi == null)
+            InsanSecValidators validator = new(_veterinerDbContext);
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
             {
-                return View(model);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View();
             }
 
             ViewBag.SecilenKisi = secilenKisi;
@@ -691,7 +701,8 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public IActionResult CalisanDuzenle(InsanDuzenleViewModel model)
         {
-            var insan = _veterinerDbContext.Insans.FirstOrDefault(x => x.InsanTckn == model.InsanTckn);
+            var insan = _veterinerDbContext.Users.FirstOrDefault(x => x.InsanTckn == model.InsanTckn);
+            var rol = _veterinerDbContext.UserRoles.FirstOrDefault(x => x.UserId == insan.Id);
 
             if (insan == null)
             {
@@ -710,99 +721,103 @@ namespace VeterinerApp.Controllers
 
             insan.InsanAdi = model.InsanAdi;
             insan.InsanSoyadi = model.InsanSoyadi;
-            insan.InsanMail = model.InsanMail.ToLower();
-            insan.InsanTel = model.InsanTel;
+            insan.Email = model.Email.ToLower();
+            insan.PhoneNumber = model.PhoneNumber;
             insan.DiplomaNo = model.DiplomaNo;
-            insan.KullaniciAdi = model.KullaniciAdi;
+            insan.UserName = model.UserName;
             insan.CalisiyorMu = model.CalisiyorMu;
             insan.Maas = model.Maas;
-            insan.RolId = model.RolId;
+
+            rol.RoleId = model.RolId;
+            rol.UserId = insan.Id;
 
             _veterinerDbContext.SaveChanges();
             TempData["KisiGuncellendi"] = $"{insan.InsanAdi} {insan.InsanSoyadi} adlı kişinin bilgileri başarı ile güncellendi.";
             return View("CalisanSec");
         }
 
-        [HttpGet]
-        public IActionResult CalisanListele(int sayfaNumarasi = 1)
-        {
-            int sayfaBoyutu = 4;
-            var toplamKayit = _veterinerDbContext.Insans.Count();
-            var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
-            {
-                InsanTckn = insan.InsanTckn,
-                InsanAdi = insan.InsanAdi,
-                InsanSoyadi = insan.InsanSoyadi,
-                InsanTel = insan.InsanTel,
-                InsanMail = insan.InsanMail,
-                RolId = insan.RolId,
-                DiplomaNo = insan.DiplomaNo,
-                CalisiyorMu = insan.CalisiyorMu,
-                Maas = insan.Maas,
-                KullaniciAdi = insan.KullaniciAdi,
-                RolAdi = _veterinerDbContext.Rols
-                    .Where(rol => rol.RolId == insan.RolId)
-                    .Select(rol => rol.RolAdi)
-                    .FirstOrDefault()
-            });
+        //[HttpGet]
+        //public IActionResult CalisanListele(int sayfaNumarasi = 1)
+        //{
+        //    int sayfaBoyutu = 4;
+        //    var toplamKayit = _veterinerDbContext.Insans.Count();
+        //    var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
+        //    {
+        //        InsanTckn = insan.InsanTckn,
+        //        InsanAdi = insan.InsanAdi,
+        //        InsanSoyadi = insan.InsanSoyadi,
+        //        InsanTel = insan.InsanTel,
+        //        InsanMail = insan.InsanMail,
+        //        RolId = insan.RolId,
+        //        DiplomaNo = insan.DiplomaNo,
+        //        CalisiyorMu = insan.CalisiyorMu,
+        //        Maas = insan.Maas,
+        //        KullaniciAdi = insan.KullaniciAdi,
+        //        RolAdi = _veterinerDbContext.Rols
+        //            .Where(rol => rol.RolId == insan.RolId)
+        //            .Select(rol => rol.RolAdi)
+        //            .FirstOrDefault()
+        //    });
 
-            var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
-            ViewBag.ToplamKayit = toplamKayit;
-            return View(viewModel);
-        }
-        [HttpPost]
-        public async Task<IActionResult> CalisanListele(string secilenKisiTckn, int sayfaNumarasi = 1)
-        {
-            int sayfaBoyutu = 4;
-            var toplamKayit = _veterinerDbContext.Insans.Count();
-            var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
-            {
-                InsanTckn = insan.InsanTckn,
-                InsanAdi = insan.InsanAdi,
-                InsanSoyadi = insan.InsanSoyadi,
-                InsanTel = insan.InsanTel,
-                InsanMail = insan.InsanMail,
-                RolId = insan.RolId,
-                DiplomaNo = insan.DiplomaNo,
-                CalisiyorMu = insan.CalisiyorMu,
-                Maas = insan.Maas,
-                KullaniciAdi = insan.KullaniciAdi,
-                RolAdi = _veterinerDbContext.Rols
-                    .Where(rol => rol.RolId == insan.RolId)
-                    .Select(rol => rol.RolAdi)
-                    .FirstOrDefault()
-            });
+        //    var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
+        //    ViewBag.ToplamKayit = toplamKayit;
+        //    return View(viewModel);
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> CalisanListele(string secilenKisiTckn, int sayfaNumarasi = 1)
+        //{
+        //    int sayfaBoyutu = 4;
+        //    var toplamKayit = _veterinerDbContext.Insans.Count();
+        //    var calisanlar = _veterinerDbContext.Insans.Select(insan => new CalisanListeleViewModel
+        //    {
+        //        InsanTckn = insan.InsanTckn,
+        //        InsanAdi = insan.InsanAdi,
+        //        InsanSoyadi = insan.InsanSoyadi,
+        //        InsanTel = insan.InsanTel,
+        //        InsanMail = insan.InsanMail,
+        //        RolId = insan.RolId,
+        //        DiplomaNo = insan.DiplomaNo,
+        //        CalisiyorMu = insan.CalisiyorMu,
+        //        Maas = insan.Maas,
+        //        KullaniciAdi = insan.KullaniciAdi,
+        //        RolAdi = _veterinerDbContext.Rols
+        //            .Where(rol => rol.RolId == insan.RolId)
+        //            .Select(rol => rol.RolAdi)
+        //            .FirstOrDefault()
+        //    });
 
-            var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
+        //    var viewModel = SayfalamaListesi<CalisanListeleViewModel>.Olustur(calisanlar, sayfaNumarasi, sayfaBoyutu);
 
-            var secilenKisi = await _veterinerDbContext.Insans
-                .Where(insan => insan.InsanTckn == secilenKisiTckn)
-                .Select(insan => new CalisanListeleViewModel
-                {
-                    InsanAdi = insan.InsanAdi,
-                    InsanSoyadi = insan.InsanSoyadi,
-                    InsanTckn = insan.InsanTckn,
-                    InsanMail = insan.InsanMail.ToLower(),
-                    InsanTel = insan.InsanTel,
-                    DiplomaNo = insan.DiplomaNo,
-                    KullaniciAdi = insan.KullaniciAdi,
-                    CalisiyorMu = insan.CalisiyorMu,
-                    Maas = insan.Maas,
-                    RolId = insan.RolId,
-                    RolAdi = _veterinerDbContext.Rols
-                        .Where(rol => rol.RolId == insan.RolId)
-                        .Select(rol => rol.RolAdi)
-                        .FirstOrDefault()
-                })
-                .FirstOrDefaultAsync();
+        //    var secilenKisi = await _veterinerDbContext.Insans
+        //        .Where(insan => insan.InsanTckn == secilenKisiTckn)
+        //        .Select(insan => new CalisanListeleViewModel
+        //        {
+        //            InsanAdi = insan.InsanAdi,
+        //            InsanSoyadi = insan.InsanSoyadi,
+        //            InsanTckn = insan.InsanTckn,
+        //            InsanMail = insan.InsanMail.ToLower(),
+        //            InsanTel = insan.InsanTel,
+        //            DiplomaNo = insan.DiplomaNo,
+        //            KullaniciAdi = insan.KullaniciAdi,
+        //            CalisiyorMu = insan.CalisiyorMu,
+        //            Maas = insan.Maas,
+        //            RolId = insan.RolId,
+        //            RolAdi = _veterinerDbContext.Rols
+        //                .Where(rol => rol.RolId == insan.RolId)
+        //                .Select(rol => rol.RolAdi)
+        //                .FirstOrDefault()
+        //        })
+        //        .FirstOrDefaultAsync();
 
-            ViewBag.SecilenKisi = secilenKisi;
-            ViewBag.ToplamKayit = toplamKayit;
+        //    ViewBag.SecilenKisi = secilenKisi;
+        //    ViewBag.ToplamKayit = toplamKayit;
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
 
 
     }
 }
+//TODO
+// db user tablosundan rol sütünü silinecek
