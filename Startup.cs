@@ -23,12 +23,14 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        //validasyon işlemleri için servis eklendi
         services.AddControllersWithViews().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
 
+        //DB bağlantısı için servis eklendi
         services.AddDbContext<VeterinerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
-        
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
