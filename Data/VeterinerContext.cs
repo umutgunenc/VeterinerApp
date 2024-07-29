@@ -10,7 +10,7 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Data
 {
-    public partial class VeterinerContext : DbContext
+    public partial class VeterinerContext :DbContext
     {
         public VeterinerContext()
         {

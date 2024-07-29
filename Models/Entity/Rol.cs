@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class Rol 
+    public partial class Rol
     {
         public Rol()
         {
