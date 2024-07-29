@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class Rol
+    public partial class Rol 
     {
         public Rol()
         {

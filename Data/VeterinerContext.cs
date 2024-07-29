@@ -45,7 +45,6 @@ namespace VeterinerApp.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=DESKTOP-5OQQMU6\\SQLEXPRESS;Database=Veteriner;Trusted_Connection=True;TrustServerCertificate=True");
             }
         }
@@ -488,14 +487,8 @@ namespace VeterinerApp.Data
                     .HasConstraintName("FK__Tur_Cins__TurId__628FA481");
             });
 
-            //modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
+            base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<IdentityUserRole<string>>()
-            //            .HasKey(r => new { r.UserId, r.RoleId });
-
-            //modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
-
-            //OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

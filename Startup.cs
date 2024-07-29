@@ -11,6 +11,7 @@ using System;
 using System.Globalization;
 using VeterinerApp.Data;
 using VeterinerApp.Models;
+using VeterinerApp.Models.Entity;
 
 public class Startup
 {
@@ -27,28 +28,7 @@ public class Startup
         services.AddDbContext<VeterinerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<VeterinerContext>()
-                .AddDefaultTokenProviders();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.SignIn.RequireConfirmedAccount = true;
-        });
-
-        services.AddAuthentication()
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Account/Login";
-                    options.LogoutPath = "/Account/Logout";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                    options.SlidingExpiration = true;
-                    //options.AccessDeniedPath = "/Account/AccessDenied";
-                });
-
-        services.AddAuthorization();
-
-        services.AddHttpContextAccessor();
+        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -60,8 +40,7 @@ public class Startup
 
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
@@ -70,15 +49,15 @@ public class Startup
             );
         });
 
-        var cultureInfo = new CultureInfo("tr-TR");
-        cultureInfo.NumberFormat.NumberDecimalSeparator = ",";
-        cultureInfo.NumberFormat.NumberGroupSeparator = ".";
-        var supportedCultures = new[] { cultureInfo };
-        app.UseRequestLocalization(new RequestLocalizationOptions
-        {
-            DefaultRequestCulture = new RequestCulture(cultureInfo),
-            SupportedCultures = supportedCultures,
-            SupportedUICultures = supportedCultures
-        });
+        //var cultureInfo = new CultureInfo("tr-TR");
+        //cultureInfo.NumberFormat.NumberDecimalSeparator = ",";
+        //cultureInfo.NumberFormat.NumberGroupSeparator = ".";
+        //var supportedCultures = new[] { cultureInfo };
+        //app.UseRequestLocalization(new RequestLocalizationOptions
+        //{
+        //    DefaultRequestCulture = new RequestCulture(cultureInfo),
+        //    SupportedCultures = supportedCultures,
+        //    SupportedUICultures = supportedCultures
+        //});
     }
 }
