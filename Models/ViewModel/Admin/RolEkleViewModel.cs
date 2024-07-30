@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class RolEkleViewModel
+    public class RolEkleViewModel : IdentityRole
     {
-        public int RolId { get; set; }
-        public string RolAdi { get; set; }
         public List<SelectListItem> Roller { get; set; }
     }
 }

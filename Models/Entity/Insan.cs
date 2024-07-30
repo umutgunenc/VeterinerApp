@@ -26,11 +26,9 @@ namespace VeterinerApp.Models.Entity
         public bool CalisiyorMu { get; set; }
         public double? Maas { get; set; }
 
-        public virtual Rol Rol { get; set; }
         public virtual ICollection<MaasOdemeleri> MaasOdemeleris { get; set; }
         public virtual ICollection<Muayene> Muayenes { get; set; }
         public virtual ICollection<SahipHayvan> SahipHayvans { get; set; }
 
-        //public virtual ICollection<Sifre> Sifres { get; set; }
     }
 }

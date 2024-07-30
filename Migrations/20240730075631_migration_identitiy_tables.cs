@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VeterinerApp.Migrations
 {
-    public partial class migration_identity : Migration
+    public partial class migration_identitiy_tables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,6 @@ namespace VeterinerApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -20,6 +19,40 @@ namespace VeterinerApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    InsanTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 450, nullable: true),
+                    InsanAdi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    InsanSoyadi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SifreOlusturmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SifreGecerlilikTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DiplomaNo = table.Column<string>(type: "varchar(11)", unicode: false, maxLength: 11, nullable: true),
+                    CalisiyorMu = table.Column<bool>(type: "bit", nullable: false),
+                    Maas = table.Column<double>(type: "float", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,136 +140,6 @@ namespace VeterinerApp.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    InsanTCKN = table.Column<string>(type: "varchar(450)", unicode: false, maxLength: 450, nullable: true),
-                    InsanAdi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    InsanSoyadi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SifreOlusturmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SifreGecerlilikTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DiplomaNo = table.Column<string>(type: "varchar(11)", unicode: false, maxLength: 11, nullable: true),
-                    CalisiyorMu = table.Column<bool>(type: "bit", nullable: false),
-                    Maas = table.Column<double>(type: "float", nullable: true),
-                    RolId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetRoles_RolId",
-                        column: x => x.RolId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FiyatListesi",
-                columns: table => new
-                {
-                    StokBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FiyatSatisGecerlilikBaslangicTarihi = table.Column<DateTime>(type: "date", nullable: false),
-                    FiyatSatisGecerlilikBitisTarihi = table.Column<DateTime>(type: "date", nullable: true),
-                    SatisFiyati = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__FiyatLis__3E0E630A24F35B80", x => new { x.StokBarkod, x.FiyatSatisGecerlilikBaslangicTarihi });
-                    table.ForeignKey(
-                        name: "FK__FiyatList__StokB__66603565",
-                        column: x => x.StokBarkod,
-                        principalTable: "Stok",
-                        principalColumn: "StokBarkod",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ilac",
-                columns: table => new
-                {
-                    IlacBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IlacAdi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__Ilac__D1970658054A94CA", x => x.IlacBarkod);
-                    table.ForeignKey(
-                        name: "FK__Ilac__IlacBarkod__656C112C",
-                        column: x => x.IlacBarkod,
-                        principalTable: "Stok",
-                        principalColumn: "StokBarkod",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StokHareket",
-                columns: table => new
-                {
-                    StokHareketId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StokHareketTarihi = table.Column<DateTime>(type: "date", nullable: true),
-                    StokBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    SatisTarihi = table.Column<DateTime>(type: "date", nullable: true),
-                    SatisFiyati = table.Column<double>(type: "float", nullable: true),
-                    AlisTarihi = table.Column<DateTime>(type: "date", nullable: true),
-                    AlisFiyati = table.Column<double>(type: "float", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StokHareket", x => x.StokHareketId);
-                    table.ForeignKey(
-                        name: "FK__StokHarek__StokB__6754599E",
-                        column: x => x.StokBarkod,
-                        principalTable: "Stok",
-                        principalColumn: "StokBarkod",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tur_Cins",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TurId = table.Column<int>(type: "int", nullable: false),
-                    CinsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tur_Cins", x => x.Id);
-                    table.UniqueConstraint("AK_Tur_Cins_TurId_CinsId", x => new { x.TurId, x.CinsId });
-                    table.ForeignKey(
-                        name: "FK__Tur_Cins__CinsId__619B8048",
-                        column: x => x.CinsId,
-                        principalTable: "Cins",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__Tur_Cins__TurId__628FA481",
-                        column: x => x.TurId,
-                        principalTable: "Tur",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,7 +231,7 @@ namespace VeterinerApp.Migrations
                 name: "MaasOdemeleri",
                 columns: table => new
                 {
-                    CalisanTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 11, nullable: false),
+                    CalisanTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 450, nullable: false),
                     OdemeTarihi = table.Column<DateTime>(type: "date", nullable: false),
                     OdenenTutar = table.Column<double>(type: "float", nullable: false)
                 },
@@ -339,6 +242,95 @@ namespace VeterinerApp.Migrations
                         name: "FK__MaasOdeme__Calis__6477ECF3",
                         column: x => x.CalisanTCKN,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FiyatListesi",
+                columns: table => new
+                {
+                    StokBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FiyatSatisGecerlilikBaslangicTarihi = table.Column<DateTime>(type: "date", nullable: false),
+                    FiyatSatisGecerlilikBitisTarihi = table.Column<DateTime>(type: "date", nullable: true),
+                    SatisFiyati = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__FiyatLis__3E0E630A24F35B80", x => new { x.StokBarkod, x.FiyatSatisGecerlilikBaslangicTarihi });
+                    table.ForeignKey(
+                        name: "FK__FiyatList__StokB__66603565",
+                        column: x => x.StokBarkod,
+                        principalTable: "Stok",
+                        principalColumn: "StokBarkod",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ilac",
+                columns: table => new
+                {
+                    IlacBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IlacAdi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Ilac__D1970658054A94CA", x => x.IlacBarkod);
+                    table.ForeignKey(
+                        name: "FK__Ilac__IlacBarkod__656C112C",
+                        column: x => x.IlacBarkod,
+                        principalTable: "Stok",
+                        principalColumn: "StokBarkod",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StokHareket",
+                columns: table => new
+                {
+                    StokHareketId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StokHareketTarihi = table.Column<DateTime>(type: "date", nullable: true),
+                    StokBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    SatisTarihi = table.Column<DateTime>(type: "date", nullable: true),
+                    SatisFiyati = table.Column<double>(type: "float", nullable: true),
+                    AlisTarihi = table.Column<DateTime>(type: "date", nullable: true),
+                    AlisFiyati = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StokHareket", x => x.StokHareketId);
+                    table.ForeignKey(
+                        name: "FK__StokHarek__StokB__6754599E",
+                        column: x => x.StokBarkod,
+                        principalTable: "Stok",
+                        principalColumn: "StokBarkod",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tur_Cins",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TurId = table.Column<int>(type: "int", nullable: false),
+                    CinsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tur_Cins", x => x.Id);
+                    table.UniqueConstraint("AK_Tur_Cins_TurId_CinsId", x => new { x.TurId, x.CinsId });
+                    table.ForeignKey(
+                        name: "FK__Tur_Cins__CinsId__619B8048",
+                        column: x => x.CinsId,
+                        principalTable: "Cins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__Tur_Cins__TurId__628FA481",
+                        column: x => x.TurId,
+                        principalTable: "Tur",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -547,11 +539,6 @@ namespace VeterinerApp.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_RolId",
-                table: "AspNetUsers",
-                column: "RolId");
-
-            migrationBuilder.CreateIndex(
                 name: "UQ__Insan__04869AE378B9FE0E",
                 table: "AspNetUsers",
                 column: "DiplomaNo",
@@ -696,6 +683,9 @@ namespace VeterinerApp.Migrations
                 name: "Tedavi_Muayene");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "Ilac");
 
             migrationBuilder.DropTable(
@@ -718,9 +708,6 @@ namespace VeterinerApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Renk");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Cins");

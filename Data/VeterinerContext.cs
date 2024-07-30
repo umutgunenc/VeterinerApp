@@ -27,7 +27,6 @@ namespace VeterinerApp.Data
         public virtual DbSet<Muayene> Muayenes { get; set; }
         public virtual DbSet<MuayeneGelirleri> MuayeneGelirleris { get; set; }
         public virtual DbSet<Renk> Renks { get; set; }
-        public virtual DbSet<Rol> Rols { get; set; }
         public virtual DbSet<SahipHayvan> SahipHayvans { get; set; }
         public virtual DbSet<Stok> Stoks { get; set; }
         public virtual DbSet<StokHareket> StokHarekets { get; set; }
@@ -40,7 +39,7 @@ namespace VeterinerApp.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-5OQQMU6\\SQLEXPRESS;Database=Veteriner;Trusted_Connection=True;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-5OQQMU6\\SQLEXPRESS;Database=Veteriner2;Trusted_Connection=True;TrustServerCertificate=True");
             }
         }
 

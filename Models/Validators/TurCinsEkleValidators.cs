@@ -18,15 +18,13 @@ namespace VeterinerApp.Models.Validators
             RuleFor(x => x.CinsId)
                 .NotNull().WithMessage("Cins boş olamaz.")
                 .NotEmpty().WithMessage("Cins boş olamaz.")
-                .Must(BeCins).WithMessage("Seçilen cins sistemde tanımlı olmalı.")
-                .Must((model, cinsId) => TurCinsAlreadyExists(model.TurId, cinsId)).WithMessage("Seçilen cins ve tür daha önceden eşleştirilmiş.")
-                .Must(notMatch).WithMessage("Seçilen cins daha önceden eşleştirilmiş.");
-
+                .Must(BeCins).WithMessage("Seçilen cins sistemde tanımlı olmalı.");
 
             RuleFor(x => x.TurId)
                 .NotNull().WithMessage("Tür boş olamaz.")
                 .NotEmpty().WithMessage("Tür boş olamaz.")
-                .Must(BeTur).WithMessage("Seçilen tür sistemde tanımlı olmalı.");
+                .Must(BeTur).WithMessage("Seçilen tür sistemde tanımlı olmalı.")
+                .Must(notMatch).WithMessage("Seçilen tür daha önceden eşleştirilmiş.");
 
         }
 
@@ -34,19 +32,13 @@ namespace VeterinerApp.Models.Validators
         {
             return _context.Cins.Any(x => x.Id == CinsId);
         }
-        private bool notMatch(int CinsId)
+        private bool notMatch(int turId)
         {
-            return !_context.TurCins.Where(x => x.CinsId == CinsId).Any();
+            return !_context.TurCins.Where(x => x.TurId == turId).Any();
         }
-
         private bool BeTur(int TurId)
         {
             return _context.Turs.Any(x => x.Id == TurId);
-        }
-
-        private bool TurCinsAlreadyExists(int turId, int cinsId)
-        {
-            return !_context.TurCins.Any(x => x.TurId == turId && x.CinsId == cinsId);
         }
     }
 }

@@ -10,7 +10,7 @@
             <p class="card-text">Diploma numarası: @Model.DiplomaNo</p>
             <p class="card-text">TCKN: @Model.InsanTckn</p>
             <p class="card-text">
-                Çalışma durumu: @if (Model.CalisiyorMu.Value)
+                Çalışma durumu: @if (Model.CalisiyorMu)
                 {
                     @:Çalışıyor
                 }
@@ -21,12 +21,12 @@
             </p>
             <p class="card-text">Maaşı: @Model.Maas</p>
             <p class="card-text">
-                E-Mail Adresi: <a href="mailto:@Model.InsanMail">@Model.InsanMail</a>
+                E-Mail Adresi: <a href="mailto:@Model.Email">@Model.Email</a>
             </p>
-            @if (Model.InsanTel != null)
+            @if (Model.PhoneNumber != null)
             {
-                var formattedTelNo = FormatTelefon(Model.InsanTel);
-                var telNo = "9" + Model.InsanTel;
+                var formattedTelNo = FormatTelefon(Model.PhoneNumber);
+                var telNo = "9" + Model.PhoneNumber;
 
                 <p class="card-text">Telefonu: <a href="https://api.whatsapp.com/send?phone=@telNo" target="_blank">@formattedTelNo</a></p>
             }

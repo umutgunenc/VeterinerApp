@@ -48,7 +48,7 @@ namespace VeterinerApp.Models.Validators
 
             RuleFor(x => x.DiplomaNo)
                 .NotNull().WithMessage("Diploma numarası giriniz.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "VETERİNER" }));
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "VETERİNER" }));
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -70,38 +70,46 @@ namespace VeterinerApp.Models.Validators
             RuleFor(x => x.CalisiyorMu)
                 .Must(x => x == true || x == false).WithMessage("Çalışan için çalışma durumu seçiniz.");
 
+            RuleFor(x => x.CalisiyorMu)
+                   .Must((model, CalisiyorMu) => !(IsRoleMatching(model.rolId, new List<string> { "MÜŞTERİ" }) && CalisiyorMu))
+                   .WithMessage("Müşteriler çalışmıyor olarak işaretlenmelidir.");
+
             RuleFor(x => x.Maas)
                 .NotNull().WithMessage("Maaş bilgisi boş olamaz.")
-                .When(x => IsRoleMatching(x.RolId,new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
+                .When(x => IsRoleMatching(x.rolId,new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
 
             RuleFor(x => x.Maas)
                 .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu && x.Maas.HasValue);
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu && x.Maas.HasValue);
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Müşteriler için maaş bilgisi girilemez")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "MÜŞTERİ" }));
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "MÜŞTERİ" }));
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Çalışmayan kişiler için maaş bilgisi girilemez.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && !x.CalisiyorMu);
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && !x.CalisiyorMu);
 
-            RuleFor(x => x.RolId)
+            RuleFor(x => x.rolId)
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
 
-            RuleFor(x => x.RolId)
+            RuleFor(x => x.rolId)
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-                .When(x => IsRoleMatching(x.RolId, new List<string> { "MÜŞTERİ" }));
+                .When(x => IsRoleMatching(x.rolId, new List<string> { "MÜŞTERİ" }));
 
-            RuleFor(x => x.RolId)
+            RuleFor(x => x.rolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-               .NotNull().WithMessage("Çalışan için bir görev seçiniz.");
+               .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
+               .Must(beRol).WithMessage("Seçilen rol geçerli değil.");
 
         }
-
+        private bool beRol(string rolId)
+        {
+            return _context.Roles.Any(x => x.Id == rolId);
+        }
         private bool BeUniqueKullaniciAdi(string InsanTckn, string kullaniciAdi)
         {
             if (string.IsNullOrEmpty(kullaniciAdi))
@@ -158,8 +166,8 @@ namespace VeterinerApp.Models.Validators
         }
         private bool IsRoleMatching(string rolId, List<string> validRoles)
         {
-            var userRole = _context.Roles.Find(rolId);
-            return userRole != null && validRoles.Contains(userRole.Name.ToUpper());
+            var role = _context.Roles.Find(rolId);
+            return role != null && validRoles.Contains(role.Name.ToUpper());
         }
         private bool UniqueEmailSelf(string InsanTckn, string insanMail)
         {

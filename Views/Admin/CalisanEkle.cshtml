@@ -23,14 +23,14 @@
             <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
             </span>
             <div class="row mb-2">
-                <input type="email" asp-for="InsanMail" class="form-control" placeholder="Mail Adresi">
+                <input type="email" asp-for="Email" class="form-control" placeholder="Mail Adresi">
             </div>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanMail">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Email">
             </span>
             <div class="row mb-2">
-                <input type="tel" asp-for="InsanTel" class="form-control" placeholder="Telefon Numarası">
+                <input type="tel" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
             </div>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTel">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="PhoneNumber">
             </span>
             <div class="row mb-2">
                 <input type="text" asp-for="DiplomaNo" class="form-control" placeholder="Diploma Seri No">
@@ -38,22 +38,18 @@
             <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="DiplomaNo">
             </span>
             <div class="row mb-2">
-                <select class="custom-select" asp-for="RolId">
+                <select class="custom-select" asp-for="rolId" asp-items="Model.Roller">
                     <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
-                    @foreach (var rol in Model.Roller)
-                    {
-                        <option value="@rol.Value">@rol.Text</option>
-                    }
+
                 </select>
             </div>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="rolId">
             </span>
             @if (!string.IsNullOrEmpty(ViewBag.Hata))
             {
                 <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
                     @ViewBag.Hata
                 </span>
-
             }
 
         </div>

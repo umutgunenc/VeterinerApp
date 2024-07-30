@@ -28,10 +28,6 @@ namespace VeterinerApp.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -48,8 +44,6 @@ namespace VeterinerApp.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -364,9 +358,6 @@ namespace VeterinerApp.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RolId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -393,8 +384,6 @@ namespace VeterinerApp.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RolId");
-
                     b.HasIndex(new[] { "DiplomaNo" }, "UQ__Insan__04869AE378B9FE0E")
                         .IsUnique()
                         .HasFilter("[DiplomaNo] IS NOT NULL");
@@ -405,9 +394,9 @@ namespace VeterinerApp.Migrations
             modelBuilder.Entity("VeterinerApp.Models.Entity.MaasOdemeleri", b =>
                 {
                     b.Property<string>("CalisanTckn")
-                        .HasMaxLength(11)
+                        .HasMaxLength(450)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(11)")
+                        .HasColumnType("varchar(450)")
                         .HasColumnName("CalisanTCKN");
 
                     b.Property<DateTime>("OdemeTarihi")
@@ -671,13 +660,6 @@ namespace VeterinerApp.Migrations
                     b.ToTable("Tur_Cins");
                 });
 
-            modelBuilder.Entity("VeterinerApp.Models.Entity.Rol", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
-
-                    b.HasDiscriminator().HasValue("Rol");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -802,15 +784,6 @@ namespace VeterinerApp.Migrations
                     b.Navigation("IlacIlacBarkodNavigation");
 
                     b.Navigation("Muayene");
-                });
-
-            modelBuilder.Entity("VeterinerApp.Models.Entity.Insan", b =>
-                {
-                    b.HasOne("VeterinerApp.Models.Entity.Rol", "Rol")
-                        .WithMany("Insans")
-                        .HasForeignKey("RolId");
-
-                    b.Navigation("Rol");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.MaasOdemeleri", b =>
@@ -988,11 +961,6 @@ namespace VeterinerApp.Migrations
             modelBuilder.Entity("VeterinerApp.Models.Entity.TurCins", b =>
                 {
                     b.Navigation("Hayvans");
-                });
-
-            modelBuilder.Entity("VeterinerApp.Models.Entity.Rol", b =>
-                {
-                    b.Navigation("Insans");
                 });
 #pragma warning restore 612, 618
         }

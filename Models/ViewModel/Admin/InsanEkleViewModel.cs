@@ -4,18 +4,9 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class InsanEkleViewModel
+    public class InsanEkleViewModel : Insan
     {
-        public string InsanTckn { get; set; }
-        public string InsanAdi { get; set; }
-        public string InsanSoyadi { get; set; }
-        public string InsanTel { get; set; }
-        public string InsanMail { get; set; }
-        public int RolId { get; set; }
-        public string DiplomaNo { get; set; }
-        public bool? CalisiyorMu { get; set; }
-        public double? Maas { get; set; }
-        public string KullaniciAdi { get; set; }
+        public string rolId { get; set; }
         public List<SelectListItem> Roller { get; set; }
 
     }

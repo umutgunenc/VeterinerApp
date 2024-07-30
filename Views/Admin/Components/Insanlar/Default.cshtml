@@ -1,12 +1,15 @@
 ﻿@model InsanDuzenleViewModel
 
 <form asp-action="CalisanDuzenle" asp-controller="Admin" method="post">
-    <div >
+    <div>
         <div class="form-group row mb-3">
             <label asp-for="InsanAdi" class="col-md-3 col-form-label">Adı</label>
             <div class="col-md-9">
                 <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanAdi"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -14,16 +17,21 @@
             <label asp-for="InsanSoyadi" class="col-md-3 col-form-label">Soyadı</label>
             <div class="col-md-9">
                 <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanSoyadi"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
+                    </span>
+                </div>
             </div>
         </div>
-
 
         <div class="form-group row mb-3">
             <label asp-for="Email" class="col-md-3 col-form-label">Mail Adresi</label>
             <div class="col-md-9">
                 <input type="email" asp-for="Email" class="form-control" placeholder="Mail Adresi">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Email"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -31,7 +39,10 @@
             <label asp-for="PhoneNumber" class="col-md-3 col-form-label">Telefon Numarası</label>
             <div class="col-md-9">
                 <input type="tel" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="PhoneNumber"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -39,30 +50,25 @@
             <label asp-for="DiplomaNo" class="col-md-3 col-form-label">Diploma Seri No</label>
             <div class="col-md-9">
                 <input type="text" asp-for="DiplomaNo" class="form-control" placeholder="Diploma Seri No">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="DiplomaNo"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="DiplomaNo">
+                    </span>
+                </div>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label asp-for="RolId" class="col-md-3 col-form-label">Çalışan Kişinin Görevi</label>
+            <label asp-for="rolId" class="col-md-3 col-form-label">Çalışan Kişinin Görevi</label>
             <div class="col-md-9">
-                <select class="custom-select" asp-for="RolId">
+                <select class="custom-select" asp-for="rolId" asp-items="Model.Roller">
                     <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
-                    @foreach (var rol in Model.Roller)
-                    {
-                        <option value="@rol.Value">@rol.Text</option>
-                    }
                 </select>
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="rolId">
+                    </span>
+                </div>
             </div>
         </div>
-
-        @if (!string.IsNullOrEmpty(ViewBag.Hata))
-        {
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
-                @ViewBag.Hata
-            </span>
-        }
 
         <div class="form-group row mb-3">
             <label asp-for="CalisiyorMu" class="col-md-3 col-form-label">Çalışıyor mu?</label>
@@ -75,7 +81,10 @@
                     <input type="radio" id="customRadio2" name="CalisiyorMu" class="custom-control-input" asp-for="CalisiyorMu" value="false">
                     <label class="custom-control-label" for="customRadio2">HAYIR</label>
                 </div>
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="CalisiyorMu"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CalisiyorMu">
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -83,7 +92,10 @@
             <label asp-for="UserName" class="col-md-3 col-form-label">Kullanıcı Adı</label>
             <div class="col-md-9">
                 <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="UserName"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -91,7 +103,10 @@
             <label asp-for="Maas" class="col-md-3 col-form-label">Maaş</label>
             <div class="col-md-9">
                 <input type="text" asp-for="Maas" class="form-control" placeholder="Maaş" />
-                <span class="font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Maas"></span>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Maas">
+                    </span>
+                </div>
             </div>
         </div>
     </div>

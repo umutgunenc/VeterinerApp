@@ -9,7 +9,7 @@
     <form asp-action="RolSil" asp-controller="Admin" method="post">
         <div class="form-row">
             <div class="col">
-                <select asp-for="RolId" class="form-control">
+                <select asp-for="Id" class="form-control">
                     <option selected disabled>Silinecek Rolü Seçiniz</option>
                     @foreach (var rol in Model.Roller)
                     {
@@ -20,7 +20,7 @@
             <button type="submit" class="btn btn-primary mb-2">Sil</button>
         </div>
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="RolId">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Id">
             </span>
 
         </div>

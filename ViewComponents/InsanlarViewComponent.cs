@@ -40,7 +40,7 @@ namespace VeterinerApp.ViewComponents
                     UserName = x.UserName,
                     CalisiyorMu = x.CalisiyorMu,
                     Maas = x.Maas,
-                    RolId = _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
+                    rolId = _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
                         .Select(r => r.RoleId)
                         .FirstOrDefault(),
                     Roller = _veterinerDbContext.Roles.Select(r => new SelectListItem
@@ -48,7 +48,7 @@ namespace VeterinerApp.ViewComponents
                         Value = r.Id.ToString(),
                         Text = r.Name
                     }).ToList(),
-                    RolAdi = _veterinerDbContext.Roles
+                    rolAdi = _veterinerDbContext.Roles
                         .Where(r => r.Id == _veterinerDbContext.UserRoles.Where(r => r.UserId == x.Id)
                         .Select(r => r.RoleId)
                         .FirstOrDefault())
