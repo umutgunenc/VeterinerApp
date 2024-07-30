@@ -20,12 +20,12 @@ namespace VeterinerApp.Models.Validators
                 .Must(notBeInsan).WithMessage("Silinecek role tanımlı kişiler olduğu için silme işlemi gerçekleştirilemedi.");
         }
 
-        private bool beRol(string rolId)
+        private bool beRol(int rolId)
         {
             return _context.Roles.Any(x => x.Id == rolId);
         }
 
-        private bool notBeInsan(string rolId)
+        private bool notBeInsan(int rolId)
         {
             return !_context.Users.Any(x => x.Id == rolId);
         }

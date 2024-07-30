@@ -6,7 +6,7 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Data
 {
-    public partial class VeterinerContext : IdentityDbContext<Insan>
+    public partial class VeterinerContext : IdentityDbContext<AppUser,AppRole,int>
     {
         public VeterinerContext()
         {
@@ -22,7 +22,7 @@ namespace VeterinerApp.Data
         public virtual DbSet<Hayvan> Hayvans { get; set; }
         public virtual DbSet<Ilac> Ilacs { get; set; }
         public virtual DbSet<IlacMuayene> IlacMuayenes { get; set; }
-        public virtual DbSet<Insan> Insans { get; set; }
+        public virtual DbSet<AppUser> Insans { get; set; }
         public virtual DbSet<MaasOdemeleri> MaasOdemeleris { get; set; }
         public virtual DbSet<Muayene> Muayenes { get; set; }
         public virtual DbSet<MuayeneGelirleri> MuayeneGelirleris { get; set; }
@@ -163,7 +163,7 @@ namespace VeterinerApp.Data
                     .HasConstraintName("FK__Ilac_Muay__Muaye__73BA3083");
             });
 
-            modelBuilder.Entity<Insan>(entity =>
+            modelBuilder.Entity<AppUser>(entity =>
             {
                 entity.HasKey(e => e.InsanTckn)
                     .HasName("PK__Insan__1D10AE4008848862");
@@ -211,22 +211,10 @@ namespace VeterinerApp.Data
                 entity.HasOne(d => d.CalisanTcknNavigation)
                     .WithMany(p => p.MaasOdemeleris)
                     .HasForeignKey(d => d.CalisanTckn)
+                    .HasPrincipalKey(p => p.InsanTckn)  // Principal key olarak InsanTckn kullanılıyor
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__MaasOdeme__Calis__6477ECF3");
             });
-
-            modelBuilder.Entity<MaasOdemeleri>(entity =>
-            {
-                entity.ToTable("MaasOdemeleri");
-
-                entity.HasKey(m => new { m.CalisanTckn, m.OdemeTarihi });
-
-                entity.HasOne(m => m.CalisanTcknNavigation)
-                    .WithMany(u => u.MaasOdemeleris)
-                    .HasForeignKey(m => m.CalisanTckn)
-                    .HasPrincipalKey(u => u.Id);
-
-            });                
 
             modelBuilder.Entity<Muayene>(entity =>
             {
@@ -260,6 +248,7 @@ namespace VeterinerApp.Data
                 entity.HasOne(d => d.HekimkTcknNavigation)
                     .WithMany(p => p.Muayenes)
                     .HasForeignKey(d => d.HekimkTckn)
+                    .HasPrincipalKey(p => p.InsanTckn) // Principal key olarak InsanTckn kullanılıyor
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Muayene__HekimkT__6E01572D");
             });
@@ -320,10 +309,10 @@ namespace VeterinerApp.Data
                 entity.HasOne(d => d.SahipTcknNavigation)
                     .WithMany(p => p.SahipHayvans)
                     .HasForeignKey(d => d.SahipTckn)
+                    .HasPrincipalKey(p => p.InsanTckn) // Principal key olarak InsanTckn kullanılıyor
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__SahipHayv__Sahip__6FE99F9F");
             });
-
 
             modelBuilder.Entity<Stok>(entity =>
             {

@@ -4,9 +4,9 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class InsanDuzenleViewModel : Insan
+    public class InsanDuzenleViewModel : AppUser
     {
-        public string rolId { get; set; }
+        public int rolId { get; set; }
         public string rolAdi { get; set; }
         public List<SelectListItem> Roller { get; set; }
         public List<SelectListItem> Insanlar { get; set; }

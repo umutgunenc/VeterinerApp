@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class Insan :IdentityUser
+    public partial class AppUser : IdentityUser<int>
     {
-        public Insan() 
+        public AppUser()
         {
             MaasOdemeleris = new HashSet<MaasOdemeleri>();
             Muayenes = new HashSet<Muayene>();
@@ -29,6 +29,5 @@ namespace VeterinerApp.Models.Entity
         public virtual ICollection<MaasOdemeleri> MaasOdemeleris { get; set; }
         public virtual ICollection<Muayene> Muayenes { get; set; }
         public virtual ICollection<SahipHayvan> SahipHayvans { get; set; }
-
     }
 }

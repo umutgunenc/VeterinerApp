@@ -63,23 +63,6 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
                 .Must(BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
-            //TODO Bu Kodlar çalışmıyor
-            
-
-            //RuleFor(x => x.CalisiyorMu)
-            //    .NotNull().WithMessage("Çalışan için çalışma durumu seçiniz.")
-            //    .NotEmpty().WithMessage("Çalışan için çalışma durumu seçiniz.")
-            //    .Must(x => x == true || x == false).WithMessage("Çalışan için çalışma durumu seçiniz.");
-
-            //RuleFor(x => _context.UserRoles.Select(r => r.RoleId))
-            //    .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-            //    .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-            //    .When(x => IsRoleMatching(_context.UserRoles.Select(r => r.RoleId).ToString(), new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
-
-            //RuleFor(x => _context.UserRoles.Select(r => r.RoleId))
-            //    .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-            //    .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-            //    .When(x => IsRoleMatching(_context.UserRoles.Select(r => r.RoleId).ToString(), new List<string> { "MÜŞTERİ" }));
 
             RuleFor(x => x.rolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
@@ -137,7 +120,7 @@ namespace VeterinerApp.Models.Validators
             }
             return returnvalue;
         }
-        private bool IsRoleMatching(string rolId, List<string> validRoles)
+        private bool IsRoleMatching(int rolId, List<string> validRoles)
         {
             var role = _context.Roles.Find(rolId);
             return role != null && validRoles.Contains(role.Name.ToUpper());

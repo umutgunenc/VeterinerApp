@@ -24,7 +24,7 @@ namespace VeterinerApp.Models.Entity
         public string IlacBarkod { get; set; }
 
         public virtual Hayvan Hayvan { get; set; }
-        public virtual Insan HekimkTcknNavigation { get; set; }
+        public virtual AppUser HekimkTcknNavigation { get; set; }
         public virtual MuayeneGelirleri MuayeneGelirleri { get; set; }
         public virtual ICollection<IlacMuayene> IlacMuayenes { get; set; }
         public virtual ICollection<TedaviMuayene> TedaviMuayenes { get; set; }

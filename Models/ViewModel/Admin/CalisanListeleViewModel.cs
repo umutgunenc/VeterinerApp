@@ -4,7 +4,7 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class CalisanListeleViewModel : Insan
+    public class CalisanListeleViewModel : AppUser
     {
         public object RolId { get; internal set; }
         public object RolAdi { get; internal set; }

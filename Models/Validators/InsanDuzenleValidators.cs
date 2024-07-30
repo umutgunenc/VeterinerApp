@@ -106,7 +106,7 @@ namespace VeterinerApp.Models.Validators
                .Must(beRol).WithMessage("Seçilen rol geçerli değil.");
 
         }
-        private bool beRol(string rolId)
+        private bool beRol(int rolId)
         {
             return _context.Roles.Any(x => x.Id == rolId);
         }
@@ -164,7 +164,7 @@ namespace VeterinerApp.Models.Validators
             }
             return returnvalue;
         }
-        private bool IsRoleMatching(string rolId, List<string> validRoles)
+        private bool IsRoleMatching(int rolId, List<string> validRoles)
         {
             var role = _context.Roles.Find(rolId);
             return role != null && validRoles.Contains(role.Name.ToUpper());

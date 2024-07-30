@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VeterinerApp.Migrations
 {
-    public partial class migration_identitiy_tables : Migration
+    public partial class migration_identitiy : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,8 @@ namespace VeterinerApp.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -25,8 +26,9 @@ namespace VeterinerApp.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    InsanTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 450, nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InsanTCKN = table.Column<string>(type: "varchar(450)", unicode: false, maxLength: 450, nullable: false),
                     InsanAdi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     InsanSoyadi = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -53,6 +55,7 @@ namespace VeterinerApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.UniqueConstraint("PK__Insan__1D10AE4008848862", x => x.InsanTCKN);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,7 +130,7 @@ namespace VeterinerApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -148,7 +151,7 @@ namespace VeterinerApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -170,7 +173,7 @@ namespace VeterinerApp.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,8 +190,8 @@ namespace VeterinerApp.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -211,7 +214,7 @@ namespace VeterinerApp.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -231,8 +234,9 @@ namespace VeterinerApp.Migrations
                 name: "MaasOdemeleri",
                 columns: table => new
                 {
-                    CalisanTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 450, nullable: false),
+                    CalisanTCKN = table.Column<string>(type: "varchar(450)", unicode: false, maxLength: 450, nullable: false),
                     OdemeTarihi = table.Column<DateTime>(type: "date", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     OdenenTutar = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -242,7 +246,7 @@ namespace VeterinerApp.Migrations
                         name: "FK__MaasOdeme__Calis__6477ECF3",
                         column: x => x.CalisanTCKN,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "InsanTCKN",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -393,7 +397,7 @@ namespace VeterinerApp.Migrations
                     MuayeneTarihi = table.Column<DateTime>(type: "date", nullable: false),
                     SonrakiMuayeneTarihi = table.Column<DateTime>(type: "date", nullable: true),
                     Aciklama = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
-                    HekimkTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 450, nullable: false),
+                    HekimkTCKN = table.Column<string>(type: "varchar(450)", unicode: false, maxLength: 450, nullable: false),
                     IlacBarkod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
@@ -410,7 +414,7 @@ namespace VeterinerApp.Migrations
                         name: "FK__Muayene__HekimkT__6E01572D",
                         column: x => x.HekimkTCKN,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "InsanTCKN",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -418,7 +422,7 @@ namespace VeterinerApp.Migrations
                 name: "SahipHayvan",
                 columns: table => new
                 {
-                    SahipTCKN = table.Column<string>(type: "nvarchar(450)", unicode: false, maxLength: 11, nullable: false),
+                    SahipTCKN = table.Column<string>(type: "varchar(450)", unicode: false, maxLength: 11, nullable: false),
                     HayvanId = table.Column<int>(type: "int", nullable: false),
                     SahiplikTarihi = table.Column<DateTime>(type: "date", nullable: false),
                     SahiplikCikisTarihi = table.Column<DateTime>(type: "date", nullable: true)
@@ -436,7 +440,7 @@ namespace VeterinerApp.Migrations
                         name: "FK__SahipHayv__Sahip__6FE99F9F",
                         column: x => x.SahipTCKN,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "InsanTCKN",
                         onDelete: ReferentialAction.Restrict);
                 });
 

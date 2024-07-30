@@ -430,7 +430,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public IActionResult RolEkle(RolEkleViewModel model)
         {
-            var rolEntity = new IdentityRole { Name = model.Name.ToUpper() };
+            var rolEntity = new AppRole { Name = model.Name.ToUpper() };
 
             RolValidators rolValidator = new RolValidators(_veterinerDbContext);
             ValidationResult result = rolValidator.Validate(model);
@@ -529,9 +529,8 @@ namespace VeterinerApp.Controllers
             sifre sifre = new sifre();
             string kullaniciSifresi = sifre.GeneratePassword();
 
-            var calisan = new Insan
+            var calisan = new AppUser
             {
-                Id = model.InsanTckn,
                 InsanAdi = model.InsanAdi.ToUpper(),
                 InsanSoyadi = model.InsanSoyadi.ToUpper(),
                 InsanTckn = model.InsanTckn,
@@ -542,14 +541,10 @@ namespace VeterinerApp.Controllers
                 CalisiyorMu = true,
                 SifreOlusturmaTarihi = DateTime.Now,
                 SifreGecerlilikTarihi = DateTime.Now.AddDays(120),
-                PasswordHash = kullaniciSifresi                
+                PasswordHash = kullaniciSifresi,
             };
 
-            var insanRol = new IdentityUserRole<string>()
-            {
-                UserId = model.InsanTckn,
-                RoleId = model.rolId
-            };
+
 
             InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
             ValidationResult result = validator.Validate(model);
@@ -572,6 +567,14 @@ namespace VeterinerApp.Controllers
             }
 
             _veterinerDbContext.Users.Add(calisan);
+            _veterinerDbContext.SaveChanges(); // Önce kullanıcıyı kaydet
+
+            var insanRol = new IdentityUserRole<int>()
+            {
+                UserId = calisan.Id,
+                RoleId = model.rolId
+            };
+
             _veterinerDbContext.UserRoles.Add(insanRol);
 
             if (_veterinerDbContext.SaveChanges() > 0)
@@ -712,7 +715,7 @@ namespace VeterinerApp.Controllers
             _veterinerDbContext.SaveChanges();
 
             // Yeni kullanıcı rolünü ekle
-            var yeniRol = new IdentityUserRole<string>
+            var yeniRol = new IdentityUserRole<int>()
             {
                 RoleId = model.rolId,
                 UserId = insan.Id

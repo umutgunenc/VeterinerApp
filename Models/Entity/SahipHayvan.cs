@@ -13,6 +13,6 @@ namespace VeterinerApp.Models.Entity
         public DateTime? SahiplikCikisTarihi { get; set; }
 
         public virtual Hayvan Hayvan { get; set; }
-        public virtual Insan SahipTcknNavigation { get; set; }
+        public virtual AppUser SahipTcknNavigation { get; set; }
     }
 }

@@ -30,6 +30,9 @@ public class Startup
         services.AddDbContext<VeterinerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
+        //identity servisi eklendi
+        services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<VeterinerContext>().AddDefaultTokenProviders();
+
 
     }
 

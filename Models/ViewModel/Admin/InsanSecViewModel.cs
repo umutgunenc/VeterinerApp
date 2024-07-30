@@ -4,7 +4,7 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class InsanSecViewModel : Insan
+    public class InsanSecViewModel : AppUser
     {
 
     }
