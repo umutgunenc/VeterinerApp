@@ -20,12 +20,18 @@ namespace VeterinerApp.Models.Validators.Account
                 .NotNull().WithMessage("Kullanıcı adını giriniz.")
                 .Must(BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
-            RuleFor(x => x.Password)
+            //RuleFor(x => x.PasswordHash)
+            //    .NotNull().WithMessage("Lütfen şifrenizi giriniz.")
+            //    .NotEmpty().WithMessage("Lütfen şifrenizi giriniz.")
+            //    .MinimumLength(8).WithMessage("Şifre en az 8 karakter olmalıdır.")
+            //    .MaximumLength(50).WithMessage("Şifre maksimum 50 karakter olabilir.");
+
+            RuleFor(x => x.PasswordHash)
                 .NotNull().WithMessage("Lütfen şifrenizi giriniz.")
-                .NotEmpty().WithMessage("ŞLütfen şifrenizi giriniz.")
+                .NotEmpty().WithMessage("Lütfen şifrenizi giriniz.")
                 .MinimumLength(8).WithMessage("Şifre en az 8 karakter olmalıdır.")
                 .MaximumLength(50).WithMessage("Şifre maksimum 50 karakter olabilir.");
-            //TODO : Şifre zorunlulukları eklenecek
+            //TODO : Şifre için kontroller eklenecek
             //.Matches("[0-9]").WithMessage("Şifre en az bir rakam içermelidir.") 
             //.Matches("[a-z]").WithMessage("Şifre en az bir küçük harf içermelidir.")
             //.Matches("[A-Z]").WithMessage("Şifre en az bir büyük harf içermelidir.")
@@ -34,14 +40,14 @@ namespace VeterinerApp.Models.Validators.Account
             RuleFor(x => x.ConfirmPassword)
                 .NotNull().WithMessage("Lütfen şifrenizi tekrar giriniz.")
                 .NotEmpty().WithMessage("Lütfen şifrenizi tekrar giriniz.")
-                .Equal(x => x.Password).WithMessage("Şifreler uyuşmuyor");
+                .Equal(x => x.PasswordHash).WithMessage("Şifreler uyuşmuyor");
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
                 .NotEmpty().WithMessage("İsminizi giriniz.")
                 .NotNull().WithMessage("İsminizi giriniz.");
 
-            RuleFor(x => x.Surname)
+            RuleFor(x => x.InsanSoyadi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda soyisim girilebilir.")
                 .NotEmpty().WithMessage("Soyisminizi giriniz.")
                 .NotNull().WithMessage("Soyisminizi giriniz.");
@@ -60,13 +66,16 @@ namespace VeterinerApp.Models.Validators.Account
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
                 .Must(UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
-            RuleFor(x => x.TCKN)
+            RuleFor(x => x.InsanTckn)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
                 .Must(UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
                 .Must(TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
+
+            RuleFor(x => x.TermOfUse)
+                .Equal(true).WithMessage("Kullanım şartlarını kabul etmelisiniz.");
 
         }
         private bool BeUniqueKullaniciAdi(string kullaniciAdi)

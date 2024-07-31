@@ -542,6 +542,7 @@ namespace VeterinerApp.Controllers
                 SifreOlusturmaTarihi = DateTime.Now,
                 SifreGecerlilikTarihi = DateTime.Now.AddDays(120),
                 PasswordHash = kullaniciSifresi,
+                TermOfUse = true,
             };
 
 

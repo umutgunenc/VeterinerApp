@@ -11,7 +11,11 @@
     <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 </head>
 <body>
-    @await Html.PartialAsync("_navbar")
+    @await Html.PartialAsync("_topBar")
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Html.PartialAsync("_navbar")
+    }
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
@@ -28,12 +32,12 @@
                         @RenderSection("TurEkle", false)
                         @RenderSection("TurSil", false)
                         @RenderSection("CinsTur", false)
-                        @RenderSection("CinsTurSil",false)
+                        @RenderSection("CinsTurSil", false)
                         @RenderSection("CalisanEkle", false)
                         @RenderSection("RolEkle", false)
-                        @RenderSection("RolSil",false)
-                        @RenderSection("CalisanSec",false)
-                        @RenderSection("calisanListele",false)
+                        @RenderSection("RolSil", false)
+                        @RenderSection("CalisanSec", false)
+                        @RenderSection("calisanListele", false)
                     </div>
                 </div>
             </div>
@@ -42,5 +46,6 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7cc8b9dbd2.js" crossorigin="anonymous"></script>
 </body>
 </html>

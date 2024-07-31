@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinerApp.Models.Validators;
 using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Login;
 using FluentValidation.Results;
 using System.Linq;
 using VeterinerApp.Models.Entity;

@@ -7,129 +7,180 @@
 
 @section register {
 
+    <h3><i class="fa-solid fa-id-card"></i>
+        <hr />
+    Kayıt Ol</h3>
     <form asp-action="Register" asp-controller="Account" method="post">
         <div class="form-col">
 
             <div class="form-group row mb-3">
-                <label asp-for="Name" class="col-md-3 col-form-label">Adı</label>
-                <div class="col-md-9">
-                    <input type="text" asp-for="Name" class="form-control" placeholder="Adı">
-                    <div class="my-1">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Name">
+                <label asp-for="InsanAdi" class="col-sm-2 col-form-label">Adı</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label">Soyadı</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
                         </span>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="Surname" class="col-md-3 col-form-label">SoyAdı</label>
-                <div class="col-md-9">
-                    <input type="text" asp-for="Surname" class="form-control" placeholder="SoyAdı">
-                    <div class="my-1">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Surname">
+                <label asp-for="InsanTckn" class="col-sm-2 col-form-label">TCKN</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanTckn">
                         </span>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="TCKN" class="col-md-3 col-form-label">TCKN</label>
-                <div class="col-md-9">
-                    <input type="text" asp-for="TCKN" class="form-control" placeholder="TCKN">
-                    <div class="my-1">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TCKN">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="Email" class="col-md-3 col-form-label">Email Adresi</label>
-                <div class="col-md-9">
+                <label asp-for="Email" class="col-sm-2 col-form-label">Email Adresi</label>
+                <div class="col-sm-10">
                     <input type="text" asp-for="Email" class="form-control" placeholder="Email Adresi">
-                    <div class="my-1">
+                    <div class="mt-2">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
                         </span>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="PhoneNumber" class="col-md-3 col-form-label">Telefon Numarası</label>
-                <div class="col-md-9">
+                <label asp-for="PhoneNumber" class="col-sm-2 col-form-label">Telefon Numarası</label>
+                <div class="col-sm-10">
                     <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
-                    <div class="my-1">
+                    <div class="mt-2">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
                         </span>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="UserName" class="col-md-3 col-form-label">Kullanıcı Adı</label>
-                <div class="col-md-9">
+                <label asp-for="UserName" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
+                <div class="col-sm-10">
                     <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
-                    <div class="my-1">
+                    <div class="mt-2">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
                         </span>
                     </div>
                 </div>
             </div>
+
             <div class="form-group row mb-3">
-                <label asp-for="Password" class="col-md-3 col-form-label">Şifre</label>
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <button type="button" class="rounded-left form-control btn-outline-secondary col-md-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash rounded-left" viewBox="0 0 16 16">
-                                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"></path>
-                                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"></path>
-                                <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"></path>
-                            </svg>
-                        </button>
-                        <input type="password" asp-for="Password" class="form-control rounded-right px-3d col-md-11" placeholder="Şifre">
-                    </div>
-                    <div class="my-1">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Password">
+                <label asp-for="PasswordHash" class="col-sm-2 col-form-label">Şifre</label>
+                <div class="col-sm-10 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text rounded-left" id="passBtn">
+                            <span id="eyeIcon">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
                         </span>
                     </div>
-
+                    <input type="password" asp-for="PasswordHash" class="form-control rounded-right" id="password">
                 </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="ConfirmPassword" class="col-md-3 col-form-label">Şifre Tekrar</label>
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <button type="button" class="rounded-left form-control btn-outline-secondary col-md-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash rounded-left" viewBox="0 0 16 16">
-                                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"></path>
-                                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"></path>
-                                <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"></path>
-                            </svg>
-                        </button>
-                        <input type="password" asp-for="ConfirmPassword" class="form-control rounded-right px-3d col-md-11" placeholder="Şifre Tekrar">
-                    </div>
-                    <div class="my-1">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="ConfirmPassword">
-                        </span>
-                    </div>
-
+                <div class="col-sm-10 offset-sm-2 mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PasswordHash"></span>
                 </div>
             </div>
 
 
+
+
+
+            <div class="form-group row mb-3">
+                <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label">Şifre</label>
+                <div class="col-sm-10 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text rounded-left" id="confirmPassBtn">
+                            <span id="confirmedEyeIcon">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                        </span>
+                    </div>
+                    <input type="password" asp-for="ConfirmPassword" class="form-control rounded-right" id="confirmPassword">
+
+                </div>
+                <div class="col-sm-10 offset-sm-2 mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="ConfirmPassword"></span>
+                </div>
+            </div>
+
+            <div class="form-check mb-3 h5">
+                <input class="form-check-input" type="checkbox" asp-for="TermOfUse" id="invalidCheck" style="width:18px;height:18px">
+                <label class="form-check-label pl-2" for="invalidCheck">
+                    Kullanım şartlarını kabul ediyorum.
+                </label>
+
+                <a href="#">Kullanım şartlarını okumak için buraya tıklayınız 
+                    <i class="fa-regular fa-copyright"></i></a>
+            </div>
+            <span class="font-weight-bold text-danger bg-light text-danger rounded mb-3" asp-validation-for="TermOfUse">
+            </span>
+            <button type="submit" class="col btn btn-primary mb-2">Kayıt Ol</button>
+            @if (ViewBag.Hata != null)
+            {
+                <div class="font-weight-bold text-danger bg-light text-danger rounded" role="alert">
+                    @ViewBag.Hata
+                </div>
+            }
         </div>
-        <button type="submit" class="col btn btn-primary mb-2">Kayıt Ol</button>
 
     </form>
 
 
 
-    @*@if (TempData["CalısanEklendi"] != null)
-        {
-            <div class="alert alert-success" role="alert" id="CalısanEklendi">
-                @TempData["CalısanEklendi"]
-            </div>
-            <script>
-                setTimeout(function () {
-                    var message = document.getElementById("CalısanEklendi");
-                    message.remove();
-                }, 5000);
-            </script>
-        }*@
+    @if (TempData["KisiEklendi"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="CalısanEklendi">
+            @TempData["KisiEklendi"]
+        </div>
+        <script>
+            setTimeout(function () {
+                var message = document.getElementById("CalısanEklendi");
+                message.remove();
+            }, 5000);
+        </script>
+    }
 }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var passBtn = document.getElementById("passBtn");
+        var password = document.getElementById("password");
+        var eyeIcon = document.getElementById("eyeIcon");
+
+        var confirmPassBtn = document.getElementById("confirmPassBtn");
+        var confirmPassword = document.getElementById("confirmPassword");
+        var confirmedEyeIcon = document.getElementById("confirmedEyeIcon");
+
+        passBtn.addEventListener("click", function () {
+            if (password.type === "password") {
+                password.type = "text";
+                eyeIcon.innerHTML = `<i class="fa-solid fa-unlock"></i>`;
+            } else {
+                password.type = "password";
+                eyeIcon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+            }
+        });
+
+        confirmPassBtn.addEventListener("click", function () {
+            if (confirmPassword.type === "password") {
+                confirmPassword.type = "text";
+                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-unlock"></i>`;
+            } else {
+                confirmPassword.type = "password";
+                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+            }
+        });
+    });
+</script>
+
