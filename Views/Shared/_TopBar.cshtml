@@ -25,7 +25,23 @@
             {
 
                 <li class="nav-item mx-2">
-                    <a href="#" class="nav-link text-white">@User.Identity.Name <i class="fa-solid fa-user-check"></i></a>
+                    <div class="dropdown">
+                        <a class="nav-link text-white " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @User.Identity.Name <i class="fa-solid fa-user-check"></i>
+                        </a>
+
+                        <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item text-white cstm" href="/User/Information"
+                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
+                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';" }">Bilgilerim</a>
+                            <a class="dropdown-item text-white" href="#"
+                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
+                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';">Şifremi Değiştir</a>
+                            <a class="dropdown-item text-white" href="#"
+                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
+                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';">Something else here</a>
+                        </div>
+                    </div>
                 </li>
 
                 <li class="nav-item mx-2">

@@ -12,6 +12,10 @@
 </head>
 <body>
     @await Html.PartialAsync("_topBar")
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Html.PartialAsync("_navbar")
+    }
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
@@ -21,12 +25,12 @@
                     <div class="col-md-11">
                         @RenderBody()
                         @RenderSection("register", false)
-                        @RenderSection("login",false)
-                        @RenderSection("forgotPassword",false)
+                        @RenderSection("login", false)
+                        @RenderSection("forgotPassword", false)
                         @RenderSection("AccessDenied", false)
+                        @RenderSection("Information", false)
                     </div>
                     <div class="col-md-1">
-
                     </div>
                 </div>
             </div>

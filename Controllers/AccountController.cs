@@ -236,7 +236,7 @@ namespace VeterinerApp.Controllers
                     return View(model);
                 }
 
-                string mailBody = $"Merhaba {user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()}! <br>Şifreniz {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde yenilenmişsitr.<br>Yeni şifreniz: {yeniSifre}";
+                string mailBody = $"Merhaba {user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()}! \nŞifreniz {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde yenilenmişsitr.\nKullanıcı Adınız: {user.UserName}\nŞifreniz: {yeniSifre}";
 
                 MailGonder mail = new MailGonder(user.Email, mailBody);
                 if (!mail.MailGonderHotmail(mail))
