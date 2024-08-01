@@ -8,6 +8,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
     {
         public int rolId { get; set; }
         public List<SelectListItem> Roller { get; set; }
+        public string error { get; set; }
 
     }
 }

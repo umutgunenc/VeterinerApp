@@ -40,6 +40,13 @@
                 <div class="col-sm-10 offset-sm-2 mt-2">
                     <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PasswordHash"></span>
                 </div>
+                <div class="col-sm-10 offset-sm-2 mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AccessFailedCount"></span>
+                </div>
+                <div class="col-sm-10 offset-sm-2 mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="LockoutEnd"></span>
+                </div>
+
             </div>
 
             <button type="submit" class="col btn btn-primary mb-2">Giriş Yap <i class="fa-solid fa-user-check"></i> </button>

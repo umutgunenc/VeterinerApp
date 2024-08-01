@@ -23,10 +23,12 @@ namespace VeterinerApp.Controllers
     public class AdminController : Controller
     {
         private readonly VeterinerContext _veterinerDbContext;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AdminController(VeterinerContext veterinerDbContext)
+        public AdminController(VeterinerContext veterinerDbContext, UserManager<AppUser> userManager)
         {
             _veterinerDbContext = veterinerDbContext;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -516,7 +518,7 @@ namespace VeterinerApp.Controllers
 
         }
         [HttpPost]
-        public IActionResult CalisanEkle(InsanEkleViewModel model)
+        public async Task<IActionResult> CalisanEkle(InsanEkleViewModel model)
         {
             kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
             string kullaniciAdi = username
@@ -541,7 +543,6 @@ namespace VeterinerApp.Controllers
                 CalisiyorMu = true,
                 SifreOlusturmaTarihi = DateTime.Now,
                 SifreGecerlilikTarihi = DateTime.Now.AddDays(120),
-                PasswordHash = kullaniciSifresi,
                 TermOfUse = true,
             };
 
@@ -567,9 +568,17 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
-            _veterinerDbContext.Users.Add(calisan);
+            var createResult = await _userManager.CreateAsync(calisan, kullaniciSifresi);
             _veterinerDbContext.SaveChanges(); // Önce kullanıcıyı kaydet
 
+            if (!createResult.Succeeded)
+            {
+                foreach (var error in createResult.Errors)
+                {
+                    ModelState.AddModelError("error", error.Description);
+                }
+                return View(model);
+            }
             var insanRol = new IdentityUserRole<int>()
             {
                 UserId = calisan.Id,

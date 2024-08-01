@@ -2,16 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar.MailGonderme;
-using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Account;
 using VeterinerApp.Models.ViewModel.Account;
-using VeterinerApp.Models.ViewModel.Admin;
+using System;
 
 namespace VeterinerApp.Controllers
 {
@@ -19,12 +17,16 @@ namespace VeterinerApp.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly VeterinerContext _context;
 
-        public AccountController(UserManager<AppUser> userManager, VeterinerContext context)
+        public AccountController(UserManager<AppUser> userManager, VeterinerContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _context = context;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -42,8 +44,8 @@ namespace VeterinerApp.Controllers
                 .FirstOrDefault();
 
             model.CalisiyorMu = false;
-            model.SifreOlusturmaTarihi = System.DateTime.Now;
-            model.SifreGecerlilikTarihi = System.DateTime.Now.AddMonths(3);
+            model.SifreOlusturmaTarihi = DateTime.Now;
+            model.SifreGecerlilikTarihi = DateTime.Now.AddDays(120);
             model.UserName = model.UserName.ToUpper();
 
             RegisterValidators validator = new(_context);
@@ -57,8 +59,16 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
-            _context.Users.Add(model);
-            _context.SaveChanges();
+            var createResult = await _userManager.CreateAsync(model, model.PasswordHash);
+
+            if (!createResult.Succeeded)
+            {
+                foreach (var error in createResult.Errors)
+                {
+                    ModelState.AddModelError("PasswordHash", error.Description);
+                }
+                return View(model);
+            }
 
             IdentityUserRole<int> userRole = new()
             {
@@ -67,6 +77,7 @@ namespace VeterinerApp.Controllers
             };
 
             _context.UserRoles.Add(userRole);
+
 
             if (_context.SaveChanges() > 0)
             {
@@ -96,8 +107,65 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return View();
+            LoginValidators validator = new(_context);
+            ValidationResult result = validator.Validate(model);
 
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.UserName);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+                    return View(model);
+                }
+
+                var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: true, lockoutOnFailure: true);
+
+                if (signInResult.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (signInResult.IsLockedOut)
+                {
+                    if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
+                    {
+                        ModelState.AddModelError("LockoutEnd", $"Hesabınız kilitlenmiştir. Hesabınızın kilidi {user.LockoutEnd.Value.ToString("g")} tarihinde açılacaktır.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("LockoutEnd", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyiniz.");
+                    }
+                }
+                else if (user.AccessFailedCount>=0)
+                {
+                    ModelState.AddModelError("AccessFailedCount", $"Hesabınıza 3 defa yanlış giriş yaptığınızda kitlenecektir. {user.AccessFailedCount} kere yanlış giriş yapıldı.");
+                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+                }
+                else
+                {
+                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+                }
+            }
+
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
         }
     }
 }

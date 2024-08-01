@@ -40,7 +40,6 @@
             <div class="row mb-2">
                 <select class="custom-select" asp-for="rolId" asp-items="Model.Roller">
                     <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
-
                 </select>
             </div>
             <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="rolId">
@@ -54,7 +53,8 @@
 
         </div>
         <button type="submit" class="row btn btn-primary mb-2">Ekle</button>
-
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="error">
+        </span>
     </form>
 
 
