@@ -10,6 +10,7 @@ using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Account;
 using VeterinerApp.Models.ViewModel.Account;
 using System;
+using VeterinerApp.Fonksiyonlar;
 
 namespace VeterinerApp.Controllers
 {
@@ -81,7 +82,9 @@ namespace VeterinerApp.Controllers
 
             if (_context.SaveChanges() > 0)
             {
-                MailGonder mail = new MailGonder(model.Email, model.UserName, model.PasswordHash);
+                string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {model.UserName} \nŞifreniz : {model.PasswordHash}";
+
+                MailGonder mail = new MailGonder(model.Email, mailBody);
 
                 if (!mail.MailGonderHotmail(mail))
                 {
@@ -129,7 +132,15 @@ namespace VeterinerApp.Controllers
                     return View(model);
                 }
 
-                var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: true, lockoutOnFailure: true);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if (user.CalisiyorMu == false && (roles.Contains("ÇALIŞAN") || roles.Contains("VETERİNER") || roles.Contains("ADMİN")))
+                {
+                    ModelState.AddModelError("PasswordHash", "Kullanıcı aktif değil. Lütfen yöneticinizle iletişime geçiniz.");
+                    return View(model);
+                }
+
+                var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: false, lockoutOnFailure: true);
 
                 if (signInResult.Succeeded)
                 {
@@ -137,9 +148,9 @@ namespace VeterinerApp.Controllers
                 }
                 else if (signInResult.IsLockedOut)
                 {
-                    if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
+                    if (user.LockoutEnd.HasValue && user.LockoutEnd.Value.ToLocalTime() > DateTime.Now)
                     {
-                        ModelState.AddModelError("LockoutEnd", $"Hesabınız kilitlenmiştir. Hesabınızın kilidi {user.LockoutEnd.Value.ToString("g")} tarihinde açılacaktır.");
+                        ModelState.AddModelError("LockoutEnd", $"Hesabınız kilitlenmiştir. Hesabınızın kilidi {user.LockoutEnd.Value.ToLocalTime().ToString("g")} 'de açılacaktır.");
                     }
                     else
                     {
@@ -166,6 +177,82 @@ namespace VeterinerApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            ForgotPasswordValidators validator = new(_context);
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+
+            var user = _context.Users.FirstOrDefault(x => x.InsanTckn == model.InsanTckn && x.Email == model.Email && x.PhoneNumber == model.PhoneNumber);
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "Girdiğiniz bilgiler birbirleri ile uyuşmuyor. Girdiğiniz TCKN, email adresi veya telefon numarası sistemde kayıtlı değil.");
+                return View(model);
+            }
+            else
+            {
+                sifre sifre = new sifre();
+                var yeniSifre = sifre.GeneratePassword();
+
+                // Yeni şifreyi hashle
+                var hashedNewPassword = _userManager.PasswordHasher.HashPassword(user, yeniSifre);
+
+                // Eski şifreyi sakla
+                var eskiSifreHash = user.PasswordHash;
+
+                // Hashlenmiş şifreyi kullanıcıya ata
+                user.PasswordHash = hashedNewPassword;
+
+                // Kullanıcıyı güncelle
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    foreach (var error in updateResult.Errors)
+                    {
+                        ModelState.AddModelError("Email", error.Description);
+                    }
+                    return View(model);
+                }
+
+                string mailBody = $"Merhaba {user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()}! <br>Şifreniz {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde yenilenmişsitr.<br>Yeni şifreniz: {yeniSifre}";
+
+                MailGonder mail = new MailGonder(user.Email, mailBody);
+                if (!mail.MailGonderHotmail(mail))
+                {
+                    // Mail gönderme başarısız olursa eski şifreyi geri yükle
+                    user.PasswordHash = eskiSifreHash;
+                    await _userManager.UpdateAsync(user);
+
+                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı.";
+                    return View(model);
+                }
+
+                TempData["SifreGonderildi"] = $"{user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
+
+                return View();
+            }
         }
     }
 }

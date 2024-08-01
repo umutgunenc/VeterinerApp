@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace VeterinerApp.Controllers
 {
+    [Authorize(Roles = "ADMİN")]
     public class AdminController : Controller
     {
         private readonly VeterinerContext _veterinerDbContext;
@@ -521,9 +522,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> CalisanEkle(InsanEkleViewModel model)
         {
             kullaniciAdi username = new kullaniciAdi(_veterinerDbContext);
-            string kullaniciAdi = username
-                                    .GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.Email)
-                                    .ToUpper();
+            string kullaniciAdi = username.GenerateUsername(model.InsanAdi, model.InsanSoyadi, model.Email).ToUpper();
 
             model.UserName = kullaniciAdi;
             model.CalisiyorMu = true;
@@ -589,7 +588,9 @@ namespace VeterinerApp.Controllers
 
             if (_veterinerDbContext.SaveChanges() > 0)
             {
-                MailGonder mail = new MailGonder(model.Email, kullaniciAdi, kullaniciSifresi);
+                string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {kullaniciAdi} \nŞifreniz : {kullaniciSifresi}";
+
+                MailGonder mail = new MailGonder(model.Email,mailBody);
 
                 if (!mail.MailGonderHotmail(mail))
                 {

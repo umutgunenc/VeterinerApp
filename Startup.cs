@@ -55,6 +55,12 @@ public class Startup
                 .Build();
             config.Filters.Add(new AuthorizeFilter(policy));
         });
+
+        //Erişim izni reddedildiğinde yönlendirilecek sayfa belirlendi
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.AccessDeniedPath = "/Account/AccessDenied"; 
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

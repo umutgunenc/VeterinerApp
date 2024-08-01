@@ -140,12 +140,12 @@
 
     @if (TempData["KisiEklendi"] != null)
     {
-        <div class="alert alert-success" role="alert" id="CalısanEklendi">
+        <div class="alert alert-success" role="alert" id="KisiEklendi">
             @TempData["KisiEklendi"]
         </div>
         <script>
             setTimeout(function () {
-                var message = document.getElementById("CalısanEklendi");
+                var message = document.getElementById("KisiEklendi");
                 message.remove();
             }, 5000);
         </script>
