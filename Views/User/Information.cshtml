@@ -1,8 +1,8 @@
-﻿@model (AppUser, List<HayvanlarViewModel>)
+﻿@model KisiHayvanViewModel
 
 @{
-    var user = Model.Item1;
-    var hayvanlar = Model.Item2;
+    var user = Model.User;
+    var hayvanlar = Model.hayvanlar;
 }
 
 @{
@@ -34,7 +34,6 @@
                         <h6 class="card-title mt-2">TCKN: @user.InsanTckn</h6>
                         @if (hayvanlar.Count > 0)
                         {
-                            <form asp-action="" asp-controller="" method="post" id="hayvanListeleForm"></form>
                             <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
 
                             <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
@@ -51,8 +50,12 @@
                                 </thead>
                                 @foreach (var hayvan in hayvanlar)
                                 {
+                                    <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
+                                        <input type="hidden" asp-for="@hayvan.Hayvan" value="@hayvan" />
+                                    </form>
+
                                     <tbody>
-                                        <tr class="clickable-row" role="button" data-hayvanId="@hayvan.HayvanId">
+                                        <tr role="button" class="clickable-row" data-form-id="form-@hayvan.HayvanId">
                                             <td class="text-center">@hayvan.HayvanAdi</td>
                                             <td class="text-center">@hayvan.TurAdi</td>
                                             <td class="text-center">@hayvan.CinsAdi</td>
@@ -78,9 +81,21 @@
                                                     @:Hayatta
                                                 }
                                             </td>
-
                                         </tr>
                                     </tbody>
+
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            const rows = document.querySelectorAll(".clickable-row");
+                                            rows.forEach(row => {
+                                                row.addEventListener("click", () => {
+                                                    const form = document.getElementById("form-@hayvan.HayvanId");
+                                                    form.submit();
+                                                });
+                                            });
+                                        });
+                                    </script>
                                 }
                             </table>
 
@@ -120,7 +135,7 @@
                         @if (User.IsInRole("MÜŞTERİ"))
                         {<a href="#" class="btn btn-primary ml-3 mb-3">
                                 Hesabımı Sil
-                        </a>
+                            </a>
                         }
                         <a href="#" class="btn btn-primary ml-3 mb-3">
                             Şifremi Değiştir
@@ -136,22 +151,3 @@
 }
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const rows = document.querySelectorAll('.clickable-row');
-        const form = document.getElementById('hayvanListeleForm');
-
-        rows.forEach(row => {
-            row.addEventListener('click', () => {
-                const hayvanID = row.getAttribute('data-hayvanId');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'secilenKisiTCKN';
-                input.value = hayvanID;
-                form.appendChild(input);
-                form.submit();
-
-            });
-        });
-    });
-</script>

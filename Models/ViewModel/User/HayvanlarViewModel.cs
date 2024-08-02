@@ -6,6 +6,7 @@ namespace VeterinerApp.Models.ViewModel.User
 {
     public class HayvanlarViewModel :Hayvan
     {
+        public HayvanlarViewModel Hayvan { get; set; }
         public string TurAdi { get; set; }
         public string CinsAdi { get; set; }
         public string HayvanAnneAdi { get; set; }
