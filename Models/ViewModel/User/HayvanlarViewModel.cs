@@ -8,6 +8,8 @@ namespace VeterinerApp.Models.ViewModel.User
     {
         public string TurAdi { get; set; }
         public string CinsAdi { get; set; }
+        public string HayvanAnneAdi { get; set; }
+        public string HayvanBabaAdi { get; set; }   
 
         public string RenkAdi { get; set; }
         public List<SelectListItem> Hayvanlar { get; set; }

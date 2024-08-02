@@ -1,4 +1,4 @@
-﻿@model (VeterinerApp.Models.Entity.AppUser, List<HayvanlarViewModel>)
+﻿@model (AppUser, List<HayvanlarViewModel>)
 
 @{
     var user = Model.Item1;
@@ -27,19 +27,64 @@
 
             <div class="col-md-9 align-self-start">
                 <div class="d-flex flex-column">
-                    <div class="card-header font-weight-bold">@user.InsanAdi @user.InsanSoyadi</div>
+                    <div class="card-header font-weight-bold pl-0">
+                        <h3>@user.InsanAdi.ToUpper() @user.InsanSoyadi.ToUpper()</h3>
+                    </div>
                     <div class="">
-                        <h6 class="card-title">TCKN: @user.InsanTckn</h6>
-                        <p class="card-text">
-                         SahipHayvan Olunan Hayvanlar
-                        </p>
-                        @foreach (var hayvan in hayvanlar)
-                        {<p class="card-text">
-                                @hayvan.HayvanAdi - @hayvan.TurAdi - @hayvan.CinsAdi -@hayvan.RenkAdi -@hayvan.HayvanDogumTarihi
-                            </p>
+                        <h6 class="card-title mt-2">TCKN: @user.InsanTckn</h6>
+                        @if (hayvanlar.Count > 0)
+                        {
+                            <form asp-action="" asp-controller="" method="post" id="hayvanListeleForm"></form>
+                            <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
+
+                            <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">Hayvan Adı</th>
+                                        <th scope="col" class="text-center">Türü</th>
+                                        <th scope="col" class="text-center">Cinsi</th>
+                                        <th scope="col" class="text-center">Rengi</th>
+                                        <th scope="col" class="text-center">Cinsiyeti</th>
+                                        <th scope="col" class="text-center">Doğum Tarihi</th>
+                                        <th scope="col" class="text-center">Ölüm Tarihi</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var hayvan in hayvanlar)
+                                {
+                                    <tbody>
+                                        <tr class="clickable-row" role="button" data-hayvanId="@hayvan.HayvanId">
+                                            <td class="text-center">@hayvan.HayvanAdi</td>
+                                            <td class="text-center">@hayvan.TurAdi</td>
+                                            <td class="text-center">@hayvan.CinsAdi</td>
+                                            <td class="text-center">@hayvan.RenkAdi</td>
+                                            <td class="text-center">
+                                                @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
+                                                {
+                                                    @:Dişi
+                                                }
+                                                else
+                                                {
+                                                    @:Erkek
+                                                }
+                                            </td>
+                                            <td class="text-center">@hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</td>
+                                            <td class="text-center">
+                                                @if (hayvan.HayvanOlumTarihi != null)
+                                                {
+                                                    @hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                                                }
+                                                else
+                                                {
+                                                    @:Hayatta
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                }
+                            </table>
 
                         }
-
                         <p class="card-text">
                             E-Mail Adresi: <a href="mailto:@user.Email">@user.Email</a>
                         </p>
@@ -69,16 +114,18 @@
                         }
                         </input>
 
-                        <a href="#" class="btn btn-primary">
+                        <a href="#" class="btn btn-primary mb-3">
                             Düzenle
                         </a>
-                        <a href="#" class="btn btn-primary ml-3">
-                            Hesabımı Sil
+                        @if (User.IsInRole("MÜŞTERİ"))
+                        {<a href="#" class="btn btn-primary ml-3 mb-3">
+                                Hesabımı Sil
                         </a>
-                        <a href="#" class="btn btn-primary ml-3">
+                        }
+                        <a href="#" class="btn btn-primary ml-3 mb-3">
                             Şifremi Değiştir
                         </a>
-                        <a href="#" class="btn btn-primary ml-3">
+                        <a href="#" class="btn btn-primary ml-3 mb-3">
                             Hayvan Ekle
                         </a>
                     </div>
@@ -87,3 +134,24 @@
         </div>
     </div>
 }
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('.clickable-row');
+        const form = document.getElementById('hayvanListeleForm');
+
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                const hayvanID = row.getAttribute('data-hayvanId');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'secilenKisiTCKN';
+                input.value = hayvanID;
+                form.appendChild(input);
+                form.submit();
+
+            });
+        });
+    });
+</script>

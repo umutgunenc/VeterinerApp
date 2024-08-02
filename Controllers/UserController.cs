@@ -41,6 +41,12 @@ namespace VeterinerApp.Controllers
                 {
                     HayvanId = h.HayvanId,
                     HayvanAdi = h.HayvanAdi,
+                    HayvanCinsiyet = h.HayvanCinsiyet,
+                    HayvanKilo = h.HayvanKilo,
+                    HayvanDogumTarihi = h.HayvanDogumTarihi,
+                    HayvanOlumTarihi = h.HayvanOlumTarihi,
+                    HayvanAnneAdi = _context.Hayvans.Where(ha => ha.HayvanId == h.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
+                    HayvanBabaAdi = _context.Hayvans.Where(hb => hb.HayvanId == h.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
                     TurAdi = _context.Turs.Where(t => t.Id == h.TurId).Select(t => t.tur).FirstOrDefault(),
                     CinsAdi = _context.Cins.Where(c => c.Id == h.CinsId).Select(c => c.cins).FirstOrDefault(),
                     RenkAdi = _context.Renks.Where(r => r.Id == h.RenkId).Select(r => r.renk).FirstOrDefault()
