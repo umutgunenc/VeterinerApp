@@ -54,8 +54,8 @@ namespace VeterinerApp.Controllers
                 })
                 .ToListAsync();
 
-            var model = new KisiHayvanViewModel { User=user , hayvanlar=hayvanlar };
-            return View(model);
+            var tuplle = (user , hayvanlar );
+            return View(tuplle);
 
         }
     }

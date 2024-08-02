@@ -1,8 +1,8 @@
-﻿@model KisiHayvanViewModel
+﻿@model (AppUser, List<HayvanlarViewModel>)
 
 @{
-    var user = Model.User;
-    var hayvanlar = Model.hayvanlar;
+    var user = Model.Item1;
+    var hayvanlar = Model.Item2;
 }
 
 @{
@@ -51,7 +51,7 @@
                                 @foreach (var hayvan in hayvanlar)
                                 {
                                     <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
-                                        <input type="hidden" asp-for="@hayvan.Hayvan" value="@hayvan" />
+                                        <input type="hidden" name="hayvanId" value="@hayvan.HayvanId" />
                                     </form>
 
                                     <tbody>

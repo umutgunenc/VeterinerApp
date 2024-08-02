@@ -841,6 +841,11 @@ namespace VeterinerApp.Controllers
                 })
                 .FirstOrDefaultAsync();
 
+            if(secilenKisi == null)
+            {
+                return View("BadRequest");
+            }
+
             ViewBag.SecilenKisi = secilenKisi;
             ViewBag.ToplamKayit = toplamKayit;
 
