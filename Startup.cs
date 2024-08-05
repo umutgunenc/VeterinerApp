@@ -37,7 +37,7 @@ public class Startup
         services.AddIdentity<AppUser, AppRole>(options =>
         {
             options.Lockout.MaxFailedAccessAttempts = 3;
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Password.RequireDigit = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
@@ -59,8 +59,9 @@ public class Startup
         //Erişim izni reddedildiğinde yönlendirilecek sayfa belirlendi
         services.ConfigureApplicationCookie(options =>
         {
-            options.AccessDeniedPath = "/Account/AccessDenied"; 
+            options.AccessDeniedPath = "/Account/AccessDenied";
         });
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -27,7 +27,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool notBeInsan(int rolId)
         {
-            return !_context.Users.Any(x => x.Id == rolId);
+            return !_context.UserRoles.Any(x => x.RoleId == rolId);
         }
     }
 }

@@ -84,7 +84,9 @@ namespace VeterinerApp.Controllers
             {
                 string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {model.UserName} \nŞifreniz : {model.PasswordHash}";
 
-                MailGonder mail = new MailGonder(model.Email, mailBody);
+                string baslik = "Veteriner Bilgi Sistemi Kullanıcı Kaydı";
+
+                MailGonder mail = new MailGonder(model.Email, mailBody, baslik);
 
                 if (!mail.MailGonderHotmail(mail))
                 {
@@ -226,6 +228,10 @@ namespace VeterinerApp.Controllers
                 user.PasswordHash = hashedNewPassword;
 
                 // Kullanıcıyı güncelle
+                var EskiSifreOlusturmaTarihi = user.SifreOlusturmaTarihi;
+                var EskiSifreGecerlilikTarihi = user.SifreGecerlilikTarihi;
+                user.SifreOlusturmaTarihi = DateTime.Now;
+                user.SifreGecerlilikTarihi = DateTime.Now.AddDays(120);
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {
@@ -237,12 +243,14 @@ namespace VeterinerApp.Controllers
                 }
 
                 string mailBody = $"Merhaba {user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()}! \nŞifreniz {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde yenilenmişsitr.\nKullanıcı Adınız: {user.UserName}\nŞifreniz: {yeniSifre}";
-
-                MailGonder mail = new MailGonder(user.Email, mailBody);
+                string baslik = "Veteriner Bilgi Sistemi Şifre Yenileme";
+                MailGonder mail = new MailGonder(user.Email, mailBody, baslik);
                 if (!mail.MailGonderHotmail(mail))
                 {
                     // Mail gönderme başarısız olursa eski şifreyi geri yükle
                     user.PasswordHash = eskiSifreHash;
+                    user.SifreOlusturmaTarihi = EskiSifreOlusturmaTarihi;
+                    user.SifreGecerlilikTarihi = EskiSifreGecerlilikTarihi;
                     await _userManager.UpdateAsync(user);
 
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı.";

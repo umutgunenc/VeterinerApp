@@ -12,12 +12,11 @@ namespace VeterinerApp.Fonksiyonlar.MailGonderme
         public string subject { get; set; }
         public string body { get; set; }
 
-        public MailGonder(string mailAdres, string body)
+        public MailGonder(string mailAdres, string body, string baslik)
         {
             this.senderMail = "umutdotnet@hotmail.com";
             this.senderPassword = "1989312caN.";
             this.receiverMail = mailAdres;
-            this.subject = "Kullanıcı Kaydı";
             this.body = body;
 
 

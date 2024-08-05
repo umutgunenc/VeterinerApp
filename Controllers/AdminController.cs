@@ -589,8 +589,8 @@ namespace VeterinerApp.Controllers
             if (_veterinerDbContext.SaveChanges() > 0)
             {
                 string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {kullaniciAdi} \nŞifreniz : {kullaniciSifresi}";
-
-                MailGonder mail = new MailGonder(model.Email,mailBody);
+                string baslik= "Veteriner Bilgi Sistemi Kullanıcı Kaydı";
+                MailGonder mail = new MailGonder(model.Email,mailBody, baslik);
 
                 if (!mail.MailGonderHotmail(mail))
                 {
