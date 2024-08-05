@@ -15,6 +15,7 @@ namespace VeterinerApp.Models.Entity
             SahipHayvans = new HashSet<SahipHayvan>();
         }
 
+        public string imgURl { get; set; }
         public int HayvanId { get; set; }
         public string HayvanAdi { get; set; }
         public string HayvanCinsiyet { get; set; }
