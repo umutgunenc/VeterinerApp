@@ -98,7 +98,7 @@ namespace VeterinerApp.Controllers
             {
                 user.SifreOlusturmaTarihi = System.DateTime.Now;
                 user.SifreGecerlilikTarihi = System.DateTime.Now.AddDays(120);
-                _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
                 TempData["PasswordChanged"] = $"Sayın {user.UserName}, Şifreniz başarıyla değiştirildi.";
                 return View();
             }

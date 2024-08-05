@@ -52,7 +52,6 @@ namespace VeterinerApp.Controllers
             RenkEkleValidators renkvalidator = new RenkEkleValidators(_veterinerDbContext);
             ValidationResult result = renkvalidator.Validate(model);
 
-            _veterinerDbContext.Renks.Add(renkEntity);
 
             if (!result.IsValid)
             {
@@ -63,6 +62,7 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
+            _veterinerDbContext.Renks.Add(renkEntity);
             _veterinerDbContext.SaveChanges();
             TempData["Success"] = $"{renk} rengi eklendi";
 

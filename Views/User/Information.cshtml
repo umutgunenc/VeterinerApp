@@ -47,6 +47,7 @@
                                         <th scope="col" class="text-center">Türü</th>
                                         <th scope="col" class="text-center">Cinsi</th>
                                         <th scope="col" class="text-center">Rengi</th>
+                                        <th scope="col" class="text-center">Kilosu</th>
                                         <th scope="col" class="text-center">Cinsiyeti</th>
                                         <th scope="col" class="text-center">Doğum Tarihi</th>
                                         <th scope="col" class="text-center">Ölüm Tarihi</th>
@@ -64,6 +65,8 @@
                                             <td class="text-center">@hayvan.TurAdi</td>
                                             <td class="text-center">@hayvan.CinsAdi</td>
                                             <td class="text-center">@hayvan.RenkAdi</td>
+                                            <td class="text-center">@hayvan.HayvanKilo</td>
+
                                             <td class="text-center">
                                                 @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
                                                 {
@@ -144,7 +147,7 @@
                         <a href="/User/ChangePassword" class="btn btn-primary ml-3 mb-3">
                             Şifremi Değiştir
                         </a>
-                        <a href="#" class="btn btn-primary ml-3 mb-3">
+                        <a href="/Animal/AddAnimal" class="btn btn-primary ml-3 mb-3">
                             Hayvan Ekle
                         </a>
                     </div>

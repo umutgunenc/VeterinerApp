@@ -1,0 +1,154 @@
+﻿@model AddAnimalViewModel
+
+@{
+    Layout = "_LayoutAccount";
+}
+
+@section AddAnimal{
+    <h2>Hayvan Kaydı</h2>
+    <hr />
+
+
+    <form asp-action="AddAnimal" asp-controller="Animal" method="post">
+        <div class="form-col">
+
+            <div class="form-group row mb-3">
+                <label asp-for="HayvanAdi" class="col-sm-2 col-form-label">Hayvan Adı</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label">Doğum Tarihi</label>
+                <div class="col-sm-10">
+                    <input type="date" asp-for="HayvanDogumTarihi" class="form-control" value="@null">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
+                <div class="row-sm-4 mr-5">
+                    <label asp-for="CinsId" class="row-sm-2 col-form-label">Cinsi</label>
+                    <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                        <option value="" disabled selected>Cins Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
+                        </span>
+                    </div>
+                </div>
+                <div class="row-sm-4 mr-5 flex-fill">
+                    <label asp-for="TurId" class="row-sm-2 col-form-label">Türü</label>
+                    <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
+                        <option value="" disabled selected>Tür Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
+                        </span>
+                    </div>
+                </div>
+                <div class="row-sm-4 mr-5 flex-fill">
+                    <label asp-for="RenkId" class="row-sm-2 col-form-label">Rengi</label>
+                    <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
+                        <option value="" disabled selected>Cins Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
+                        </span>
+                    </div>
+                </div>
+                <div class="row-sm-4 mr-5 flex-fill">
+                    <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label">Cinsiyeti</label>
+                    <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+                        <option value="" disabled selected>Cinsiyet Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
+                        </span>
+                    </div>
+                </div>
+                <div class="row-sm-4 mr-3 flex-fill">
+                    <label asp-for="HayvanKilo" class="row-sm-2 col-form-label">Hayvan Kilosu</label>
+                    <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1">
+                    </input>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label">Hayvan Annesi</label>
+                <div class="col-sm-10">
+                    <select id="cins" asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
+                        <option value="" disabled selected>Anne Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label">Hayvan Babası</label>
+                <div class="col-sm-10">
+                    <select id="cins" asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
+                        <option value="" disabled selected>Baba Seçin</option>
+                    </select>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+        </div>
+    </form>
+
+    @if (TempData["AddAnimal"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["AddAnimal"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
+
+    <script>
+
+        $(document).ready(function () {
+            $('#cins').change(function () {
+                var cinsId = $(this).val();
+
+                $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
+
+                    var turSelect = $('#tur');
+                    turSelect.empty();
+                    turSelect.append('<option value="">Tür Seçin</option>');
+
+                    $.each(data, function (index, item) {
+                        turSelect.append($('<option>', {
+                            value: item.value,
+                            text: item.text
+                        }));
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                });
+            });
+        });
+
+    </script>
+}
+
