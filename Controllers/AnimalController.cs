@@ -151,6 +151,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public IActionResult AddAnimal(AddAnimalViewModel model)
         {
+
             HayvanValidator validator = new HayvanValidator(_context);
             var result = validator.Validate(model);
 

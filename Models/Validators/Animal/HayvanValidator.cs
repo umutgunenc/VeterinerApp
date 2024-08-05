@@ -68,6 +68,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .WithMessage("Hayvan babası, eklenen hayvandan büyük olmalıdır.")
                 .Must(beBoy).WithMessage("Hayvan babası dişi olmalıdır.");
 
+            //todo: hayvan kilo kontrolü yapılacak, ondalık değer girilmiyor
             RuleFor(x => x.HayvanKilo)
                 .NotNull().WithMessage("Lütfen hayvanın kilosunu giriniz.")
                 .NotEmpty().WithMessage("Lütfen hayvanın kilosunu giriniz.")
