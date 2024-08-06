@@ -4,7 +4,6 @@ using FluentValidation;
 using System.Linq;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Data;
-using VeterinerApp.Data;
 
 
 

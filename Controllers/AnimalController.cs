@@ -239,11 +239,11 @@ namespace VeterinerApp.Controllers
                     .ToList();
 
                 var cinsiyet = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Erkek", Value = "E" },
-                new SelectListItem { Text = "Dişi", Value = "D" }
-            };
-
+                {
+                    new SelectListItem { Text = "Erkek", Value = "E" },
+                    new SelectListItem { Text = "Dişi", Value = "D" }
+                };
+                
                 var returnModel = new AddAnimalViewModel
                 {
                     CinsAdlari = cinsAdlari,
@@ -345,5 +345,133 @@ namespace VeterinerApp.Controllers
             else
                 return View("BadRequest");
     }
-}
+
+        [HttpPost]
+        public IActionResult EditAnimal(int hayvanId) 
+        {
+            var cinsAdlari = _context.Cins.Select(c => new SelectListItem
+            {
+                Text = c.cins,
+                Value = c.Id.ToString()
+            }).ToList();
+
+            var renkAdlari = _context.Renks.Select(r => new SelectListItem
+            {
+                Text = r.renk,
+                Value = r.Id.ToString()
+            }).ToList();
+
+            var Anneler = _context.Hayvans
+                .Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d")
+                .Select(h => new AddAnimalViewModel
+                {
+                    HayvanAdi = h.HayvanAdi,
+                    HayvanId = h.HayvanId,
+                    rengi = _context.Renks
+                        .Where(r => r.Id == h.RenkId)
+                        .Select(r => r.renk)
+                        .FirstOrDefault(),
+                    cinsi = _context.Cins
+                        .Where(c => c.Id == h.CinsId)
+                        .Select(c => c.cins)
+                        .FirstOrDefault(),
+                    turu = _context.Turs
+                        .Where(t => t.Id == h.TurId)
+                        .Select(t => t.tur)
+                        .FirstOrDefault(),
+                    SahipTckn = _context.SahipHayvans
+                        .Where(sh => sh.HayvanId == h.HayvanId)
+                        .Select(s => s.SahipTckn)
+                        .FirstOrDefault(),
+                    SahipAdSoyad = _context.Users
+                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(sh => sh.HayvanId == h.HayvanId)
+                        .Select(s => s.SahipTckn)
+                        .FirstOrDefault())
+                        .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
+                        .FirstOrDefault()
+                })
+                .ToList();
+
+            var Babalar = _context.Hayvans
+                .Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e")
+                .Select(h => new AddAnimalViewModel
+                {
+                    HayvanAdi = h.HayvanAdi,
+                    HayvanId = h.HayvanId,
+                    rengi = _context.Renks
+                        .Where(r => r.Id == h.RenkId)
+                        .Select(r => r.renk)
+                        .FirstOrDefault(),
+                    cinsi = _context.Cins
+                        .Where(c => c.Id == h.CinsId)
+                        .Select(c => c.cins)
+                        .FirstOrDefault(),
+                    turu = _context.Turs
+                        .Where(t => t.Id == h.TurId)
+                        .Select(t => t.tur)
+                        .FirstOrDefault(),
+                    SahipTckn = _context.SahipHayvans
+                        .Where(sh => sh.HayvanId == h.HayvanId)
+                        .Select(s => s.SahipTckn)
+                        .FirstOrDefault(),
+                    SahipAdSoyad = _context.Users
+                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(sh => sh.HayvanId == h.HayvanId)
+                        .Select(s => s.SahipTckn)
+                        .FirstOrDefault())
+                        .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
+                        .FirstOrDefault()
+                })
+                .ToList();
+
+            var cinsiyet = new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Erkek", Value = "E" },
+                    new SelectListItem { Text = "Dişi", Value = "D" }
+                };
+
+            EditAnimalViewModel model = new()
+            {
+                HayvanId = hayvanId,
+                HayvanAdi = _context.Hayvans.Find(hayvanId).HayvanAdi.ToUpper(),
+                HayvanCinsiyet = _context.Hayvans.Find(hayvanId).HayvanCinsiyet,
+                HayvanKilo = _context.Hayvans.Find(hayvanId).HayvanKilo,
+                HayvanDogumTarihi = _context.Hayvans.Find(hayvanId).HayvanDogumTarihi,
+                HayvanOlumTarihi = _context.Hayvans.Find(hayvanId).HayvanOlumTarihi,
+                CinsId=_context.Hayvans.Find(hayvanId).CinsId,
+                TurId= _context.Hayvans.Find(hayvanId).TurId,
+                RenkId = _context.Hayvans.Find(hayvanId).RenkId,
+                cinsi = _context.Cins
+                    .Where(c => c.Id == _context.Hayvans.Find(hayvanId).CinsId)
+                    .Select(c => c.cins)
+                    .FirstOrDefault(),
+                turu = _context.Turs
+                    .Where(t => t.Id == _context.Hayvans.Find(hayvanId).TurId)
+                    .Select(t => t.tur)
+                    .FirstOrDefault(),
+                rengi = _context.Renks
+                    .Where(r => r.Id == _context.Hayvans.Find(hayvanId).RenkId)
+                    .Select(r => r.renk)
+                    .FirstOrDefault(),
+                isDeath=false,
+                CinsAdlari = cinsAdlari,
+                RenkAdlari = renkAdlari,
+                HayvanAnneList = Anneler.Select(h => new SelectListItem
+                {
+                    Text = $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                    Value = h.HayvanId.ToString()
+                }).ToList(),
+                HayvanBabaList = Babalar.Select(h => new SelectListItem
+                {
+                    Text = $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                    Value = h.HayvanId.ToString()
+                }).ToList(),
+                CinsiyetList = cinsiyet,
+                Sahip = _userManager.GetUserAsync(User).Result
+            };
+
+            return View(model);
+        }
+    }
 }

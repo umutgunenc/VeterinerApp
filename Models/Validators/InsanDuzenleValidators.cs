@@ -175,9 +175,7 @@ namespace VeterinerApp.Models.Validators
                 return true;
 
             return !_context.Users
-                .Any(x => x.Email.ToUpper() == insanMail.ToUpper()
-                || x.Email.ToLower() == insanMail.ToLower()
-                && x.InsanTckn != InsanTckn);
+                .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.InsanTckn != InsanTckn);
         }
     }
 }

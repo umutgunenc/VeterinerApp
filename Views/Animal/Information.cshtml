@@ -1,7 +1,5 @@
 ﻿@model HayvanlarViewModel
-@{
 
-}
 
 @{
     Layout = "_LayoutAccount";
@@ -34,7 +32,7 @@
                         <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
                         <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
                         <h6 class="card-title mt-2">
-                            Cinsiyeti :@if (Model.HayvanCinsiyet == "D" || Model.HayvanCinsiyet == "d")
+                            Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
                             {
                                 @:Dişi
                             }
@@ -74,6 +72,7 @@
                                 @: Bilinmiyor
                             }
                         </h6>
+
 
 
                         @if (Model.Muayeneler.Count > 0)
@@ -118,14 +117,17 @@
 
                         }
 
-                        <a href="#" class="btn btn-primary mb-3">
-                            Düzenle
-                        </a>
+                        <form asp-action="EditAnimal" asp-controller="Animal">
+                            <input type="hidden" name="hayvanId" value="@Model.HayvanId" />
+                            <button type="submit" class="btn btn-primary mb-3">Düzenle</button>
+                        </form>
+
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-}
+    }
 
