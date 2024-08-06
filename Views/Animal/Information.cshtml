@@ -1,90 +1,102 @@
-﻿<!--@model HayvanlarViewModel
-@{ 
-    
+﻿@model HayvanlarViewModel
+@{
+
 }
 
-@{ 
+@{
     Layout = "_LayoutAccount";
 }
 
-@section animalInfirmation{
+@section animalInformation{
     <h2>hayvan bilgileri</h2>
     <hr />
     <div class="card text-white bg-dark mb-3">
         <div class="row no-gutters">
             <div class="col-md-3">
                 <div class="m-3 text-center">
-                    <img src="@if (user.ImgURL != null) { @user.ImgURL } else { @Url.Content("~/img/user.svg") }" class="card-img">
-                    <div class="mt-3">-->
+                    <img src="@if (Model.imgURL != null) { @Model.imgURL } else { @Url.Content("~/img/animal.png") }" class="card-img">
+                    <div class="mt-3">
                         @*<form action="~/img/@user.UserName/" method="post" enctype="multipart/form-data">
-                            <input type="file" id="fileInput" name="file" accept="image/*" style="display: none;">
-                            <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">Profil Fotoğrafı Ekle</button>
-                        </form>*@
-                    <!--</div>
+                                <input type="file" id="fileInput" name="file" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">Profil Fotoğrafı Ekle</button>
+                            </form>*@
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-9 align-self-start">
                 <div class="d-flex flex-column">
                     <div class="card-header font-weight-bold pl-0">
-                        <h3>@user.InsanAdi.ToUpper() @user.InsanSoyadi.ToUpper()</h3>
+                        <h3>@Model.HayvanAdi<h3>
                     </div>
                     <div class="">
-                        <h6 class="card-title mt-2">TCKN: @user.InsanTckn</h6>
-                        <h6 class="card-title mt-2">Şifre Geçerlilik Süresi: @kalanSure Gün</h6>
+                        <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
+                        <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
+                        <h6 class="card-title mt-2">
+                            Cinsiyeti :@if (Model.HayvanCinsiyet == "D" || Model.HayvanCinsiyet == "d")
+                            {
+                                @:Dişi
+                            }
+                            else
+                            {
+                                @:Erkek
+                            }
+                        </h6>
+                        <h6 class="card-title mt-2">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
+                        <h6 class="card-title mt-2">
+                            Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
+                            {
+                                @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                            }
+                            else
+                            {
+                                @:Hayatta
+                            }
+                        </h6>
+                        <h6 class="card-title mt-2">
+                            Hayvan Annesi : @if (Model.HayvanAdi != null)
+                            {
+                                @Model.HayvanAnneAdi
+                            }
+                            else
+                            {
+                                @: Bilinmiyor
+                            }
+                        </h6>
+                        <h6 class="card-title mt-2">
+                            Hayvan Babası : @if (Model.HayvanAdi != null)
+                            {
+                                @Model.HayvanBabaAdi
+                            }
+                            else
+                            {
+                                @: Bilinmiyor
+                            }
+                        </h6>
 
-                        @if (hayvanlar.Count > 0)
+
+                        @if (Model.Muayeneler.Count > 0)
                         {
                             <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
 
                             <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="text-center">Hayvan Adı</th>
-                                        <th scope="col" class="text-center">Türü</th>
-                                        <th scope="col" class="text-center">Cinsi</th>
-                                        <th scope="col" class="text-center">Rengi</th>
-                                        <th scope="col" class="text-center">Kilosu</th>
-                                        <th scope="col" class="text-center">Cinsiyeti</th>
-                                        <th scope="col" class="text-center">Doğum Tarihi</th>
-                                        <th scope="col" class="text-center">Ölüm Tarihi</th>
+                                        <th scope="col" class="text-center">Muayene Tarihi</th>
+                                        <th scope="col" class="text-center">Hekim Adı</th>
                                     </tr>
                                 </thead>
-                                @foreach (var hayvan in hayvanlar)
+                                @foreach (var muayene in Model.Muayeneler)
                                 {
-                                    <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
-                                        <input type="hidden" name="hayvanId" value="@hayvan.HayvanId" />
+                                    
+                                    <form  method="post" id="form-@muayene.MuayeneNo">
+                                        <input type="hidden" name="hayvanId" value="@muayene.MuayeneNo" />
                                     </form>
 
                                     <tbody>
-                                        <tr role="button" class="clickable-row" data-form-id="form-@hayvan.HayvanId">
-                                            <td class="text-center">@hayvan.HayvanAdi</td>
-                                            <td class="text-center">@hayvan.TurAdi</td>
-                                            <td class="text-center">@hayvan.CinsAdi</td>
-                                            <td class="text-center">@hayvan.RenkAdi</td>
-                                            <td class="text-center">@hayvan.HayvanKilo</td>
-
-                                            <td class="text-center">
-                                                @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
-                                                {
-                                                    @:Dişi
-                                                }
-                                                else
-                                                {
-                                                    @:Erkek
-                                                }
-                                            </td>
-                                            <td class="text-center">@hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</td>
-                                            <td class="text-center">
-                                                @if (hayvan.HayvanOlumTarihi != null)
-                                                {
-                                                    @hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
-                                                }
-                                                else
-                                                {
-                                                    @:Hayatta
-                                                }
-                                            </td>
+                                        <tr role="button" class="clickable-row" data-form-id="form-@muayene.HayvanId">
+                                            <td class="text-center">@muayene.MuayeneTarihi</td>
+                                            <td class="text-center">@muayene.HekimkTckn</td>                                                         
                                         </tr>
                                     </tbody>
 
@@ -94,7 +106,7 @@
                                         const rows = document.querySelectorAll(".clickable-row");
                                         rows.forEach(row => {
                                             row.addEventListener("click", () => {
-                                                const form = document.getElementById("form-@hayvan.HayvanId");
+                                                const form = document.getElementById("form-@muayene.HayvanId");
                                                 form.submit();
                                             });
                                         });
@@ -104,48 +116,9 @@
                             </table>
 
                         }
-                        <p class="card-text">
-                            E-Mail Adresi: <a href="mailto:@user.Email">@user.Email</a>
-                        </p>
-
-                        @if (user.PhoneNumber != null)
-                        {
-                            var formattedTelNo = FormatTelefon(user.PhoneNumber);
-                            var telNo = "9" + user.PhoneNumber;
-
-                            <p class="card-text">Telefonu: <a href="https://api.whatsapp.com/send?phone=@telNo" target="_blank">@formattedTelNo</a></p>
-                        }
-
-                        @functions {
-                            public string FormatTelefon(string telefon)
-                            {
-                                if (string.IsNullOrEmpty(telefon))
-                                    return string.Empty;
-
-                                string telNo = new string(telefon.Where(char.IsDigit).ToArray());
-
-                                if (telNo.Length == 11)
-                                    return $"+90 {telNo.Substring(1, 3)} {telNo.Substring(4, 3)}  {telNo.Substring(7, 2)} {telNo.Substring(9, 2)}";
-                                else
-                                    return telefon;
-
-                            }
-                        }
-                        </input>
 
                         <a href="#" class="btn btn-primary mb-3">
                             Düzenle
-                        </a>
-                        @if (User.IsInRole("MÜŞTERİ"))
-                        {<a href="#" class="btn btn-primary ml-3 mb-3">
-                                Hesabımı Sil
-                            </a>
-                        }
-                        <a href="/User/ChangePassword" class="btn btn-primary ml-3 mb-3">
-                            Şifremi Değiştir
-                        </a>
-                        <a href="/Animal/AddAnimal" class="btn btn-primary ml-3 mb-3">
-                            Hayvan Ekle
                         </a>
                     </div>
                 </div>
@@ -153,5 +126,5 @@
         </div>
     </div>
 
-}-->
+}
 

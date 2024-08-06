@@ -10,7 +10,7 @@ using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Account;
 using VeterinerApp.Models.ViewModel.Account;
-using VeterinerApp.Models.ViewModel.User;
+using VeterinerApp.Models.ViewModel.Animal;
 
 namespace VeterinerApp.Controllers
 {
