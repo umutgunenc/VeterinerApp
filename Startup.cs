@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
+using System.Threading;
 using VeterinerApp.Data;
 using VeterinerApp.Models;
 using VeterinerApp.Models.Entity;
@@ -75,6 +76,15 @@ public class Startup
         app.UseStaticFiles();
         app.UseRouting();
 
+        // Kültür ayarlarını yapılandır
+        var supportedCultures = new[] { new CultureInfo("en-US") };
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture("en-US"),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        });
+
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -86,15 +96,6 @@ public class Startup
             );
         });
 
-        //var cultureInfo = new CultureInfo("tr-TR");
-        //cultureInfo.NumberFormat.NumberDecimalSeparator = ",";
-        //cultureInfo.NumberFormat.NumberGroupSeparator = ".";
-        //var supportedCultures = new[] { cultureInfo };
-        //app.UseRequestLocalization(new RequestLocalizationOptions
-        //{
-        //    DefaultRequestCulture = new RequestCulture(cultureInfo),
-        //    SupportedCultures = supportedCultures,
-        //    SupportedUICultures = supportedCultures
-        //});
+
     }
 }

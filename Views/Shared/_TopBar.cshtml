@@ -1,62 +1,37 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
+﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top topbar-custom">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarToggler">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="topbarToggler">
+        <a href="/home/index" class="navbar-brand">Ana Sayfa</a>
         <ul class="navbar-nav mr-auto">
+            @if (User.IsInRole("ADMİN"))
+            {
+                <li class="nav-item active">
+                    <a href="/admin/AdminIndex" class="nav-link">Admin İşlemleri</a>
+                </li>
+            }
+            @if (User.IsInRole("ÇALIŞAN"))
+            {
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">Çalışan İşlemleri</a>
+                </li>
+            }
+            @if (User.IsInRole("VETERİNER"))
+            {
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">Veteriner İşlemleri</a>
+                </li>
+            }
             <li class="nav-item active">
-                <h3 class="text-white"> <a href="/" class="nav-link text-white">VETERİNER BİLGİ SİSTEMİ <i class="fa-solid fa-home"></i></a></h3>
+                <a href="#" class="nav-link">Hakkımızda</a>
             </li>
-        </ul>
-
-        <ul class="navbar-nav mx-auto ">
-            <li class="nav-item mx-2">
-                <h5><a href="#" class="nav-link text-white"><i class="fa-brands fa-facebook"></i></a></h5>
-            </li>
-            <li class="nav-item mx-2">
-                <h5><a href="#" class="nav-link text-white"><i class="fa-brands fa-twitter"></i></a></h5>
-            </li>
-            <li class="nav-item mx-2">
-                <h5><a href="#" class="nav-link text-white"><i class="fa-brands fa-instagram"></i></a></h5>
-            </li>
-
-        </ul>
-
-        <ul class="navbar-nav ml-auto">
-
-            @if (User.Identity.IsAuthenticated)
-            {
-
-                <li class="nav-item mx-2">
-                    <div class="dropdown">
-                        <a class="nav-link text-white " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @User.Identity.Name <i class="fa-solid fa-user-check"></i>
-                        </a>
-                        <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item text-white cstm" href="/User/Information"
-                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
-                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';" }"><i class="fa-solid fa-passport"></i> Bilgilerim</a>
-                            <a class="dropdown-item text-white" href="/User/ChangePassword"
-                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
-                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';"><i class="fa-solid fa-key"></i> Şifremi Değiştir</a>
-                            <a class="dropdown-item text-white" href="#"
-                               onmouseover="this.style.backgroundColor='#43494E'; this.style.color='white';"
-                               onmouseout="this.style.backgroundColor='#343A40'; this.style.color='white';">Something else here</a>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="nav-item mx-2">
-                    <a href="/Account/Logout" class="nav-link text-white">Çıkış Yap  <i class="fa-regular fa-circle-xmark"></i></a>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item mx-2">
-                    <a href="/Account/Register" class="nav-link text-white">Kayıt Ol <i class="fa-regular fa-id-card"></i></a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a href="/Account/Login" class="nav-link text-white">Giriş Yap <i class="fa-solid fa-user-check"></i></a>
-                </li>
-            }
-
         </ul>
     </div>
+    <form class="form-inline input-group p-0 col-5" action="#" method="get">
+        <input class="form-control mr-sm-0 rounded-left bg-light" type="text" placeholder="Hayvan Ara" />
+        <div class="input-group-append">
+            <button class="btn btn-outline-info rounded-right px-3" type="submit">Ara</button>
+        </div>
+    </form>
 </nav>

@@ -1,0 +1,13 @@
+﻿.navbar-custom {
+    z-index: 1020; /* Topbar'ın üstünde kalması için */
+}
+
+.topbar-custom {
+    z-index: 1010; /* Navbar'ın altında kalması için */
+}
+
+body {
+    /*padding-top: 56px;*/ /* Navbar yüksekliği kadar boşluk bırakır */
+    /*padding-top: 112px;*/ /* Topbar yüksekliği eklenir */
+}
+

@@ -25,7 +25,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label">Doğum Tarihi</label>
                 <div class="col-sm-10">
-                    <input type="date" asp-for="HayvanDogumTarihi" class="form-control" value="@null">
+                    <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
                     <div class="mt-2">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
                         </span>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="row-sm-4 mr-3">
                     <label asp-for="HayvanKilo" class="row-sm-2 col-form-label">Hayvan Kilosu</label>
-                    <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" value="">
+                    <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
                     </input>
                     <div class="mt-2">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">

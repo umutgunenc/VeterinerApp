@@ -32,6 +32,7 @@
                     <div class="">
                         <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
                         <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
+                        <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
                         <h6 class="card-title mt-2">
                             Cinsiyeti :@if (Model.HayvanCinsiyet == "D" || Model.HayvanCinsiyet == "d")
                             {
@@ -88,15 +89,15 @@
                                 </thead>
                                 @foreach (var muayene in Model.Muayeneler)
                                 {
-                                    
-                                    <form  method="post" id="form-@muayene.MuayeneNo">
+
+                                    <form method="post" id="form-@muayene.MuayeneNo">
                                         <input type="hidden" name="hayvanId" value="@muayene.MuayeneNo" />
                                     </form>
 
                                     <tbody>
                                         <tr role="button" class="clickable-row" data-form-id="form-@muayene.HayvanId">
                                             <td class="text-center">@muayene.MuayeneTarihi</td>
-                                            <td class="text-center">@muayene.HekimkTckn</td>                                                         
+                                            <td class="text-center">@muayene.HekimkTckn</td>
                                         </tr>
                                     </tbody>
 
