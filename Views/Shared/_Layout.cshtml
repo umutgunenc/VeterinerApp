@@ -14,10 +14,11 @@
 
 </head>
 <body>
-    @await Html.PartialAsync("_topBar")
+    @await Html.PartialAsync("_navbar")
+
     @if (User.Identity.IsAuthenticated)
     {
-        @await Html.PartialAsync("_navbar")
+        @await Html.PartialAsync("_topBar")
     }
     <div class="container mt-3">
         <div class="row">
