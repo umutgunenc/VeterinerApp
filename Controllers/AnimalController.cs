@@ -1,11 +1,13 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
@@ -156,7 +158,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddAnimal(AddAnimalViewModel model)
+        public async Task<IActionResult> AddAnimal(AddAnimalViewModel model, IFormFile filePhoto)
         {
 
             HayvanValidator validator = new HayvanValidator(_context);
@@ -277,6 +279,8 @@ namespace VeterinerApp.Controllers
 
                 return View(returnModel);
             }
+
+
             Hayvan hayvan = new Hayvan();
 
             hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
@@ -296,6 +300,33 @@ namespace VeterinerApp.Controllers
             sahipHayvan.SahiplikTarihi = model.SahiplikTarihi;
             sahipHayvan.SahipTckn = _userManager.GetUserAsync(User).Result.InsanTckn;
             sahipHayvan.HayvanId = hayvan.HayvanId;
+
+
+            if (filePhoto != null)
+            {
+                var dosyaUzantısı = Path.GetExtension(filePhoto.FileName);
+                var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
+                var hayvanKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\animals", hayvan.HayvanId.ToString());
+
+                if (!Directory.Exists(hayvanKlasoru))
+                {
+                    Directory.CreateDirectory(hayvanKlasoru);
+                }
+
+                var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await filePhoto.CopyToAsync(stream);
+                }
+
+                // Web URL'sini oluşturma
+                var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
+
+                // Veritabanına URL'yi kaydetme
+                hayvan.imgURl = fileUrl;
+                await _context.SaveChangesAsync();
+            }
 
             _context.SahipHayvans.Add(sahipHayvan);
             _context.SaveChanges();
@@ -475,8 +506,8 @@ namespace VeterinerApp.Controllers
 
                 isDeath = _context.Hayvans.Find(hayvanId).HayvanOlumTarihi == null ? false : true,
 
-                HayvanAnneId=_context.Hayvans.Find(hayvanId).HayvanAnneId,
-                HayvanBabaId= _context.Hayvans.Find(hayvanId).HayvanBabaId,
+                HayvanAnneId = _context.Hayvans.Find(hayvanId).HayvanAnneId,
+                HayvanBabaId = _context.Hayvans.Find(hayvanId).HayvanBabaId,
 
                 CinsAdlari = cinsAdlari,
                 RenkAdlari = renkAdlari,
@@ -513,7 +544,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveEdit(EditAnimalViewModel model)
+        public async Task<IActionResult> SaveEdit(EditAnimalViewModel model)
         {
             EditHayvanValidator validator = new EditHayvanValidator(_context);
             ValidationResult result = validator.Validate(model);
@@ -666,13 +697,58 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
 
-                }                
+                }
 
                 return View("EditAnimal", returnModel);
             }
-
             var hayvan = _context.Hayvans.Find(model.HayvanId);
-            hayvan.HayvanAdi= model.HayvanAdi.ToUpper();
+            if (model.changePhoto)
+            {
+                if (model.filePhoto != null)
+                {
+                    var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
+
+                    string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+
+                    if (!allowedExtensions.Contains(dosyaUzantısı.ToLower()))
+                    {
+                        ModelState.AddModelError("filePhoto", "Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.");
+
+                        return View("EditAnimal", returnModel);
+                    }
+
+                    var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
+                    var hayvanKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\animals", hayvan.HayvanId.ToString());
+
+                    if (!Directory.Exists(hayvanKlasoru))
+                    {
+                        Directory.CreateDirectory(hayvanKlasoru);
+                    }
+
+                    var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.filePhoto.CopyToAsync(stream);
+                    }
+
+                    // Web URL'sini oluşturma
+                    var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
+
+                    hayvan.imgURl = fileUrl;
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Fotoğraf seçilmedi.");
+                }
+            }
+            else
+            {
+                hayvan.imgURl = null;
+
+            }
+
+            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
             hayvan.CinsId = model.CinsId;
             hayvan.TurId = model.TurId;
             hayvan.RenkId = model.RenkId;

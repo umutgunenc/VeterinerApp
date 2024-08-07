@@ -5,7 +5,7 @@
 }
 
 @section editAnimal{
-    <form asp-action="SaveEdit" asp-controller="Animal" method="post">
+    <form asp-action="SaveEdit" asp-controller="Animal" method="post" enctype="multipart/form-data">
         <div class="form-col">
 
             <div class="form-group row mb-3">
@@ -122,7 +122,24 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">
+                    Fotoğrafı Değiştir
+                    <input class="ml-2" asp-for="changePhoto" type="checkbox" id="flexCheckDefault">
+                </label>
+                <div class="col-sm-10">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                        <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
+                    </div>
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+                        </span>
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="changePhoto">
+                        </span>
+                    </div>
+                </div>
+            </div>
             <div class="form-group row mb-3">
                 <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>
                 <div class="col-sm-10">
@@ -194,7 +211,12 @@
                 turleriGetir(cinsId);
             });
         });
-
+        document.querySelector('.custom-file-input').addEventListener('change', function (event) {
+            var inputFile = event.currentTarget;
+            var fileName = inputFile.files[0].name;
+            var label = inputFile.nextElementSibling;
+            label.innerHTML = fileName;
+        });
 
     </script>
 }

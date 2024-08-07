@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using VeterinerApp.Models.Entity;
@@ -11,6 +12,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public string cinsi { get; set; }
         public string turu { get; set; }
         public bool isDeath { get; set; }
+        public bool changePhoto { get; set; }
         public List<SelectListItem> TurAdlari { get; set; }
         public List<SelectListItem> CinsAdlari { get; set; }
         public List<SelectListItem> RenkAdlari { get; set; }
@@ -22,5 +24,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public List<SelectListItem> HayvanBabaList { get; set; }
         public DateTime SahiplikTarihi { get; set; }
         public DateTime? SahiplikCikisTarihi { get; set; }
+        public IFormFile filePhoto { get; set; }
+
     }
 }

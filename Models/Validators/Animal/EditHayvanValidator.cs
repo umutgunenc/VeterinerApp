@@ -4,6 +4,7 @@ using System;
 using VeterinerApp.Data;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.Entity;
+using System.IO;
 
 namespace VeterinerApp.Models.Validators.Animal
 {
@@ -101,6 +102,16 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.isDeath)
                 .Must((model, x) => x == false || model.HayvanOlumTarihi.HasValue)
                 .WithMessage("Lütfen hayvanın ölüm tarihini giriniz.");
+
+            RuleFor(x => x.changePhoto)
+                .Must((model, x) => !x || model.filePhoto != null)
+                .WithMessage("Lütfen bir fotoğraf seçiniz.");
+
+
+            RuleFor(x => x.filePhoto)
+                .Empty().When(x => x.changePhoto == false).WithMessage("Fotoğraf yüklemek için kutucuğu işaretleyin.")
+                .Null().When(x => x.changePhoto == false).WithMessage("Fotoğraf yüklemek için kutucuğu işaretleyin.");
+
         }
 
         private bool MustBeRenk(int girilenRenk)
