@@ -48,7 +48,8 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanDogumTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz")
-                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.");
+                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
+                .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
             RuleFor(x => x.HayvanAnneId)
                 .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
@@ -73,12 +74,11 @@ namespace VeterinerApp.Models.Validators.Animal
                 .NotEmpty().WithMessage("Lütfen hayvanın kilosunu giriniz.")
                 .GreaterThanOrEqualTo(0).WithMessage("Lütfen geçerli kilo değeri giriniz.");
 
-            RuleFor(x=>x.SahiplikTarihi)
+            RuleFor(x => x.SahiplikTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz.")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz.")
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
-                .GreaterThanOrEqualTo(x=>x.HayvanDogumTarihi).WithMessage("Lütfen geçerli bir tarih giriniz.");
-
+                .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
 
         }
@@ -131,7 +131,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 return true;
 
             var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
-            return baba != null && baba.HayvanCinsiyet == "D";
+            return baba != null && baba.HayvanCinsiyet == "E";
         }
 
 
