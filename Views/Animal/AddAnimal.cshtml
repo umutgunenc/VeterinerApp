@@ -32,7 +32,16 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group row mb-3">
+                <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>
+                <div class="col-sm-10">
+                    <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
                 <div class="row-sm-2">
@@ -137,7 +146,7 @@
 
                     var turSelect = $('#tur');
                     turSelect.empty();
-                    turSelect.append('<option value="">Tür Seçin</option>');
+                    turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
 
                     $.each(data, function (index, item) {
                         turSelect.append($('<option>', {

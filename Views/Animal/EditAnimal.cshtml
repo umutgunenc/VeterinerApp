@@ -5,7 +5,7 @@
 }
 
 @section editAnimal{
-    <form asp-action="AddAnimal" asp-controller="Animal" method="post">
+    <form asp-action="SaveEdit" asp-controller="Animal" method="post">
         <div class="form-col">
 
             <div class="form-group row mb-3">
@@ -31,14 +31,15 @@
             <div class="form-group row mb-3">
                 <label class="col-sm-2 col-form-label d-flex align-items-center">
                     Ölüm Tarihi
-                    <input class="ml-2" asp-for="isDeath" type="checkbox" value="false" id="flexCheckDefault">
+                    <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
                 </label>
 
                 <div class="col-sm-10">
-                    <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                    <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                     <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanOlumTarihi">
-                        </span>
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanOlumTarihi"></span>
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="isDeath"></span>
+
                     </div>
                 </div>
             </div>
@@ -121,11 +122,44 @@
                     </div>
                 </div>
             </div>
+
+            <div class="form-group row mb-3">
+                <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>
+                <div class="col-sm-10">
+                    <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label asp-for="SahiplikCikisTarihi" class="col-sm-2 col-form-label">Sahiplik Çıkış Tarihi</label>
+                <div class="col-sm-10">
+                    <input type="date" asp-for="SahiplikCikisTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    <div class="mt-2">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikCikisTarihi">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="HayvanId" />
         </div>
         <button type="submit" class="col btn btn-primary">Kaydet</button>
     </form>
 
-
+    @if (TempData["Edit"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">@TempData["Edit"]</div>
+        <script>
+            setTimeout(function () {
+                var successMessage = document.getElementById("successMessage");
+                successMessage.remove();
+            }, 2500);
+        </script>
+    }
 
     <script>
          $(document).ready(function () {
@@ -133,7 +167,7 @@
                 $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (veri) {
                     var turSecim = $('#tur');
                     turSecim.empty();
-                    turSecim.append('<option value="">Tür Seçin</option>');
+                    turSecim.append('<option value="" disabled selected>Tür Seçin</option>');
 
                     $.each(veri, function (index, item) {
                         turSecim.append($('<option>', {

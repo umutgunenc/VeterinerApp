@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using VeterinerApp.Models.Entity;
 
@@ -19,5 +20,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public string SahipAdSoyad { get; set; }
         public List<SelectListItem> HayvanAnneList { get; set; }
         public List<SelectListItem> HayvanBabaList { get; set; }
+        public DateTime SahiplikTarihi { get; set; }
+        public DateTime? SahiplikCikisTarihi { get; set; }
     }
 }

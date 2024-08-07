@@ -20,6 +20,8 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public string HayvanBabaAdi { get; set; }
         public string RenkAdi { get; set; }
         public List<MuayeneViewModel> Muayeneler { get; set; }
+        public DateTime SahiplikTarihi { get; set; }
+        public DateTime? SahiplikCikisTarihi { get; set; }
 
 
     }

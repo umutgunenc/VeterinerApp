@@ -1,22 +1,17 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using VeterinerApp.Models.Entity;
+using System;
 using VeterinerApp.Data;
 using VeterinerApp.Models.ViewModel.Animal;
-
-
-#nullable disable
+using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.Validators.Animal
 {
-    public partial class HayvanValidator : AbstractValidator<AddAnimalViewModel>
+    public class EditHayvanValidator : AbstractValidator<EditAnimalViewModel>
     {
         private readonly VeterinerContext _context;
 
-        public HayvanValidator(VeterinerContext context)
+        public EditHayvanValidator(VeterinerContext context)
         {
             _context = context;
 
@@ -48,7 +43,9 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanDogumTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz")
-                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.");
+                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
+                .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
+
 
             RuleFor(x => x.HayvanAnneId)
                 .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
@@ -73,14 +70,37 @@ namespace VeterinerApp.Models.Validators.Animal
                 .NotEmpty().WithMessage("Lütfen hayvanın kilosunu giriniz.")
                 .GreaterThanOrEqualTo(0).WithMessage("Lütfen geçerli kilo değeri giriniz.");
 
-            RuleFor(x=>x.SahiplikTarihi)
+            RuleFor(x => x.SahiplikTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz.")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz.")
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
-                .GreaterThanOrEqualTo(x=>x.HayvanDogumTarihi).WithMessage("Lütfen geçerli bir tarih giriniz.");
+                .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
+            RuleFor(x => x.SahiplikCikisTarihi)
+                .Must((model, x) => !x.HasValue || (model.SahiplikTarihi <= x.Value))
+                .WithMessage("Sahiplikten çıkış tarihi, sahiplenme tarihinden büyük olmalıdır.")
+                .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Sahiplik çıkış tarihi, hayvan doğum tarihinden büyük olmalıdır.");
 
+            RuleFor(x => x.HayvanOlumTarihi)
+                .NotEmpty()
+                .When(x => x.isDeath)
+                .WithMessage("Lütfen ölüm tarihini giriniz.")
+                .NotNull()
+                .When(x => x.isDeath)
+                .WithMessage("Lütfen ölüm tarihini giriniz.")
+                .Must((model, x) => !x.HasValue)
+                .When(x => !x.isDeath)
+                .WithMessage("Lütfen hayvanı ölü olarak işaretleyin.")
+                .Must((model, x) => model.HayvanDogumTarihi <= x.Value)
+                .When(x => x.HayvanOlumTarihi.HasValue)
+                .WithMessage("Ölüm tarihi, doğum tarihinden büyük olmalıdır.")
+                .Must((model, x) => model.SahiplikTarihi <= x.Value)
+                .When(x => x.HayvanOlumTarihi.HasValue)
+                .WithMessage("Ölüm tarihi, sahiplik tarihinden büyük olmalıdır.");
 
+            RuleFor(x => x.isDeath)
+                .Must((model, x) => x == false || model.HayvanOlumTarihi.HasValue)
+                .WithMessage("Lütfen hayvanın ölüm tarihini giriniz.");
         }
 
         private bool MustBeRenk(int girilenRenk)
@@ -131,9 +151,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 return true;
 
             var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
-            return baba != null && baba.HayvanCinsiyet == "D";
+            return baba != null && baba.HayvanCinsiyet == "E";
         }
-
-
     }
 }
