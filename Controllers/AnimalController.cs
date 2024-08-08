@@ -158,7 +158,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAnimal(AddAnimalViewModel model, IFormFile filePhoto)
+        public async Task<IActionResult> AddAnimal(AddAnimalViewModel model)
         {
 
             HayvanValidator validator = new HayvanValidator(_context);
@@ -302,9 +302,9 @@ namespace VeterinerApp.Controllers
             sahipHayvan.HayvanId = hayvan.HayvanId;
 
 
-            if (filePhoto != null)
+            if (model.filePhoto != null)
             {
-                var dosyaUzantısı = Path.GetExtension(filePhoto.FileName);
+                var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
                 var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
                 var hayvanKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\animals", hayvan.HayvanId.ToString());
 
@@ -317,7 +317,7 @@ namespace VeterinerApp.Controllers
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await filePhoto.CopyToAsync(stream);
+                    await model.filePhoto.CopyToAsync(stream);
                 }
 
                 // Web URL'sini oluşturma

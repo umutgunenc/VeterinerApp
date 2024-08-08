@@ -119,6 +119,10 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Empty()
                 .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "useDefault")
                 .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
+            RuleFor(x=>x.filePhoto)
+                .Must(x => x.Length < 5242880)
+                .When(x => x.filePhoto != null)
+                .WithMessage("Fotoğraf boyutu 5MB'dan küçük olmalıdır.");
 
 
         }

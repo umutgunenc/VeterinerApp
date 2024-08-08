@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using VeterinerApp.Models.Entity;
@@ -21,5 +22,6 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public List<SelectListItem> HayvanBabaList { get; set; }
         public DateTime SahiplikTarihi { get; set; }
         public DateTime? SahiplikCikisTarihi { get; set; }
+        public IFormFile filePhoto { get; set; }
     }
 }

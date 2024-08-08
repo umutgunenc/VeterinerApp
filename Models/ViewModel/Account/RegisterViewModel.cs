@@ -1,4 +1,5 @@
-﻿using VeterinerApp.Models.Entity;
+﻿using Microsoft.AspNetCore.Http;
+using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Account
 {
@@ -7,5 +8,6 @@ namespace VeterinerApp.Models.ViewModel.Account
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public int rolId { get; set; }
+        public IFormFile filePhoto { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using System.Linq;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Data;
 using VeterinerApp.Models.ViewModel.Animal;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 
 #nullable disable
@@ -80,9 +82,24 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
                 .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
+            RuleFor(x => x.filePhoto)
+                .Must(HaveValidExtension)
+                .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
+                .When(x => x.filePhoto != null)
+                .WithName("filePhoto");
+
+            RuleFor(x => x.filePhoto)
+                .Must(x => x.Length < 5242880)
+                .When(x => x.filePhoto != null)
+                .WithMessage("Fotoğraf boyutu 5MB'dan küçük olmalıdır.");
 
         }
-
+        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private bool HaveValidExtension(IFormFile file)
+        {
+            var extension = Path.GetExtension(file.FileName).ToLower();
+            return allowedExtensions.Contains(extension);
+        }
         private bool MustBeRenk(int girilenRenk)
         {
             return _context.Renks.Any(x => x.Id == girilenRenk);
