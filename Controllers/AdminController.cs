@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Fonksiyonlar.MailGonderme;
@@ -15,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
+using VeterinerApp.Models.Validators.Admin;
 
 
 
@@ -49,7 +49,7 @@ namespace VeterinerApp.Controllers
             string renk = model.renk.ToUpper();
             var renkEntity = new Renk { renk = renk };
 
-            RenkEkleValidators renkvalidator = new RenkEkleValidators(_veterinerDbContext);
+            RenkEkleValidators renkvalidator = new RenkEkleValidators();
             ValidationResult result = renkvalidator.Validate(model);
 
 
@@ -92,7 +92,7 @@ namespace VeterinerApp.Controllers
 
             var renkEntity = new Renk { Id = model.Id, renk = silinecekRenkAdı };
 
-            RenkSilValidator validator = new(_veterinerDbContext);
+            RenkSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -132,7 +132,7 @@ namespace VeterinerApp.Controllers
             string cinsAdi = model.cins.ToUpper();
             var cinsEntity = new Cins { cins = cinsAdi };
 
-            CinsEkleValidators validator = new CinsEkleValidators(_veterinerDbContext);
+            CinsEkleValidators validator = new CinsEkleValidators();
             ValidationResult result = validator.Validate(model);
 
             _veterinerDbContext.Cins.Add(cinsEntity);
@@ -174,7 +174,7 @@ namespace VeterinerApp.Controllers
 
             var cinsEntity = new Cins { Id = model.Id, cins = silinecekCinsAdı };
 
-            CinsSilValidator validator = new(_veterinerDbContext);
+            CinsSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -213,7 +213,7 @@ namespace VeterinerApp.Controllers
             string turAdi = model.tur.ToUpper();
             var turEntity = new Tur { tur = turAdi };
 
-            TurEkleValidators validator = new TurEkleValidators(_veterinerDbContext);
+            TurEkleValidators validator = new TurEkleValidators();
             ValidationResult result = validator.Validate(model);
 
             _veterinerDbContext.Turs.Add(turEntity);
@@ -258,7 +258,7 @@ namespace VeterinerApp.Controllers
 
             var turEntity = new Tur { Id = model.Id, tur = silinecekTurAdı };
 
-            TurSilValidator validator = new(_veterinerDbContext);
+            TurSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -322,7 +322,7 @@ namespace VeterinerApp.Controllers
                 CinsId = model.CinsId,
             };
 
-            TurCinsEkleValidators validator = new(_veterinerDbContext);
+            TurCinsEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -396,7 +396,7 @@ namespace VeterinerApp.Controllers
                 TurId = silinecekTurId
             };
 
-            TurCinsSilValidators validator = new(_veterinerDbContext);
+            TurCinsSilValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -435,7 +435,7 @@ namespace VeterinerApp.Controllers
         {
             var rolEntity = new AppRole { Name = model.Name.ToUpper() };
 
-            RolValidators rolValidator = new RolValidators(_veterinerDbContext);
+            RolValidators rolValidator = new RolValidators();
             ValidationResult result = rolValidator.Validate(model);
 
             if (!result.IsValid)
@@ -475,7 +475,7 @@ namespace VeterinerApp.Controllers
 
             var rolEntity = _veterinerDbContext.Roles.FirstOrDefault(x => x.Id == model.Id);
 
-            RolSilValidators validator = new(_veterinerDbContext);
+            RolSilValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -547,7 +547,7 @@ namespace VeterinerApp.Controllers
 
 
 
-            InsanEkleValidators validator = new InsanEkleValidators(_veterinerDbContext);
+            InsanEkleValidators validator = new InsanEkleValidators();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -656,7 +656,7 @@ namespace VeterinerApp.Controllers
                         .FirstOrDefault()
                 }).FirstOrDefault();
 
-            InsanSecValidators validator = new(_veterinerDbContext);
+            InsanSecValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -677,7 +677,7 @@ namespace VeterinerApp.Controllers
             var insan = _veterinerDbContext.Users.FirstOrDefault(x => x.InsanTckn == model.InsanTckn);
             var rol = _veterinerDbContext.UserRoles.FirstOrDefault(x => x.UserId == insan.Id);
 
-            InsanDuzenleValidators validator = new(_veterinerDbContext);
+            InsanDuzenleValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {

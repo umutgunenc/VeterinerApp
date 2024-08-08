@@ -6,7 +6,7 @@ using VeterinerApp.Models.Entity;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class SahipHayvanValidators : AbstractValidator<SahipHayvan>
     {

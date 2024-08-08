@@ -50,7 +50,7 @@ namespace VeterinerApp.Controllers
             model.SifreGecerlilikTarihi = DateTime.Now.AddDays(120);
             model.UserName = model.UserName.ToUpper();
 
-            RegisterValidators validator = new(_context);
+            RegisterValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -224,7 +224,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            ForgotPasswordValidators validator = new(_context);
+            ForgotPasswordValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {

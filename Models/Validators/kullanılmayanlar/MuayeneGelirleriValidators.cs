@@ -5,9 +5,9 @@ using System.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
-    public partial class MuayeneGelirleriValidators :AbstractValidator<MuayeneGelirleri>
+    public partial class MuayeneGelirleriValidators : AbstractValidator<MuayeneGelirleri>
     {
         private readonly VeterinerContext _context;
         public MuayeneGelirleriValidators(VeterinerContext context)

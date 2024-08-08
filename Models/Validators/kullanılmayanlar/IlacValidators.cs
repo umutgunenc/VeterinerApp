@@ -8,7 +8,7 @@ using VeterinerApp.Data;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class IlacValidators : AbstractValidator<Ilac>
     {

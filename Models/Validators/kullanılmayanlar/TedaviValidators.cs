@@ -6,7 +6,7 @@ using VeterinerApp.Models.Entity;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class TedaviValidators : AbstractValidator<Tedavi>
     {
@@ -36,7 +36,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool beUnique(string tedaviAdi)
         {
-            return _context.Tedavis.Any(x=>x.TedaviAdi.ToUpper()==tedaviAdi.ToUpper());
+            return _context.Tedavis.Any(x => x.TedaviAdi.ToUpper() == tedaviAdi.ToUpper());
         }
     }
 }

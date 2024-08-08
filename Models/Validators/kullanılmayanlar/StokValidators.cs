@@ -6,9 +6,9 @@ using VeterinerApp.Models.Entity;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
-    public partial class StokValidators :AbstractValidator<Stok>
+    public partial class StokValidators : AbstractValidator<Stok>
     {
 
         private readonly VeterinerContext _context;
@@ -32,17 +32,17 @@ namespace VeterinerApp.Models.Validators
                 .NotEmpty().WithMessage("Boş bırakılamaz.")
                 .NotNull().WithMessage("Boş bırakılamaz.")
                 .Must(x => x is int).WithMessage("Lütfen geçerli bir sayı giriniz.")
-                .Must(x => x is int && x >= 0).WithMessage("Sıfırdan büyük bir sayı giriniz");            
+                .Must(x => x is int && x >= 0).WithMessage("Sıfırdan büyük bir sayı giriniz");
 
         }
 
         private bool BeUnique(string barkod)
         {
-            return !_context.Stoks.Any(x=>x.StokBarkod.ToUpper()==barkod.ToUpper());
+            return !_context.Stoks.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
         }
         private bool BeUniqueName(string name)
         {
-            return !_context.Stoks.Any(x=>x.StokAdi.ToUpper()==name.ToUpper());
+            return !_context.Stoks.Any(x => x.StokAdi.ToUpper() == name.ToUpper());
         }
     }
 }

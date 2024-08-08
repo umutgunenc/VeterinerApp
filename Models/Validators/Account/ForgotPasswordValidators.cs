@@ -9,11 +9,9 @@ namespace VeterinerApp.Models.Validators.Account
 {
     public class ForgotPasswordValidators : AbstractValidator<ForgotPasswordViewModel>
     {
-        private readonly VeterinerContext _context;
 
-        public ForgotPasswordValidators(VeterinerContext context)
+        public ForgotPasswordValidators()
         {
-            _context = context;
 
             RuleFor(x => x.InsanTckn)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")

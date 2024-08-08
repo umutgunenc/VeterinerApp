@@ -11,11 +11,9 @@ namespace VeterinerApp.Models.Validators.Account
 {
     public class RegisterValidators : AbstractValidator<RegisterViewModel>
     {
-        private readonly VeterinerContext _context;
 
-        public RegisterValidators(VeterinerContext contex)
+        public RegisterValidators()
         {
-            _context = contex;
 
             RuleFor(x => x.UserName)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")

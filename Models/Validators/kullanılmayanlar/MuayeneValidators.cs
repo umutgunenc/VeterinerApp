@@ -8,7 +8,7 @@ using VeterinerApp.Models.Entity;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class MuayeneValidators : AbstractValidator<Muayene>
     {
@@ -71,19 +71,19 @@ namespace VeterinerApp.Models.Validators
         }
         private bool beUnique(int muayeneNo)
         {
-            return !_context.Muayenes.Any(x=>x.MuayeneNo == muayeneNo);
+            return !_context.Muayenes.Any(x => x.MuayeneNo == muayeneNo);
         }
         private bool beNotDead(int hayvanId)
         {
-            var hayvan = _context.Hayvans.FirstOrDefault(x => x.HayvanId==hayvanId);
-            if (hayvan!=null && hayvan.HayvanOlumTarihi==null) 
-                return true; 
+            var hayvan = _context.Hayvans.FirstOrDefault(x => x.HayvanId == hayvanId);
+            if (hayvan != null && hayvan.HayvanOlumTarihi == null)
+                return true;
             return false;
 
         }
         private bool beHayvan(int hayvanId)
         {
-            return _context.Hayvans.Any(x=>x.HayvanId==hayvanId);
+            return _context.Hayvans.Any(x => x.HayvanId == hayvanId);
         }
         private bool beAktifCalisan(string hekimTCKN)
         {

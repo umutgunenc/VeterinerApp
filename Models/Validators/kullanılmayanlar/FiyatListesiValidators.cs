@@ -8,7 +8,7 @@ using VeterinerApp.Data;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class FiyatListesiValidators : AbstractValidator<FiyatListesi>
     {
@@ -42,7 +42,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool MustBeBarkod(string girilenBarkod)
         {
-            return _context.Stoks.Any(x=>x.StokBarkod.ToUpper() == girilenBarkod.ToUpper());
+            return _context.Stoks.Any(x => x.StokBarkod.ToUpper() == girilenBarkod.ToUpper());
         }
     }
 }

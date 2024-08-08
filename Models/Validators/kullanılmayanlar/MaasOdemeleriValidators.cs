@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class MaasOdemeleriValidators : AbstractValidator<MaasOdemeleri>
     {
@@ -19,7 +19,7 @@ namespace VeterinerApp.Models.Validators
             RuleFor(x => x.CalisanTckn)
                 .NotEmpty().WithMessage("Çalışan TCKN bilgisi eksik")
                 .NotNull().WithMessage("Çalışan TCKN bilgisi eksik");
-                //.Must(MustBeCalisan).WithMessage("Maaş ödemesi yapılacak kişi sisteme kayıtlı değil.");
+            //.Must(MustBeCalisan).WithMessage("Maaş ödemesi yapılacak kişi sisteme kayıtlı değil.");
 
             RuleFor(x => x.OdemeTarihi)
                 .NotEmpty().WithMessage("Maaşın ödeme tarihini giriniz")

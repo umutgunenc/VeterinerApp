@@ -6,9 +6,9 @@ using VeterinerApp.Models.Entity;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
-    public partial class StokHareketValidators:AbstractValidator<StokHareket>
+    public partial class StokHareketValidators : AbstractValidator<StokHareket>
     {
         private readonly VeterinerContext _context;
         public StokHareketValidators(VeterinerContext context)
@@ -18,7 +18,7 @@ namespace VeterinerApp.Models.Validators
             RuleFor(x => x.StokHareketId)
                 .NotEmpty().WithMessage("Boş bırakılamaz.")
                 .NotEmpty().WithMessage("Boş bırakılamaz.")
-                .Must(x=>x is int).WithMessage("Geçerlin bir ID giriniz.");
+                .Must(x => x is int).WithMessage("Geçerlin bir ID giriniz.");
 
             RuleFor(x => x.StokBarkod)
                 .NotNull().WithMessage("Lütfen bir barkod numarası giriniz.")
@@ -30,11 +30,11 @@ namespace VeterinerApp.Models.Validators
                 .NotNull().WithMessage("Lütfen bir tarih giriniz.")
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz.")
                 .Must(x => x is DateTime).WithMessage("Lütfen geçerli bir tarih giriniz.")
-                .Must(x => x is DateTime && x<=DateTime.Now).WithMessage("Gelecekten bir tarih girilemez.");
+                .Must(x => x is DateTime && x <= DateTime.Now).WithMessage("Gelecekten bir tarih girilemez.");
 
             RuleFor(x => x.SatisTarihi)
                 .Must(x => !x.HasValue || x is DateTime).WithMessage("Geçerli bir tarih giriniz.")
-                .Must(x => !x.HasValue || (x.HasValue && x.Value <= DateTime.Now)).WithMessage("Satış tarihi gelecekten bir tarih olamaz.");
+                .Must(x => !x.HasValue || x.HasValue && x.Value <= DateTime.Now).WithMessage("Satış tarihi gelecekten bir tarih olamaz.");
 
             RuleFor(x => x.AlisTarihi)
                 .NotEmpty().WithMessage("Alış tarihi boş olamaz.")
@@ -59,7 +59,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool BeBarkod(string barkod)
         {
-            return _context.Stoks.Any(x=>x.StokBarkod.ToUpper()==barkod.ToUpper());
+            return _context.Stoks.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
         }
 
         private bool BeFiyatListesi(double? fiyat)

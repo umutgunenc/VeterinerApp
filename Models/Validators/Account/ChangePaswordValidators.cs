@@ -11,18 +11,7 @@ namespace VeterinerApp.Models.Validators.Account
 {
     public class ChangePaswordValidators : AbstractValidator<ChangePaswordViewModel>
     {
-        private readonly VeterinerContext _context;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly PasswordHasher<AppUser> _passwordHasher;
-        private readonly ClaimsPrincipal _user;
 
-        public ChangePaswordValidators(VeterinerContext context, UserManager<AppUser> userManager, PasswordHasher<AppUser> passwordHasher, ClaimsPrincipal user)
-        {
-            _context = context;
-            _userManager = userManager;
-            _passwordHasher = passwordHasher;
-            _user = user;
-        }
         public ChangePaswordValidators()
         {
             //TODO yeni şifre için validasyonlar ekle

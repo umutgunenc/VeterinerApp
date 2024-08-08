@@ -6,28 +6,24 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerApp.Models.Validators.ValidateFunctions;
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.Admin
 {
     public class RenkEkleValidators : AbstractValidator<RenkEkleViewModel>
     {
-        private readonly VeterinerContext _dbContext;
 
-        public RenkEkleValidators(VeterinerContext dbContext)
+        public RenkEkleValidators()
         {
-            _dbContext = dbContext;
 
             RuleFor(x => x.renk)
                 .NotNull().WithMessage("Lütfen bir renk giriniz.")
                 .NotEmpty().WithMessage("Lütfen bir renk giriniz.")
                 .MaximumLength(50).WithMessage("En fazla 50 karakter uzunluğunda değer girilebilir.")
-                .Must(BeUnique).WithMessage("Girdiğiniz renk zaten sisteme kayıtlı.");
+                .Must(FunctionsValidator.BeUniqueRenk).WithMessage("Girdiğiniz renk zaten sisteme kayıtlı.");
         }
 
-        private bool BeUnique(string girilenDeger)
-        {
-            return !_dbContext.Renks.Any(x => x.renk.ToUpper() == girilenDeger.ToUpper());
-        }
+
     }
 }
 

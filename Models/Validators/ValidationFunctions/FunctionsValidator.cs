@@ -57,18 +57,10 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
             return baba != null && baba.HayvanCinsiyet == "E";
         }
-        public static readonly List<string> radioValues = new List<string>
-        {
-            "keepPhoto",
-            "changePhoto",
-            "useDefault"
-        };
         public static bool ValidRadio(string value)
         {
             return radioValues.Contains(value);
         }
-
-        public static readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
         public static bool HaveValidExtension(IFormFile file)
         {
             var extension = Path.GetExtension(file.FileName).ToLower();
@@ -124,6 +116,132 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
             return !_context.Insans.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
         }
+        public static bool BeUniqueCins(string girilenDeger)
+        {
+            return !_context.Cins.Any(x => x.cins.ToUpper() == girilenDeger.ToUpper());
+        }
+        public static bool beCins(int id)
+        {
+            return _context.Cins.Any(x => x.Id == id);
+        }
+        public static bool notBeTur(int rolId)
+        {
+            return !_context.TurCins.Any(x => x.CinsId == rolId);
+        }
+        public static bool beRol(int rolId)
+        {
+            return _context.Roles.Any(x => x.Id == rolId);
+        }
+
+        //TODO : Bu iki fonksiyonu kontrol et
+        public static bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
+        {
+            if (string.IsNullOrEmpty(diplomaNumarasi))
+            {
+                return true;
+            }
+            return !_context.Users.Any(x => x.DiplomaNo.ToUpper() == diplomaNumarasi.ToUpper());
+        }
+        public static bool BeUniqueOrNullDiplomaNo(string InsanTckn, string diplomaNo)
+        {
+            if (string.IsNullOrEmpty(diplomaNo))
+                return true;
+
+            return !_context.Users.Any(x => x.DiplomaNo == diplomaNo && x.InsanTckn.ToUpper() != InsanTckn.ToUpper());
+        }
+        public static bool BeUniqueKullaniciAdi(string InsanTckn, string kullaniciAdi)
+        {
+            if (string.IsNullOrEmpty(kullaniciAdi))
+                return true;
+
+            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper() && x.InsanTckn != InsanTckn);
+        }
+        public static bool UniqueTel(string InsanTckn, string insanTel)
+        {
+            if (string.IsNullOrEmpty(insanTel))
+                return true;
+
+            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.InsanTckn != InsanTckn);
+        }
+        public static bool IsRoleMatching(int rolId, List<string> validRoles)
+        {
+            var role = _context.Roles.Find(rolId);
+            return role != null && validRoles.Contains(role.Name.ToUpper());
+        }
+        public static bool UniqueEmailSelf(string InsanTckn, string insanMail)
+        {
+            if (string.IsNullOrEmpty(insanMail))
+                return true;
+
+            return !_context.Users
+                .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.InsanTckn != InsanTckn);
+        }
+        public static bool notUniqueTCKN(string girilenTCKN)
+        {
+            return _context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
+        }
+        public static bool BeUniqueRenk(string girilenDeger)
+        {
+            return !_context.Renks.Any(x => x.renk.ToUpper() == girilenDeger.ToUpper());
+        }
+        public static bool beRenk(int Id)
+        {
+            return _context.Renks.Any(x => x.Id == Id);
+        }
+        public static bool beNotUsedRenk(int Id)
+        {
+            return !_context.Hayvans.Any(x => x.RenkId == Id);
+        }
+        public static bool notBeInsan(int rolId)
+        {
+            return !_context.UserRoles.Any(x => x.RoleId == rolId);
+        }
+        public static bool roller(string roller)
+        {
+            roller = roller.ToUpper();
+            if (roller == "admin".ToUpper() || roller == "veteriner".ToUpper() || roller == "çalışan".ToUpper() || roller == "müşteri".ToUpper())
+                return true;
+            return false;
+        }
+        public static bool beUniqueRol(string rol)
+        {
+            return !_context.Roles.Any(x => x.Name.ToUpper() == rol.ToUpper());
+        }
+        public static bool notMatch(int turId)
+        {
+            return !_context.TurCins.Where(x => x.TurId == turId).Any();
+        }
+        public static bool beTur(int TurId)
+        {
+            return _context.Turs.Any(x => x.Id == TurId);
+        }
+        public static bool beTurCins(int id)
+        {
+            return _context.TurCins.Any(x => x.Id == id);
+        }
+        public static bool beNotUsedTurCins(int id)
+        {
+            var cinsId = _context.TurCins.Where(x => x.Id == id).Select(x => x.CinsId).FirstOrDefault();
+            var turId = _context.TurCins.Where(x => x.Id == id).Select(x => x.TurId).FirstOrDefault();
+            return !_context.Hayvans.Where(x => x.CinsId == cinsId && x.TurId == turId).Any();
+        }
+        public static bool beUniqueTur(string girilenTur)
+        {
+            return !_context.Turs.Any(t => t.tur.ToUpper() == girilenTur.ToUpper());
+        }
+        public static bool beNotTurCins(int id)
+        {
+            return !_context.TurCins.Any(x => x.TurId == id);
+        }
+
+
+        public static readonly List<string> radioValues = new List<string>
+        {
+            "keepPhoto",
+            "changePhoto",
+            "useDefault"
+        };
+        public static readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
 
     }
 }

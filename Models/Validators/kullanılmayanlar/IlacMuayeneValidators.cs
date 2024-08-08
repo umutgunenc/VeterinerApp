@@ -7,7 +7,7 @@ using VeterinerApp.Data;
 
 
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class IlacMuayeneValidators : AbstractValidator<IlacMuayene>
     {
@@ -32,7 +32,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool MustBeBarkod(string Barkod)
         {
-            return _context.Ilacs.Any(x=>x.IlacBarkod.ToUpper() == Barkod.ToUpper());
+            return _context.Ilacs.Any(x => x.IlacBarkod.ToUpper() == Barkod.ToUpper());
         }
 
         private bool MustBeMuayene(int Muayene)

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerApp.Models.Validators.kullanılmayanlar
 {
     public partial class TedaviMuayeneValidators : AbstractValidator<TedaviMuayene>
     {
@@ -22,7 +22,7 @@ namespace VeterinerApp.Models.Validators
                 .Must(x => x is int).WithMessage("Geçerli bir tedavi numarası giriniz.")
                 .Must(beTedavi).WithMessage("Seçilen Tedavi sisteme kayıtlı olmalı.");
 
-            RuleFor(x=>x.MuayeneId)
+            RuleFor(x => x.MuayeneId)
                 .NotNull().WithMessage("Muayene numarası boş bırakılamaz.")
                 .NotEmpty().WithMessage("Muayene numarası boş bırakılamaz.")
                 .Must(x => x is int).WithMessage("Geçerli bir muayene numarası giriniz.")
@@ -31,7 +31,7 @@ namespace VeterinerApp.Models.Validators
 
         private bool beTedavi(int tedaviId)
         {
-            return _context.Tedavis.Any(x=>x.TedaviId == tedaviId);
+            return _context.Tedavis.Any(x => x.TedaviId == tedaviId);
         }
 
         private bool beMuayene(int muayeneId)
