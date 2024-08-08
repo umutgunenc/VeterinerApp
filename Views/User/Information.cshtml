@@ -15,7 +15,7 @@
 
     <div class="card text-white bg-dark mb-3">
         <div class="row no-gutters">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="m-3 text-center">
                     <img src="@if (user.ImgURL != null) { @user.ImgURL } else { @Url.Content("~/img/user.svg") }" class="card-img">
                     <div class="mt-3">
@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="col-md-9 align-self-start">
+            <div class="col-md-8 align-self-start">
                 <div class="d-flex flex-column">
                     <div class="card-header font-weight-bold pl-0">
                         <h3>@user.InsanAdi.ToUpper() @user.InsanSoyadi.ToUpper()</h3>
@@ -39,58 +39,58 @@
                         @if (hayvanlar.Count > 0)
                         {
                             <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
-
-                            <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="text-center">Hayvan Adı</th>
-                                        <th scope="col" class="text-center">Türü</th>
-                                        <th scope="col" class="text-center">Cinsi</th>
-                                        <th scope="col" class="text-center">Rengi</th>
-                                        <th scope="col" class="text-center">Kilosu</th>
-                                        <th scope="col" class="text-center">Cinsiyeti</th>
-                                        <th scope="col" class="text-center">Doğum Tarihi</th>
-                                        <th scope="col" class="text-center">Ölüm Tarihi</th>
-                                    </tr>
-                                </thead>
-                                @foreach (var hayvan in hayvanlar)
-                                {
-                                    <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
-                                        <input type="hidden" name="hayvanId" value="@hayvan.HayvanId"/>
-                                    </form>
-
-                                    <tbody>
-                                        <tr role="button" class="clickable-row" id="row-@hayvan.HayvanId">
-                                            <td class="text-center">@hayvan.HayvanAdi.ToUpper()</td>
-                                            <td class="text-center">@hayvan.TurAdi</td>
-                                            <td class="text-center">@hayvan.CinsAdi</td>
-                                            <td class="text-center">@hayvan.RenkAdi</td>
-                                            <td class="text-center">@hayvan.HayvanKilo</td>
-                                            <td class="text-center">
-                                                @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
-                                                {
-                                                    @:Dişi
-                                                }
-                                                else
-                                                {
-                                                    @:Erkek
-                                                }
-                                            </td>
-                                            <td class="text-center">@hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</td>
-                                            <td class="text-center">
-                                                @if (hayvan.HayvanOlumTarihi != null)
-                                                {
-                                                    @hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
-                                                }
-                                                else
-                                                {
-                                                    @:Hayatta
-                                                }
-                                            </td>
+                            <div class="table-responsive-xl">
+                                <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="text-center">Hayvan Adı</th>
+                                            <th scope="col" class="text-center">Türü</th>
+                                            <th scope="col" class="text-center">Cinsi</th>
+                                            <th scope="col" class="text-center">Rengi</th>
+                                            <th scope="col" class="text-center">Kilosu</th>
+                                            <th scope="col" class="text-center">Cinsiyeti</th>
+                                            <th scope="col" class="text-center">Doğum Tarihi</th>
+                                            <th scope="col" class="text-center">Ölüm Tarihi</th>
                                         </tr>
-                                    </tbody>
+                                    </thead>
+                                    @foreach (var hayvan in hayvanlar)
+                                    {
+                                        <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
+                                            <input type="hidden" name="hayvanId" value="@hayvan.HayvanId" />
+                                        </form>
 
-                                    <script>
+                                        <tbody>
+                                            <tr role="button" class="clickable-row" id="row-@hayvan.HayvanId">
+                                                <td class="text-center">@hayvan.HayvanAdi.ToUpper()</td>
+                                                <td class="text-center">@hayvan.TurAdi</td>
+                                                <td class="text-center">@hayvan.CinsAdi</td>
+                                                <td class="text-center">@hayvan.RenkAdi</td>
+                                                <td class="text-center">@hayvan.HayvanKilo</td>
+                                                <td class="text-center">
+                                                    @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
+                                                    {
+                                                        @:Dişi
+                                                    }
+                                                    else
+                                                    {
+                                                        @:Erkek
+                                                    }
+                                                </td>
+                                                <td class="text-center">@hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</td>
+                                                <td class="text-center">
+                                                    @if (hayvan.HayvanOlumTarihi != null)
+                                                    {
+                                                        @hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                                                    }
+                                                    else
+                                                    {
+                                                        @:Hayatta
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                        <script>
                                         document.addEventListener('DOMContentLoaded', () => {
                                             const row = document.getElementById("row-@hayvan.HayvanId");
                                             const form = document.getElementById('form-@hayvan.HayvanId');
@@ -99,9 +99,11 @@
                                                 form.submit();
                                             });
                                         });
-                                    </script>
-                                }
-                            </table>
+                                        </script>
+                                    }
+                                </table>
+
+                            </div>
 
                         }
                         <p class="card-text">

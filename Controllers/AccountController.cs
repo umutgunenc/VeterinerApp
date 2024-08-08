@@ -11,6 +11,7 @@ using VeterinerApp.Models.Validators.Account;
 using VeterinerApp.Models.ViewModel.Account;
 using System;
 using VeterinerApp.Fonksiyonlar;
+using System.IO;
 
 namespace VeterinerApp.Controllers
 {
@@ -60,6 +61,7 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
+            
             var createResult = await _userManager.CreateAsync(model, model.PasswordHash);
 
             if (!createResult.Succeeded)
@@ -69,6 +71,32 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("PasswordHash", error.Description);
                 }
                 return View(model);
+            }
+            var user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
+            if (model.filePhoto != null)
+            {
+                var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
+                var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
+                var userKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\user", user.Id.ToString());
+
+                if (!Directory.Exists(userKlasoru))
+                {
+                    Directory.CreateDirectory(userKlasoru);
+                }
+
+                var filePath = Path.Combine(userKlasoru, dosyaAdi);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.filePhoto.CopyToAsync(stream);
+                }
+
+                // Web URL'sini oluşturma
+                var fileUrl = $"/img/user/{user.Id}/{dosyaAdi}";
+
+                // Veritabanına URL'yi kaydetme
+                user.ImgURL = fileUrl;
+                await _context.SaveChangesAsync();
             }
 
             IdentityUserRole<int> userRole = new()

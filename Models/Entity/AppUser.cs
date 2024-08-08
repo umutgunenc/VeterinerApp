@@ -21,12 +21,10 @@ namespace VeterinerApp.Models.Entity
         public string ImgURL { get; set; }
         public DateTime SifreOlusturmaTarihi { get; set; }
         public DateTime SifreGecerlilikTarihi { get; set; }
-
         public string DiplomaNo { get; set; }
         public bool CalisiyorMu { get; set; }
         public double? Maas { get; set; }
         public bool TermOfUse { get; set; }
-
         public virtual ICollection<MaasOdemeleri> MaasOdemeleris { get; set; }
         public virtual ICollection<Muayene> Muayenes { get; set; }
         public virtual ICollection<SahipHayvan> SahipHayvans { get; set; }
