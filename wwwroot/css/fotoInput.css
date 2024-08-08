@@ -1,0 +1,23 @@
+﻿<style >
+.custom-file-input ~ .custom-file-label[data-browse]::after {
+    content: attr(data-browse);
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: center !important; 
+    height: 100% !important; 
+}
+.custom-file-label::after {
+    content: attr(data-browse);
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+.etiket {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+</style >

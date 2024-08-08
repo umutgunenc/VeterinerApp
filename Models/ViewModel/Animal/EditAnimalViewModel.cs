@@ -12,7 +12,8 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public string cinsi { get; set; }
         public string turu { get; set; }
         public bool isDeath { get; set; }
-        public bool changePhoto { get; set; }
+        public string PhotoOption { get; set; }
+
         public List<SelectListItem> TurAdlari { get; set; }
         public List<SelectListItem> CinsAdlari { get; set; }
         public List<SelectListItem> RenkAdlari { get; set; }

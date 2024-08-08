@@ -123,22 +123,37 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-2 col-form-label">
-                    Fotoğrafı Değiştir
-                    <input class="ml-2" asp-for="changePhoto" type="checkbox" id="flexCheckDefault">
-                </label>
-                <div class="col-sm-10">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                        <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
+                <div class="col">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="keepPhoto" checked="checked">
+                        <label class="custom-control-label" for="customRadio1">Fotoğrafı Değiştirme</label>
                     </div>
-                    <div class="mt-2">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="changePhoto">
+                        <label class="custom-control-label" for="customRadio2">Fotoğrafı Değiştir</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="useDefault">
+                        <label class="custom-control-label" for="customRadio3">Fotoğraf Kullanma</label>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-10 d-block">
+                    <div class="custom-file w-100 mh-100 h-75">
+                        <input type="file" class="custom-file-input h-100" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                        <label class="custom-file-label h-100 etiket" for="customFileLangHTML" data-browse="Seç">
+                            Fotoğraf Seç
+                        </label>
+                    </div>
+                    <div class="mt-2 mb-5">
                         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
                         </span>
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="changePhoto">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
                         </span>
                     </div>
                 </div>
+
             </div>
             <div class="form-group row mb-3">
                 <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>

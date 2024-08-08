@@ -702,51 +702,40 @@ namespace VeterinerApp.Controllers
                 return View("EditAnimal", returnModel);
             }
             var hayvan = _context.Hayvans.Find(model.HayvanId);
-            if (model.changePhoto)
+            if (model.PhotoOption == "changePhoto")
             {
-                if (model.filePhoto != null)
+
+                var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
+
+                var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
+                var hayvanKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\animals", hayvan.HayvanId.ToString());
+
+                if (!Directory.Exists(hayvanKlasoru))
                 {
-                    var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
-
-                    string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-
-                    if (!allowedExtensions.Contains(dosyaUzantısı.ToLower()))
-                    {
-                        ModelState.AddModelError("filePhoto", "Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.");
-
-                        return View("EditAnimal", returnModel);
-                    }
-
-                    var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
-                    var hayvanKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\animals", hayvan.HayvanId.ToString());
-
-                    if (!Directory.Exists(hayvanKlasoru))
-                    {
-                        Directory.CreateDirectory(hayvanKlasoru);
-                    }
-
-                    var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await model.filePhoto.CopyToAsync(stream);
-                    }
-
-                    // Web URL'sini oluşturma
-                    var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
-
-                    hayvan.imgURl = fileUrl;
+                    Directory.CreateDirectory(hayvanKlasoru);
                 }
-                else
+
+                var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    ModelState.AddModelError("", "Fotoğraf seçilmedi.");
+                    await model.filePhoto.CopyToAsync(stream);
                 }
-            }
-            else
-            {
-                hayvan.imgURl = null;
+
+                // Web URL'sini oluşturma
+                var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
+
+                hayvan.imgURl = fileUrl;
 
             }
+            else if (model.PhotoOption == "useDefault") {
+                hayvan.imgURl = null; 
+            }
+            else if (model.PhotoOption == "keepPhoto")
+            {
+                hayvan.imgURl = hayvan.imgURl;
+            }
+
 
             hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
             hayvan.CinsId = model.CinsId;

@@ -5,6 +5,8 @@ using VeterinerApp.Data;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.Entity;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace VeterinerApp.Models.Validators.Animal
 {
@@ -47,7 +49,6 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
                 .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
-
             RuleFor(x => x.HayvanAnneId)
                 .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
                 .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
@@ -85,33 +86,59 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanOlumTarihi)
                 .NotEmpty()
                 .When(x => x.isDeath)
-                .WithMessage("Lütfen ölüm tarihini giriniz.")
-                .NotNull()
-                .When(x => x.isDeath)
-                .WithMessage("Lütfen ölüm tarihini giriniz.")
+                .WithMessage("Lütfen ölüm tarihini giriniz.");
+            RuleFor(x => x.HayvanOlumTarihi)
                 .Must((model, x) => !x.HasValue)
                 .When(x => !x.isDeath)
-                .WithMessage("Lütfen hayvanı ölü olarak işaretleyin.")
+                .WithMessage("Lütfen hayvanı ölü olarak işaretleyin.");
+            RuleFor(x => x.HayvanOlumTarihi)
                 .Must((model, x) => model.HayvanDogumTarihi <= x.Value)
                 .When(x => x.HayvanOlumTarihi.HasValue)
-                .WithMessage("Ölüm tarihi, doğum tarihinden büyük olmalıdır.")
+                .WithMessage("Ölüm tarihi, doğum tarihinden büyük olmalıdır.");
+            RuleFor(x => x.HayvanOlumTarihi)
                 .Must((model, x) => model.SahiplikTarihi <= x.Value)
                 .When(x => x.HayvanOlumTarihi.HasValue)
                 .WithMessage("Ölüm tarihi, sahiplik tarihinden büyük olmalıdır.");
 
-            RuleFor(x => x.isDeath)
-                .Must((model, x) => x == false || model.HayvanOlumTarihi.HasValue)
-                .WithMessage("Lütfen hayvanın ölüm tarihini giriniz.");
-
-            RuleFor(x => x.changePhoto)
-                .Must((model, x) => !x || model.filePhoto != null)
-                .WithMessage("Lütfen bir fotoğraf seçiniz.");
-
+            RuleFor(x => x.PhotoOption)
+                .NotEmpty().WithMessage("Lütfen bir seçenek seçiniz.")
+                .NotNull().WithMessage("Lütfen bir seçenek seçiniz.")
+                .Must(ValidRadio).WithMessage("Geçersiz seçenek.");
 
             RuleFor(x => x.filePhoto)
-                .Empty().When(x => x.changePhoto == false).WithMessage("Fotoğraf yüklemek için kutucuğu işaretleyin.")
-                .Null().When(x => x.changePhoto == false).WithMessage("Fotoğraf yüklemek için kutucuğu işaretleyin.");
+                .Must(HaveValidExtension)
+                .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
+                .When(x => x.PhotoOption == "changePhoto" && x.filePhoto != null)
+                .WithName("filePhoto");
 
+            RuleFor(x => x.filePhoto)
+                .NotEmpty()
+                .When(x => x.PhotoOption == "changePhoto")
+                .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
+            RuleFor(x => x.filePhoto)
+                .Empty()
+                .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "useDefault")
+                .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
+
+
+        }
+
+        private readonly List<string> radioValues = new List<string>
+        {
+            "keepPhoto",
+            "changePhoto",
+            "useDefault"
+        };
+
+        private bool ValidRadio(string value)
+        {
+            return radioValues.Contains(value);
+        }
+        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private bool HaveValidExtension(IFormFile file)
+        {
+            var extension = Path.GetExtension(file.FileName).ToLower();
+            return allowedExtensions.Contains(extension);
         }
 
         private bool MustBeRenk(int girilenRenk)
