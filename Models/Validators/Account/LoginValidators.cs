@@ -29,9 +29,5 @@ namespace VeterinerApp.Models.Validators.Account
 
         }
 
-        private bool beKullanici(string kullaniciAdi)
-        {
-            return _context.Users.Any(x => x.UserName == kullaniciAdi);
-        }
     }
 }

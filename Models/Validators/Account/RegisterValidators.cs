@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using VeterinerApp.Data;
+using VeterinerApp.Models.Validators.ValidateFunctions;
 using VeterinerApp.Models.ViewModel.Account;
 
 namespace VeterinerApp.Models.Validators.Account
@@ -20,7 +21,7 @@ namespace VeterinerApp.Models.Validators.Account
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")
                 .NotEmpty().WithMessage("Kullanıcı adını giriniz.")
                 .NotNull().WithMessage("Kullanıcı adını giriniz.")
-                .Must(BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
+                .Must(FunctionsValidator.BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
             //RuleFor(x => x.PasswordHash)
             //    .NotNull().WithMessage("Lütfen şifrenizi giriniz.")
@@ -59,28 +60,28 @@ namespace VeterinerApp.Models.Validators.Account
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must(UniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
+                .Must(FunctionsValidator.UniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
 
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must(UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
+                .Must(FunctionsValidator.UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.InsanTckn)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
-                .Must(UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
-                .Must(TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
+                .Must(FunctionsValidator.UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
+                .Must(FunctionsValidator.TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
 
             RuleFor(x => x.TermOfUse)
                 .Equal(true).WithMessage("Kullanım şartlarını kabul etmelisiniz.");
 
             RuleFor(x => x.filePhoto)
-                .Must(HaveValidExtension)
+                .Must(FunctionsValidator.HaveValidExtension)
                 .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
                 .When(x => x.filePhoto != null)
                 .WithName("filePhoto");
@@ -92,62 +93,7 @@ namespace VeterinerApp.Models.Validators.Account
 
         }
 
-        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-        private bool HaveValidExtension(IFormFile file)
-        {
-            var extension = Path.GetExtension(file.FileName).ToLower();
-            return allowedExtensions.Contains(extension);
-        }
-        private bool BeUniqueKullaniciAdi(string kullaniciAdi)
-        {
-            if (string.IsNullOrEmpty(kullaniciAdi))
-                return true;
-            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper());
-        }
-        private bool UniqueTel(string TelNo)
-        {
-            return !_context.Users.Any(x => x.PhoneNumber.ToUpper() == TelNo.ToUpper());
-        }
-        private bool UniqueTCKN(string girilenTCKN)
-        {
-            return !_context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
-        }
-        private bool TcDogrula(string tcKimlikNo)
-        {
-            bool returnvalue = false;
-            if (tcKimlikNo.Length == 11)
-            {
-                Int64 ATCNO, BTCNO, TcNo;
-                long C1, C2, C3, C4, C5, C6, C7, C8, C9, Q1, Q2;
 
-                TcNo = Int64.Parse(tcKimlikNo);
-
-                ATCNO = TcNo / 100;
-                BTCNO = TcNo / 100;
-
-                C1 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C2 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C3 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C4 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C5 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C6 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C7 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C8 = ATCNO % 10; ATCNO = ATCNO / 10;
-                C9 = ATCNO % 10; ATCNO = ATCNO / 10;
-                Q1 = ((10 - ((((C1 + C3 + C5 + C7 + C9) * 3) + (C2 + C4 + C6 + C8)) % 10)) % 10);
-                Q2 = ((10 - (((((C2 + C4 + C6 + C8) + Q1) * 3) + (C1 + C3 + C5 + C7 + C9)) % 10)) % 10);
-
-                returnvalue = ((BTCNO * 100) + (Q1 * 10) + Q2 == TcNo);
-            }
-            return returnvalue;
-        }
-        private bool UniqueEmail(string insanMail)
-        {
-            if (string.IsNullOrEmpty(insanMail))
-                return true;
-
-            return !_context.Insans.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
-        }
 
     }
 }

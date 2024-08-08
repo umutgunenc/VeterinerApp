@@ -7,13 +7,14 @@ using VeterinerApp.Models.Entity;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using VeterinerApp.Models.Validators.ValidateFunctions;
+
 
 namespace VeterinerApp.Models.Validators.Animal
 {
     public class EditHayvanValidator : AbstractValidator<EditAnimalViewModel>
     {
         private readonly VeterinerContext _context;
-
         public EditHayvanValidator(VeterinerContext context)
         {
             _context = context;
@@ -26,17 +27,17 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.RenkId)
                 .NotEmpty().WithMessage("Lütfen bir renk seçiniz.")
                 .NotNull().WithMessage("Lütfen bir renk seçiniz.")
-                .Must(MustBeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.MustBeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
 
             RuleFor(x => x.CinsId)
                 .NotEmpty().WithMessage("Lütfen bir cins seçiniz")
                 .NotNull().WithMessage("Lütfen bir cins seçiniz")
-                .Must(MustBeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.MustBeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
 
             RuleFor(x => x.TurId)
                 .NotEmpty().WithMessage("Lütfen bir tür seçiniz")
                 .NotNull().WithMessage("Lütfen bir tür seçiniz")
-                .Must(MustBeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.MustBeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
 
             RuleFor(x => x.HayvanCinsiyet)
                 .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
@@ -52,20 +53,20 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanAnneId)
                 .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
                 .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => beSameCins(model, x))
+                .Must((model, x) => FunctionsValidator.beSameCins(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => beOlder(model, x))
+                .Must((model, x) => FunctionsValidator.beOlder(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(beGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
+                .Must(FunctionsValidator.beGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
 
             RuleFor(x => x.HayvanBabaId)
                 .Must(babaId => !babaId.HasValue || _context.Hayvans.Any(a => a.HayvanId == babaId.Value))
                 .WithMessage("Hayvanın babası sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => beSameCins(model, x))
+                .Must((model, x) => FunctionsValidator.beSameCins(model, x))
                 .WithMessage("Hayvan babası, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => beOlder(model, x))
+                .Must((model, x) => FunctionsValidator.beOlder(model, x))
                 .WithMessage("Hayvan babası, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(beBoy).WithMessage("Hayvan babası erkek olmalıdır.");
+                .Must(FunctionsValidator.beBoy).WithMessage("Hayvan babası erkek olmalıdır.");
 
             RuleFor(x => x.HayvanKilo)
                 .NotNull().WithMessage("Lütfen hayvanın kilosunu giriniz.")
@@ -103,10 +104,10 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.PhotoOption)
                 .NotEmpty().WithMessage("Lütfen bir seçenek seçiniz.")
                 .NotNull().WithMessage("Lütfen bir seçenek seçiniz.")
-                .Must(ValidRadio).WithMessage("Geçersiz seçenek.");
+                .Must(FunctionsValidator.ValidRadio).WithMessage("Geçersiz seçenek.");
 
             RuleFor(x => x.filePhoto)
-                .Must(HaveValidExtension)
+                .Must(FunctionsValidator.HaveValidExtension)
                 .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
                 .When(x => x.PhotoOption == "changePhoto" && x.filePhoto != null)
                 .WithName("filePhoto");
@@ -127,73 +128,5 @@ namespace VeterinerApp.Models.Validators.Animal
 
         }
 
-        private readonly List<string> radioValues = new List<string>
-        {
-            "keepPhoto",
-            "changePhoto",
-            "useDefault"
-        };
-
-        private bool ValidRadio(string value)
-        {
-            return radioValues.Contains(value);
-        }
-        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-        private bool HaveValidExtension(IFormFile file)
-        {
-            var extension = Path.GetExtension(file.FileName).ToLower();
-            return allowedExtensions.Contains(extension);
-        }
-
-        private bool MustBeRenk(int girilenRenk)
-        {
-            return _context.Renks.Any(x => x.Id == girilenRenk);
-        }
-
-        private bool MustBeCins(int girilenCins)
-        {
-            return _context.TurCins.Any(x => x.CinsId == girilenCins);
-        }
-
-        private bool MustBeTur(int girilenTur)
-        {
-            return _context.TurCins.Any(x => x.TurId == girilenTur);
-        }
-
-        private bool beSameCins(Hayvan model, int? parentID)
-        {
-            if (!parentID.HasValue)
-                return true;
-
-            var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
-            return parent != null && parent.CinsId == model.CinsId;
-        }
-
-        private bool beOlder(Hayvan model, int? parentID)
-        {
-            if (!parentID.HasValue)
-                return true;
-
-            var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
-            return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
-        }
-
-        private bool beGirl(int? anneId)
-        {
-            if (!anneId.HasValue)
-                return true;
-
-            var anne = _context.Hayvans.FirstOrDefault(a => a.HayvanId == anneId.Value);
-            return anne != null && anne.HayvanCinsiyet == "D";
-        }
-
-        private bool beBoy(int? babaId)
-        {
-            if (!babaId.HasValue)
-                return true;
-
-            var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
-            return baba != null && baba.HayvanCinsiyet == "E";
-        }
     }
 }
