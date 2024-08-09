@@ -58,28 +58,28 @@ namespace VeterinerApp.Models.Validators.Account
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must(FunctionsValidator.UniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
+                .Must(FunctionsValidator.BeUniqueTel).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
 
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must(FunctionsValidator.UniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
+                .Must(FunctionsValidator.BeUniqueEmail).WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.InsanTckn)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
-                .Must(FunctionsValidator.UniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
-                .Must(FunctionsValidator.TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
+                .Must(FunctionsValidator.BeUniqueTCKN).WithMessage("Girilen TCKN zaten sistemde kayıtlı.")
+                .Must(FunctionsValidator.BeValidTCKN).WithMessage("Geçerli bir TCKN giriniz.");
 
             RuleFor(x => x.TermOfUse)
                 .Equal(true).WithMessage("Kullanım şartlarını kabul etmelisiniz.");
 
             RuleFor(x => x.filePhoto)
-                .Must(FunctionsValidator.HaveValidExtension)
+                .Must(FunctionsValidator.BeValidExtensionForPhoto)
                 .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
                 .When(x => x.filePhoto != null)
                 .WithName("filePhoto");

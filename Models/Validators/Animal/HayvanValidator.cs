@@ -31,17 +31,17 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.RenkId)
                 .NotEmpty().WithMessage("Lütfen bir renk seçiniz.")
                 .NotNull().WithMessage("Lütfen bir renk seçiniz.")
-                .Must(FunctionsValidator.MustBeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.BeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
 
             RuleFor(x => x.CinsId)
                 .NotEmpty().WithMessage("Lütfen bir cins seçiniz")
                 .NotNull().WithMessage("Lütfen bir cins seçiniz")
-                .Must(FunctionsValidator.MustBeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.BeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
 
             RuleFor(x => x.TurId)
                 .NotEmpty().WithMessage("Lütfen bir tür seçiniz")
                 .NotNull().WithMessage("Lütfen bir tür seçiniz")
-                .Must(FunctionsValidator.MustBeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
+                .Must(FunctionsValidator.BeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
 
             RuleFor(x => x.HayvanCinsiyet)
                 .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
@@ -57,20 +57,20 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanAnneId)
                 .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
                 .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => FunctionsValidator.beSameCins(model, x))
+                .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => FunctionsValidator.beOlder(model, x))
+                .Must((model, x) => FunctionsValidator.BeOlder(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(FunctionsValidator.beGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
+                .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
 
             RuleFor(x => x.HayvanBabaId)
                 .Must(babaId => !babaId.HasValue || _context.Hayvans.Any(a => a.HayvanId == babaId.Value))
                 .WithMessage("Hayvanın babası sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => FunctionsValidator.beSameCins(model, x))
+                .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
                 .WithMessage("Hayvan babası, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => FunctionsValidator.beOlder(model, x))
+                .Must((model, x) => FunctionsValidator.BeOlder(model, x))
                 .WithMessage("Hayvan babası, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(FunctionsValidator.beBoy).WithMessage("Hayvan babası erkek olmalıdır.");
+                .Must(FunctionsValidator.BeBoy).WithMessage("Hayvan babası erkek olmalıdır.");
 
             RuleFor(x => x.HayvanKilo)
                 .NotNull().WithMessage("Lütfen hayvanın kilosunu giriniz.")
@@ -84,7 +84,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
             RuleFor(x => x.filePhoto)
-                .Must(FunctionsValidator.HaveValidExtension)
+                .Must(FunctionsValidator.BeValidExtensionForPhoto)
                 .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
                 .When(x => x.filePhoto != null)
                 .WithName("filePhoto");

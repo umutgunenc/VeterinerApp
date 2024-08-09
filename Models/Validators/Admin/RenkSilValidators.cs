@@ -18,8 +18,8 @@ namespace VeterinerApp.Models.Validators.Admin
             RuleFor(x => x.Id)
                 .NotNull().WithMessage("Lütfen bir renk seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir renk seçiniz.")
-                .Must(FunctionsValidator.beRenk).WithMessage("Listede olmayan bir rengi silemezsiniz.")
-                .Must(FunctionsValidator.beNotUsedRenk).WithMessage("Silinmek istenen renk bir hayvana atandığı için silme işlemi başarısız oldu.");
+                .Must(FunctionsValidator.BeRenk).WithMessage("Listede olmayan bir rengi silemezsiniz.")
+                .Must(FunctionsValidator.BeNotUsedRenk).WithMessage("Silinmek istenen renk bir hayvana atandığı için silme işlemi başarısız oldu.");
 
         }
 

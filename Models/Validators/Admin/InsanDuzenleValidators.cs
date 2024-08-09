@@ -21,14 +21,14 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
-                .Must(FunctionsValidator.TcDogrula).WithMessage("Geçerli bir TCKN giriniz.");
+                .Must(FunctionsValidator.BeValidTCKN).WithMessage("Geçerli bir TCKN giriniz.");
 
             RuleFor(x => x.PhoneNumber)
                 .MaximumLength(11).WithMessage("Telefon numarası maksimum 11 karakter olabilir.")
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must((model, insanTel) => FunctionsValidator.UniqueTel(model.InsanTckn, insanTel))
+                .Must((model, insanTel) => FunctionsValidator.BeUniqueTel(model.InsanTckn, insanTel))
                 .WithMessage("Girilen telefon numarası zaten sisteme kayıtlı.");
 
             RuleFor(x => x.Email)
@@ -36,7 +36,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must((model, insanMail) => FunctionsValidator.UniqueEmailSelf(model.InsanTckn, insanMail))
+                .Must((model, insanMail) => FunctionsValidator.BeUniqueEmail(model.InsanTckn, insanMail))
                 .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.DiplomaNo)
@@ -101,7 +101,7 @@ namespace VeterinerApp.Models.Validators.Admin
             RuleFor(x => x.rolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-               .Must(FunctionsValidator.beRol).WithMessage("Seçilen rol geçerli değil.");
+               .Must(FunctionsValidator.BeRol).WithMessage("Seçilen rol geçerli değil.");
 
         }
 

@@ -13,19 +13,23 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
     {
         private static readonly VeterinerContext _context = new VeterinerContext();
 
-        public static bool MustBeRenk(int girilenRenk)
+        public static bool BeRenk(int Id)
         {
-            return _context.Renks.Any(x => x.Id == girilenRenk);
+            return _context.Renks.Any(x => x.Id == Id);
         }
-        public static bool MustBeCins(int girilenCins)
+        public static bool BeCins(int id)
         {
-            return _context.TurCins.Any(x => x.CinsId == girilenCins);
+            return _context.Cins.Any(x => x.Id == id);
         }
-        public static bool MustBeTur(int girilenTur)
+        public static bool BeTur(int TurId)
         {
-            return _context.TurCins.Any(x => x.TurId == girilenTur);
+            return _context.Turs.Any(x => x.Id == TurId);
         }
-        public static bool beSameCins(Hayvan model, int? parentID)
+        public static bool BeTurCins(int id)
+        {
+            return _context.TurCins.Any(x => x.Id == id);
+        }
+        public static bool BeSameCins(Hayvan model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
@@ -33,7 +37,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
             return parent != null && parent.CinsId == model.CinsId;
         }
-        public static bool beOlder(Hayvan model, int? parentID)
+        public static bool BeOlder(Hayvan model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
@@ -41,7 +45,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
             return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
         }
-        public static bool beGirl(int? anneId)
+        public static bool BeGirl(int? anneId)
         {
             if (!anneId.HasValue)
                 return true;
@@ -49,7 +53,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var anne = _context.Hayvans.FirstOrDefault(a => a.HayvanId == anneId.Value);
             return anne != null && anne.HayvanCinsiyet == "D";
         }
-        public static bool beBoy(int? babaId)
+        public static bool BeBoy(int? babaId)
         {
             if (!babaId.HasValue)
                 return true;
@@ -57,16 +61,31 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
             return baba != null && baba.HayvanCinsiyet == "E";
         }
-        public static bool ValidRadio(string value)
+        public static bool BeRol(int rolId)
+        {
+            return _context.Roles.Any(x => x.Id == rolId);
+        }
+        public static bool BeAllowedRol(string roller)
+        {
+            roller = roller.ToUpper();
+            if (roller == "admin".ToUpper() || roller == "veteriner".ToUpper() || roller == "çalışan".ToUpper() || roller == "müşteri".ToUpper())
+                return true;
+            return false;
+        }
+        public static bool BeValidRadioPhotoAdd(string value)
         {
             return radioValues.Contains(value);
         }
-        public static bool HaveValidExtension(IFormFile file)
+        public static bool BeValidExtensionForPhoto(IFormFile file)
         {
             var extension = Path.GetExtension(file.FileName).ToLower();
             return allowedExtensions.Contains(extension);
         }
-        public static bool TcDogrula(string tcKimlikNo)
+        public static bool BeUsedTCKN(string girilenTCKN)
+        {
+            return _context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
+        }
+        public static bool BeValidTCKN(string tcKimlikNo)
         {
             bool returnvalue = false;
             if (tcKimlikNo.Length == 11)
@@ -95,45 +114,46 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             }
             return returnvalue;
         }
-        public static bool BeUniqueKullaniciAdi(string kullaniciAdi)
-        {
-            if (string.IsNullOrEmpty(kullaniciAdi))
-                return true;
-            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper());
-        }
-        public static bool UniqueTel(string TelNo)
-        {
-            return !_context.Users.Any(x => x.PhoneNumber.ToUpper() == TelNo.ToUpper());
-        }
-        public static bool UniqueTCKN(string girilenTCKN)
+
+
+
+        public static bool BeUniqueTCKN(string girilenTCKN)
         {
             return !_context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
-        }
-        public static bool UniqueEmail(string insanMail)
-        {
-            if (string.IsNullOrEmpty(insanMail))
-                return true;
-
-            return !_context.Insans.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
         }
         public static bool BeUniqueCins(string girilenDeger)
         {
             return !_context.Cins.Any(x => x.cins.ToUpper() == girilenDeger.ToUpper());
         }
-        public static bool beCins(int id)
+        public static bool BeUniqueTur(string girilenTur)
         {
-            return _context.Cins.Any(x => x.Id == id);
+            return !_context.Turs.Any(t => t.tur.ToUpper() == girilenTur.ToUpper());
         }
-        public static bool notBeTur(int rolId)
+        public static bool BeUniqueRol(string rol)
         {
-            return !_context.TurCins.Any(x => x.CinsId == rolId);
+            return !_context.Roles.Any(x => x.Name.ToUpper() == rol.ToUpper());
         }
-        public static bool beRol(int rolId)
+        public static bool BeUniqueRenk(string girilenDeger)
         {
-            return _context.Roles.Any(x => x.Id == rolId);
+            return !_context.Renks.Any(x => x.renk.ToUpper() == girilenDeger.ToUpper());
         }
+        public static bool BeUniqueTel(string TelNo)
+        {
+            return !_context.Users.Any(x => x.PhoneNumber.ToUpper() == TelNo.ToUpper());
+        }
+        /// <summary>
+        /// Girilen kişi dışındaki telefon numarası benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="InsanTckn"></param>
+        /// <param name="insanTel"></param>
+        /// <returns></returns>
+        public static bool BeUniqueTel(string InsanTckn, string insanTel)
+        {
+            if (string.IsNullOrEmpty(insanTel))
+                return true;
 
-        //TODO : Bu iki fonksiyonu kontrol et
+            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.InsanTckn != InsanTckn);
+        }
         public static bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
         {
             if (string.IsNullOrEmpty(diplomaNumarasi))
@@ -142,6 +162,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             }
             return !_context.Users.Any(x => x.DiplomaNo.ToUpper() == diplomaNumarasi.ToUpper());
         }
+        /// <summary>
+        /// Girilen kişi dışındaki diploma numarası benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="InsanTckn"></param>
+        /// <param name="diplomaNo"></param>
+        /// <returns></returns>
         public static bool BeUniqueOrNullDiplomaNo(string InsanTckn, string diplomaNo)
         {
             if (string.IsNullOrEmpty(diplomaNo))
@@ -149,6 +175,18 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
             return !_context.Users.Any(x => x.DiplomaNo == diplomaNo && x.InsanTckn.ToUpper() != InsanTckn.ToUpper());
         }
+        public static bool BeUniqueKullaniciAdi(string kullaniciAdi)
+        {
+            if (string.IsNullOrEmpty(kullaniciAdi))
+                return true;
+            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper());
+        }
+        /// <summary>
+        /// Girilen kişi dışındaki kullanıcı adı benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="InsanTckn"></param>
+        /// <param name="kullaniciAdi"></param>
+        /// <returns></returns>
         public static bool BeUniqueKullaniciAdi(string InsanTckn, string kullaniciAdi)
         {
             if (string.IsNullOrEmpty(kullaniciAdi))
@@ -156,19 +194,20 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
             return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper() && x.InsanTckn != InsanTckn);
         }
-        public static bool UniqueTel(string InsanTckn, string insanTel)
+        public static bool BeUniqueEmail(string insanMail)
         {
-            if (string.IsNullOrEmpty(insanTel))
+            if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.InsanTckn != InsanTckn);
+            return !_context.Insans.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
         }
-        public static bool IsRoleMatching(int rolId, List<string> validRoles)
-        {
-            var role = _context.Roles.Find(rolId);
-            return role != null && validRoles.Contains(role.Name.ToUpper());
-        }
-        public static bool UniqueEmailSelf(string InsanTckn, string insanMail)
+        /// <summary>
+        /// Girilen kişi dışındaki mail adresi bezersiz olmalıdır.
+        /// </summary>
+        /// <param name="InsanTckn"></param>
+        /// <param name="insanMail"></param>
+        /// <returns></returns>
+        public static bool BeUniqueEmail(string InsanTckn, string insanMail)
         {
             if (string.IsNullOrEmpty(insanMail))
                 return true;
@@ -176,72 +215,48 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return !_context.Users
                 .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.InsanTckn != InsanTckn);
         }
-        public static bool notUniqueTCKN(string girilenTCKN)
+
+
+        public static bool IsRoleMatching(int rolId, List<string> validRoles)
         {
-            return _context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
+            var role = _context.Roles.Find(rolId);
+            return role != null && validRoles.Contains(role.Name.ToUpper());
         }
-        public static bool BeUniqueRenk(string girilenDeger)
-        {
-            return !_context.Renks.Any(x => x.renk.ToUpper() == girilenDeger.ToUpper());
-        }
-        public static bool beRenk(int Id)
-        {
-            return _context.Renks.Any(x => x.Id == Id);
-        }
-        public static bool beNotUsedRenk(int Id)
+        public static bool BeNotUsedRenk(int Id)
         {
             return !_context.Hayvans.Any(x => x.RenkId == Id);
         }
-        public static bool notBeInsan(int rolId)
-        {
-            return !_context.UserRoles.Any(x => x.RoleId == rolId);
-        }
-        public static bool roller(string roller)
-        {
-            roller = roller.ToUpper();
-            if (roller == "admin".ToUpper() || roller == "veteriner".ToUpper() || roller == "çalışan".ToUpper() || roller == "müşteri".ToUpper())
-                return true;
-            return false;
-        }
-        public static bool beUniqueRol(string rol)
-        {
-            return !_context.Roles.Any(x => x.Name.ToUpper() == rol.ToUpper());
-        }
-        public static bool notMatch(int turId)
-        {
-            return !_context.TurCins.Where(x => x.TurId == turId).Any();
-        }
-        public static bool beTur(int TurId)
-        {
-            return _context.Turs.Any(x => x.Id == TurId);
-        }
-        public static bool beTurCins(int id)
-        {
-            return _context.TurCins.Any(x => x.Id == id);
-        }
-        public static bool beNotUsedTurCins(int id)
+        public static bool BeNotUsedTurCins(int id)
         {
             var cinsId = _context.TurCins.Where(x => x.Id == id).Select(x => x.CinsId).FirstOrDefault();
             var turId = _context.TurCins.Where(x => x.Id == id).Select(x => x.TurId).FirstOrDefault();
             return !_context.Hayvans.Where(x => x.CinsId == cinsId && x.TurId == turId).Any();
         }
-        public static bool beUniqueTur(string girilenTur)
+        public static bool BeNotMatchedRol(int rolId)
         {
-            return !_context.Turs.Any(t => t.tur.ToUpper() == girilenTur.ToUpper());
+            return !_context.UserRoles.Any(x => x.RoleId == rolId);
         }
-        public static bool beNotTurCins(int id)
+        public static bool BeNotMatchedCins(int cinsId)
+        {
+            return !_context.TurCins.Any(x => x.CinsId == cinsId);
+        }
+        public static bool BeNotMatchTurCins(int turId)
+        {
+            return !_context.TurCins.Where(x => x.TurId == turId).Any();
+        }
+        public static bool BeNotMatchedTur(int id)
         {
             return !_context.TurCins.Any(x => x.TurId == id);
         }
 
 
-        public static readonly List<string> radioValues = new List<string>
+        private static readonly List<string> radioValues = new List<string>
         {
             "keepPhoto",
             "changePhoto",
             "useDefault"
         };
-        public static readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
 
     }
 }

@@ -19,8 +19,8 @@ namespace VeterinerApp.Models.Validators.Admin
             RuleFor(x => x.Id)
                 .NotNull().WithMessage("Lütfen bir cins seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir cins seçiniz.")
-                .Must(FunctionsValidator.beCins).WithMessage("Listede olmayan bir cinsi silemezsiniz.")
-                .Must(FunctionsValidator.notBeTur).WithMessage("Silinecek cinse ait tanımlı tür olduğu için silme işlemi gerçekleştirilemedi.");
+                .Must(FunctionsValidator.BeCins).WithMessage("Listede olmayan bir cinsi silemezsiniz.")
+                .Must(FunctionsValidator.BeNotMatchedCins).WithMessage("Silinecek cinse ait tanımlı tür olduğu için silme işlemi gerçekleştirilemedi.");
         }
 
     }
