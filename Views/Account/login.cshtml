@@ -8,9 +8,9 @@
 @section login {
 
     <h3>
-        <i class="fa-solid fa-user-check"></i>
+        <i class="fa-solid fa-user-check"></i>        Giriş Yap
+
         <hr />
-        Giriş Yap
     </h3>
     <form asp-action="Login" asp-controller="Account" method="post">
         <div class="form-col">
@@ -31,7 +31,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text rounded-left" id="passBtn">
                             <span id="eyeIcon">
-                                <i class="fa-solid fa-lock"></i>
+                                <i class="fa-solid fa-eye-slash"></i>
                             </span>
                         </span>
                     </div>
@@ -49,14 +49,14 @@
 
             </div>
 
-            <button type="submit" class="col btn btn-primary mb-2">Giriş Yap <i class="fa-solid fa-user-check"></i> </button>
+            <button type="submit" class="col btn btn-dark rounded mb-2">Giriş Yap <i class="fa-solid fa-user-check"></i> </button>
 
             <div class="form-group row mb-3">
                 <div class="col-sm-12 d-flex justify-content-between">
-                    <a href="/account/forgotPassword" class="btn btn-primary" style="width:48%">
+                    <a href="/account/forgotPassword" class="btn btn-dark rounded" style="width:48%">
                         Şifremi Unuttum <i class="fa-solid fa-question"></i>
                     </a>
-                    <a href="/account/register" class="btn btn-primary" style="width:48%">
+                    <a href="/account/register" class="btn btn-dark rounded" style="width:48%">
                         Kayıt Ol <i class="fa-regular fa-id-card"></i>
                     </a>
                 </div>
@@ -84,10 +84,10 @@
         passBtn.addEventListener("click", function () {
             if (password.type === "password") {
                 password.type = "text";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-unlock"></i>`;
+                eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
             } else {
                 password.type = "password";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+                eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
             }
         });
 

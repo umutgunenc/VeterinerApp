@@ -7,9 +7,10 @@
 
 @section register {
 
-    <h3><i class="fa-solid fa-id-card"></i>
+    <h3>
+        <i class="fa-solid fa-id-card"></i>        Kayıt Ol
         <hr />
-    Kayıt Ol</h3>
+    </h3>
     <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
         <div class="form-col">
 
@@ -96,7 +97,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text rounded-left" id="passBtn">
                             <span id="eyeIcon">
-                                <i class="fa-solid fa-lock"></i>
+                                <i class="fa-solid fa-eye-slash"></i>
                             </span>
                         </span>
                     </div>
@@ -113,7 +114,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text rounded-left" id="confirmPassBtn">
                             <span id="confirmedEyeIcon">
-                                <i class="fa-solid fa-lock"></i>
+                                <i class="fa-solid fa-eye-slash"></i>
                             </span>
                         </span>
                     </div>
@@ -138,7 +139,7 @@
             </div>
             <span class="font-weight-bold text-danger bg-light text-danger rounded mb-3" asp-validation-for="TermOfUse">
             </span>
-            <button type="submit" class="col btn btn-primary mb-2">Kayıt Ol</button>
+            <button type="submit" class="col btn btn-dark rounded mb-2">Kayıt Ol</button>
             @if (ViewBag.Hata != null)
             {
                 <div class="font-weight-bold text-danger bg-light text-danger rounded" role="alert">
@@ -178,20 +179,20 @@
         passBtn.addEventListener("click", function () {
             if (password.type === "password") {
                 password.type = "text";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-unlock"></i>`;
+                eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
             } else {
                 password.type = "password";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+                eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
             }
         });
 
         confirmPassBtn.addEventListener("click", function () {
             if (confirmPassword.type === "password") {
                 confirmPassword.type = "text";
-                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-unlock"></i>`;
+                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
             } else {
                 confirmPassword.type = "password";
-                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
             }
         });
 

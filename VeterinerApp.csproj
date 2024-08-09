@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ViewModel\User\" />
     <Folder Include="wwwroot\img\animals\" />
     <Folder Include="wwwroot\img\animals\16\" />
   </ItemGroup>

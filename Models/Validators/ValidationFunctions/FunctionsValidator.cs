@@ -11,6 +11,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 {
     public static class FunctionsValidator
     {
+
         private static readonly VeterinerContext _context = new VeterinerContext();
 
         public static bool BeRenk(int Id)
@@ -79,7 +80,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         public static bool BeValidExtensionForPhoto(IFormFile file)
         {
             var extension = Path.GetExtension(file.FileName).ToLower();
-            return allowedExtensions.Contains(extension);
+            return allowedExtensionsForPhoto.Contains(extension);
         }
         public static bool BeUsedTCKN(string girilenTCKN)
         {
@@ -114,8 +115,31 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             }
             return returnvalue;
         }
+        public static bool BeValidPasswordDate(string username, string password)
+        {
+            return _context.Users.Any(x => x.UserName.ToUpper() == username.ToUpper() && x.SifreGecerlilikTarihi >= DateTime.Now);
+        }
+        public static bool BeRegisteredParentAnimal(int? animalId)
+        {
+            return !animalId.HasValue || _context.Hayvans.Any(a => a.HayvanId == animalId.Value);
+        }
 
+        public static bool LoginSucceed(AppUser user)
+        {
+            return _context.Users.Any(x => x.UserName == user.UserName && x.PasswordHash == user.PasswordHash); 
+        
+        }
 
+        //public static async Task<bool> BeCorrectOldPasswordAsync(string oldPassword, string userName, UserManager<AppUser> userManager, CancellationToken cancellationToken)
+        //{
+        //    var user = await userManager.FindByNameAsync(userName);
+        //    if (user == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    return await userManager.CheckPasswordAsync(user, oldPassword);
+        //}
 
         public static bool BeUniqueTCKN(string girilenTCKN)
         {
@@ -147,12 +171,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="InsanTckn"></param>
         /// <param name="insanTel"></param>
         /// <returns></returns>
-        public static bool BeUniqueTel(string InsanTckn, string insanTel)
+        public static bool BeUniqueTel(int id, string insanTel)
         {
             if (string.IsNullOrEmpty(insanTel))
                 return true;
 
-            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.InsanTckn != InsanTckn);
+            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.Id != id);
         }
         public static bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
         {
@@ -168,12 +192,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="InsanTckn"></param>
         /// <param name="diplomaNo"></param>
         /// <returns></returns>
-        public static bool BeUniqueOrNullDiplomaNo(string InsanTckn, string diplomaNo)
+        public static bool BeUniqueOrNullDiplomaNo(int id, string diplomaNo)
         {
             if (string.IsNullOrEmpty(diplomaNo))
                 return true;
 
-            return !_context.Users.Any(x => x.DiplomaNo == diplomaNo && x.InsanTckn.ToUpper() != InsanTckn.ToUpper());
+            return !_context.Users.Any(x => x.DiplomaNo == diplomaNo && x.Id != id);
         }
         public static bool BeUniqueKullaniciAdi(string kullaniciAdi)
         {
@@ -187,12 +211,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="InsanTckn"></param>
         /// <param name="kullaniciAdi"></param>
         /// <returns></returns>
-        public static bool BeUniqueKullaniciAdi(string InsanTckn, string kullaniciAdi)
+        public static bool BeUniqueKullaniciAdi(int id, string kullaniciAdi)
         {
             if (string.IsNullOrEmpty(kullaniciAdi))
                 return true;
 
-            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper() && x.InsanTckn != InsanTckn);
+            return !_context.Users.Any(x => x.UserName.ToUpper() == kullaniciAdi.ToUpper() && x.Id != id);
         }
         public static bool BeUniqueEmail(string insanMail)
         {
@@ -207,13 +231,13 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="InsanTckn"></param>
         /// <param name="insanMail"></param>
         /// <returns></returns>
-        public static bool BeUniqueEmail(string InsanTckn, string insanMail)
+        public static bool BeUniqueEmail(int id, string insanMail)
         {
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
             return !_context.Users
-                .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.InsanTckn != InsanTckn);
+                .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
         }
 
 
@@ -256,7 +280,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             "changePhoto",
             "useDefault"
         };
-        private static readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] allowedExtensionsForPhoto = { ".jpg", ".jpeg", ".png", ".gif" };
 
     }
 }

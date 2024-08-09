@@ -134,19 +134,20 @@
                             }
                         }
                         </input>
+                        <input type="hidden" name="id" value="@Model.Item1.Id" />
 
-                        <a href="#" class="btn btn-primary mb-3">
+                        <a href="/User/EditUser" class="btn btn-secondary mb-3" id="editUser">
                             Düzenle
                         </a>
                         @if (User.IsInRole("MÜŞTERİ"))
-                        {<a href="#" class="btn btn-primary ml-3 mb-3">
+                        {<a href="#" class="btn btn-secondary ml-3 mb-3">
                                 Hesabımı Sil
                             </a>
                         }
-                        <a href="/User/ChangePassword" class="btn btn-primary ml-3 mb-3">
+                        <a href="/User/ChangePassword" class="btn btn-secondary ml-3 mb-3">
                             Şifremi Değiştir
                         </a>
-                        <a href="/Animal/AddAnimal" class="btn btn-primary ml-3 mb-3">
+                        <a href="/Animal/AddAnimal" class="btn btn-secondary ml-3 mb-3">
                             Hayvan Ekle
                         </a>
                     </div>
@@ -154,6 +155,8 @@
             </div>
         </div>
     </div>
+
+
 }
 
 

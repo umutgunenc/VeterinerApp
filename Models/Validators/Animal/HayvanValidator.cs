@@ -17,11 +17,9 @@ namespace VeterinerApp.Models.Validators.Animal
 {
     public partial class HayvanValidator : AbstractValidator<AddAnimalViewModel>
     {
-        private readonly VeterinerContext _context;
 
-        public HayvanValidator(VeterinerContext context)
+        public HayvanValidator()
         {
-            _context = context;
 
             RuleFor(x => x.HayvanAdi)
                 .MaximumLength(50).WithMessage("Hayvan adı maksimum 50 karakter uzunluğunda olmalı.")
@@ -55,7 +53,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
             RuleFor(x => x.HayvanAnneId)
-                .Must(anneId => !anneId.HasValue || _context.Hayvans.Any(a => a.HayvanId == anneId.Value))
+                .Must(FunctionsValidator.BeRegisteredParentAnimal)
                 .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
                 .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
@@ -64,7 +62,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
 
             RuleFor(x => x.HayvanBabaId)
-                .Must(babaId => !babaId.HasValue || _context.Hayvans.Any(a => a.HayvanId == babaId.Value))
+                .Must(FunctionsValidator.BeRegisteredParentAnimal)
                 .WithMessage("Hayvanın babası sistemde kayıtlı bir hayvan olmalıdır.")
                 .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
                 .WithMessage("Hayvan babası, eklenen hayvan ile aynı cins olmalıdır.")
@@ -90,9 +88,9 @@ namespace VeterinerApp.Models.Validators.Animal
                 .WithName("filePhoto");
 
             RuleFor(x => x.filePhoto)
-                .Must(x => x.Length < 5242880)
+                .Must(x => x.Length < 10485760)
                 .When(x => x.filePhoto != null)
-                .WithMessage("Fotoğraf boyutu 5MB'dan küçük olmalıdır.");
+                .WithMessage("Fotoğraf boyutu 10MB'dan küçük olmalıdır.");
 
         }
 

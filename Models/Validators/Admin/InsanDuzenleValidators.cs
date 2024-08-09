@@ -28,7 +28,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must((model, insanTel) => FunctionsValidator.BeUniqueTel(model.InsanTckn, insanTel))
+                .Must((model, insanTel) => FunctionsValidator.BeUniqueTel(model.Id, insanTel))
                 .WithMessage("Girilen telefon numarası zaten sisteme kayıtlı.");
 
             RuleFor(x => x.Email)
@@ -36,12 +36,12 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must((model, insanMail) => FunctionsValidator.BeUniqueEmail(model.InsanTckn, insanMail))
+                .Must((model, insanMail) => FunctionsValidator.BeUniqueEmail(model.Id, insanMail))
                 .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.DiplomaNo)
                 .MaximumLength(11).WithMessage("Diploma numarası en fazla 11 karakter olabilir.")
-                .Must((model, diplomaNo) => FunctionsValidator.BeUniqueOrNullDiplomaNo(model.InsanTckn, diplomaNo))
+                .Must((model, diplomaNo) => FunctionsValidator.BeUniqueOrNullDiplomaNo(model.Id, diplomaNo))
                 .WithMessage("Girilen diploma numarası zaten sistemde kayıtlı.");
 
             RuleFor(x => x.DiplomaNo)
@@ -62,7 +62,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda kullanıcı adı girilebilir")
                 .NotEmpty().WithMessage("Çalışanın kullanıcı adını giriniz.")
                 .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
-                .Must((model, kullaniciAdi) => FunctionsValidator.BeUniqueKullaniciAdi(model.InsanTckn, kullaniciAdi))
+                .Must((model, kullaniciAdi) => FunctionsValidator.BeUniqueKullaniciAdi(model.Id, kullaniciAdi))
                 .WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
             RuleFor(x => x.CalisiyorMu)

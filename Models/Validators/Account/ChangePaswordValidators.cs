@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.Validators.ValidateFunctions;
 using VeterinerApp.Models.ViewModel.Account;
 
 namespace VeterinerApp.Models.Validators.Account
@@ -16,11 +17,14 @@ namespace VeterinerApp.Models.Validators.Account
         {
             //TODO yeni şifre için validasyonlar ekle
 
+
+            //controller icinden kontrol ediliyor
             RuleFor(x => x.OldPassword)
                 .NotEmpty().WithMessage("Eski şifre alanı boş geçilemez")
-                .NotNull().WithMessage("Eski şifre alanı boş geçilemez")
-                //.MustAsync(async (oldPassword, cancellation) => await bePassword(oldPassword))
-                .WithMessage("Lütfen şifrenizi doğru giriniz.");
+                .NotNull().WithMessage("Eski şifre alanı boş geçilemez");
+                //.MustAsync(async (model, oldPassword, cancellationToken) =>
+                //await FunctionsValidator.BeCorrectOldPasswordAsync(oldPassword, model.UserName, _userManager, cancellationToken))
+                //.WithMessage("Lütfen şifrenizi doğru giriniz.");
 
             RuleFor(x => x.NewPassword)
                 .NotEmpty().WithMessage("Yeni şifre alanı boş geçilemez")

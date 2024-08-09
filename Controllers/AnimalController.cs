@@ -161,7 +161,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> AddAnimal(AddAnimalViewModel model)
         {
 
-            HayvanValidator validator = new HayvanValidator(_context);
+            HayvanValidator validator = new HayvanValidator();
             var result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -546,7 +546,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveEdit(EditAnimalViewModel model)
         {
-            EditHayvanValidator validator = new EditHayvanValidator(_context);
+            EditHayvanValidator validator = new EditHayvanValidator();
             ValidationResult result = validator.Validate(model);
 
             var cinsAdlari = _context.Cins.Select(c => new SelectListItem

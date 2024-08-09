@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using VeterinerApp.Data;
+using VeterinerApp.Models.Validators.ValidateFunctions;
 using VeterinerApp.Models.ViewModel.Account;
 
 
@@ -10,10 +12,8 @@ namespace VeterinerApp.Models.Validators.Account
 {
     public class LoginValidators : AbstractValidator<LoginViewModel>
     {
-        private readonly VeterinerContext _context;
-        public LoginValidators(VeterinerContext context)
+        public LoginValidators()
         {
-            _context = context;
 
             RuleFor(x => x.UserName)
                 .NotEmpty().WithMessage("Kullanıcı adı boş olamaz.")
@@ -23,9 +23,10 @@ namespace VeterinerApp.Models.Validators.Account
                 .NotEmpty().WithMessage("Şifre boş olamaz.");
 
             RuleFor(x => x.PasswordHash)
-                .Must((user, sifre) => _context.Users.Any(y => y.UserName == user.UserName && y.SifreGecerlilikTarihi >= DateTime.Now))
-                .WithMessage("Şifre geçerlilik süresi dolmuş. Lütfen şifrenizi değiştiriniz.")
-                .When(user => _context.Users.Any(y => y.UserName == user.UserName && y.PasswordHash == user.PasswordHash));
+                .Must((user, sifre) => FunctionsValidator.BeValidPasswordDate(user.UserName, sifre))
+                .When((user) => FunctionsValidator.LoginSucceed(user))
+                .WithMessage("Şifre geçerlilik süresi dolmuş. Lütfen şifrenizi değiştiriniz.");
+            
 
         }
 

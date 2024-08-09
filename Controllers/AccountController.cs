@@ -140,7 +140,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            LoginValidators validator = new(_context);
+            LoginValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)

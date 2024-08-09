@@ -14,14 +14,14 @@
     
 
 </head>
-<body>
+<body class="bg-secondary">
     @await Html.PartialAsync("_navbar")
 
     @if (User.Identity.IsAuthenticated)
     {
         @await Html.PartialAsync("_topBar")
     }
-    <div class="container mt-3">
+    <div class="container mt-3>
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
@@ -29,7 +29,7 @@
                         @RenderBody()
                         @RenderSection("AdminMenu", false)
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 p-1">
                         @RenderSection("RenkEkle", false)
                         @RenderSection("RenkSil", false)
                         @RenderSection("CinsEkle", false)

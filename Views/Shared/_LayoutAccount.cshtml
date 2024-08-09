@@ -15,7 +15,7 @@
 
 
 </head>
-<body>
+<body class="bg-secondary">
 
 
     @await Html.PartialAsync("_navbar")
@@ -39,6 +39,7 @@
                         @RenderSection("AddAnimal", false)
                         @RenderSection("animalInformation", false)
                         @RenderSection("editAnimal",false)
+                        @RenderSection("editUser",false)
                     </div>
                 </div>
             </div>

@@ -28,7 +28,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         // Validasyon işlemleri için servis eklendi
-        services.AddControllersWithViews().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+        services.AddControllersWithViews()
+            .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         // DB bağlantısı için servis eklendi
         services.AddDbContext<VeterinerContext>(options =>
