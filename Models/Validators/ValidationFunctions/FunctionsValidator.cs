@@ -278,7 +278,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             "keepPhoto",
             "changePhoto",
-            "useDefault"
+            "deletePhoto"
         };
         private static readonly string[] allowedExtensionsForPhoto = { ".jpg", ".jpeg", ".png", ".gif" };
 

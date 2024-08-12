@@ -537,6 +537,7 @@ namespace VeterinerApp.Controllers
                     .Where(x => x.HayvanId == hayvanId && x.SahipTckn == SahipTCKN)
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
+                imgURl = _context.Hayvans.Find(hayvanId).imgURl
 
             };
 
@@ -688,6 +689,7 @@ namespace VeterinerApp.Controllers
                     .Where(x => x.HayvanId == model.HayvanId && x.SahipTckn == SahipTCKN)
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
+                imgURl = _context.Hayvans.Find(model.HayvanId).imgURl
 
             };
 
@@ -701,8 +703,8 @@ namespace VeterinerApp.Controllers
 
                 return View("EditAnimal", returnModel);
             }
-            var hayvan = _context.Hayvans.Find(model.HayvanId);
-            if (model.PhotoOption == "changePhoto")
+            var hayvan = _context.Hayvans.FindAsync(model.HayvanId).Result;
+            if (model.PhotoOption=="changePhoto" && model.filePhoto!=null)
             {
 
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
@@ -713,6 +715,12 @@ namespace VeterinerApp.Controllers
                 if (!Directory.Exists(hayvanKlasoru))
                 {
                     Directory.CreateDirectory(hayvanKlasoru);
+                }
+                var eskiFotograflar=Directory.GetFiles(hayvanKlasoru);
+
+                foreach (var eskiFotograf in eskiFotograflar)
+                {
+                    System.IO.File.Delete(eskiFotograf);
                 }
 
                 var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
@@ -728,12 +736,17 @@ namespace VeterinerApp.Controllers
                 hayvan.imgURl = fileUrl;
 
             }
-            else if (model.PhotoOption == "useDefault") {
-                hayvan.imgURl = null; 
-            }
-            else if (model.PhotoOption == "keepPhoto")
+            else if(model.PhotoOption == "changePhoto" && model.filePhoto== null)
             {
-                hayvan.imgURl = hayvan.imgURl;
+                hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
+            }
+            else if(model.PhotoOption == "deletePhoto")
+            {
+                hayvan.imgURl = null;
+            }
+            else if(model.PhotoOption == "keepPhoto")
+            {
+                hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
             }
 
 
@@ -760,7 +773,7 @@ namespace VeterinerApp.Controllers
 
             _context.SahipHayvans.Update(SahipHayvan);
             _context.SaveChanges();
-
+            returnModel.imgURl = hayvan.imgURl;
             TempData["Edit"] = "Hayvan bilgileri başarıyla güncellendi.";
 
             return View("EditAnimal", returnModel);

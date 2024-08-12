@@ -7,15 +7,15 @@
 
 @section register {
 
-    <h3>
-        <i class="fa-solid fa-id-card"></i>        Kayıt Ol
+    <h3 class="font-weight-bold text-white">
+                Kayıt Ol    <i class="fa-solid fa-id-card"></i>
         <hr />
     </h3>
     <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
         <div class="form-col">
 
             <div class="form-group row mb-3">
-                <label asp-for="InsanAdi" class="col-sm-2 col-form-label">Adı</label>
+                <label asp-for="InsanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Adı</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
                     <div class="mt-2">
@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label">Soyadı</label>
+                <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label font-weight-bold text-white">Soyadı</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
                     <div class="mt-2">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="InsanTckn" class="col-sm-2 col-form-label">TCKN</label>
+                <label asp-for="InsanTckn" class="col-sm-2 col-form-label font-weight-bold text-white">TCKN</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
                     <div class="mt-2">
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="Email" class="col-sm-2 col-form-label">Email Adresi</label>
+                <label asp-for="Email" class="col-sm-2 col-form-label font-weight-bold text-white">Email Adresi</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="Email" class="form-control" placeholder="Email Adresi">
                     <div class="mt-2">
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="PhoneNumber" class="col-sm-2 col-form-label">Telefon Numarası</label>
+                <label asp-for="PhoneNumber" class="col-sm-2 col-form-label font-weight-bold text-white">Telefon Numarası</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
                     <div class="mt-2">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="UserName" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
+                <label asp-for="UserName" class="col-sm-2 col-form-label font-weight-bold text-white">Kullanıcı Adı</label>
                 <div class="col-sm-10">
                     <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
                     <div class="mt-2">
@@ -77,7 +77,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="filePhoto" class="col-sm-2 col-form-label">Profil Fotoğrafı</label>
+                <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Profil Fotoğrafı</label>
                 <div class="col-sm-10">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
@@ -92,7 +92,7 @@
 
 
             <div class="form-group row mb-3">
-                <label asp-for="PasswordHash" class="col-sm-2 col-form-label">Şifre</label>
+                <label asp-for="PasswordHash" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
                 <div class="col-sm-10 input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text rounded-left" id="passBtn">
@@ -109,7 +109,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label">Şifre</label>
+                <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
                 <div class="col-sm-10 input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text rounded-left" id="confirmPassBtn">
@@ -132,7 +132,7 @@
                     Kullanım şartlarını kabul ediyorum.
                 </label>
 
-                <a href="#">
+                <a href="#" class="font-weight-bold text-white">
                     Kullanım şartlarını okumak için buraya tıklayınız
                     <i class="fa-regular fa-copyright"></i>
                 </a>

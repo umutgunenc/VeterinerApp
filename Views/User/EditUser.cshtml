@@ -5,103 +5,195 @@
 }
 
 @section editUser{
-    <h3>
-        <i class="fa-solid fa-user-pen"></i>        Bilgileri Düzenle
+    <h3 class="font-weight-bold text-white">
+                Bilgileri Düzenle   <i class="fa-solid fa-user-pen"></i>
 
         <hr />
     </h3>
     <form asp-action="SaveEdit" asp-controller="User" method="post" enctype="multipart/form-data">
         <div class="form-col">
+            <div class="col-sm-12 d-inline-flex p-0">
+                <div class="d-block col-sm-9 p-0">
+                    <div class="form-group row mb-3">
+                        <label asp-for="InsanAdi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Adı</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="InsanSoyadi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Soyadı</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Adı">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="PhoneNumber" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Telefon</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="Email" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">EMail</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="email" asp-for="Email" class="form-control" placeholder="EMail">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="UserName" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Kullanıcı Adı</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="form-group row mb-3">
-                <label asp-for="InsanAdi" class="col-sm-2 col-form-label">Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label">Soyadı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="PhoneNumber" class="col-sm-2 col-form-label">Telefon Numarası</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="Email" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
-                    <input type="email" asp-for="Email" class="form-control" placeholder="Email">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="UserName" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <div class="col">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="keepPhoto" checked="checked">
-                        <label class="custom-control-label" for="customRadio1">Fotoğrafı Değiştirme</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="changePhoto">
-                        <label class="custom-control-label" for="customRadio2">Fotoğrafı Değiştir</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="useDefault">
-                        <label class="custom-control-label" for="customRadio3">Fotoğraf Kullanma</label>
-                    </div>
                 </div>
 
+                <div class="d-inline-flex pl-3">
+                    <div class="d-flex flex-column align-items-end justify-content-start">
+                        <div class="profile-photo-container mb-2">
+                            <img id="photoPreview"
+                                 src="@if (Model.ImgURL != null) { @Model.ImgURL } else { @Url.Content("~/img/user.svg") }"
+                                 alt="Profil Fotoğrafı" class="rounded" style="height: 240px; object-fit: fill; width: 262px; cursor: pointer;" onclick="window.open(this.src, '_blank')" />
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="d-none" value="keepPhoto" checked="checked" />
+                            <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="d-none" value="changePhoto">
+                            <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="d-none" value="deletePhoto">
+                            <label for="customRadio1">
+                            </label>
+                            <label for="customRadio2">
+                                <div type="button" class="btn btn-dark rounded mr-2 mt-2" onclick="document.getElementById('photoInput').click()">
+                                    Değiştir
+                                    <i class="fa-solid fa-images"></i>
+                                </div>
+                            </label>
+                            <label for="customRadio3">
+                                <div type="button" class="btn btn-dark rounded mt-2" onclick="removePhoto()">
+                                    Sil
+                                    <i class="fa-solid fa-trash-arrow-up"></i>
+                                </div>
+                            </label>
 
-                <div class="col-sm-10 d-block">
-                    <div class="custom-file w-100 mh-100 h-75">
-                        <input type="file" class="custom-file-input h-100" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                        <label class="custom-file-label h-100 etiket" for="customFileLangHTML" data-browse="Seç">
-                            Fotoğraf Seç
-                        </label>
-                    </div>
-                    <div class="mt-2 mb-5">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
-                        </span>
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
-                        </span>
+
+                        </div>
+                        <input type="file" id="photoInput" asp-for="filePhoto" class="d-none" accept=".jpg,.jpeg,.png,.gif" onchange="previewPhoto(event)" />
                     </div>
                 </div>
 
             </div>
+            @*<div class="form-group row mb-3">
+                    <label asp-for="InsanAdi" class="col-sm-2 col-form-label">Adı</label>
+                    <div class="col-sm-10">
+                        <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label">Soyadı</label>
+                    <div class="col-sm-10">
+                        <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
+                    <label asp-for="PhoneNumber" class="col-sm-2 col-form-label">Telefon Numarası</label>
+                    <div class="col-sm-10">
+                        <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="Email" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" asp-for="Email" class="form-control" placeholder="Email">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="UserName" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
+                    <div class="col-sm-10">
+                        <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
+                        <div class="col">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="keepPhoto" checked="checked">
+                                <label class="custom-control-label" for="customRadio1">Fotoğrafı Değiştirme</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="changePhoto">
+                                <label class="custom-control-label" for="customRadio2">Fotoğrafı Değiştir</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="useDefault">
+                                <label class="custom-control-label" for="customRadio3">Fotoğraf Kullanma</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-10 d-block">
+                            <div class="custom-file w-100 mh-100 h-75">
+                                <input type="file" class="custom-file-input h-100" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                                <label class="custom-file-label h-100 etiket" for="customFileLangHTML" data-browse="Seç">
+                                    Fotoğraf Seç
+                                </label>
+                            </div>
+                            <div class="mt-2 mb-5">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+                                </span>
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>*@
 
             <input type="hidden" asp-for="Id" />
         </div>
         <button type="submit" class="col btn btn-dark rounded mb-3">Düzenle</button>
+        <div class="">
+            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+            </span>
+            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
+            </span>
     </form>
 
     @if (TempData["EditUser"] != null)
@@ -123,6 +215,20 @@
             var label = inputFile.nextElementSibling;
             label.innerHTML = fileName;
         });
+
+         function previewPhoto(event) {
+         var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('photoPreview').src = e.target.result;
+            };
+         reader.readAsDataURL(event.target.files[0]);
+         }
+
+
+         function removePhoto() {
+             document.getElementById('photoPreview').src = '@Url.Content("~/img/user.svg")';
+             document.getElementById('photoInput').value = '';
+         }
 
     </script>
 }

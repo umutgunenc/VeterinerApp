@@ -23,13 +23,11 @@ namespace VeterinerApp.Controllers
     {
         private readonly VeterinerContext _context;
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
 
-        public UserController(VeterinerContext context, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public UserController(VeterinerContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _roleManager = roleManager;
         }
         [HttpGet]
         public async Task<IActionResult> Information()
@@ -120,6 +118,7 @@ namespace VeterinerApp.Controllers
             model.UserName = user.UserName.ToUpper();
             model.PhoneNumber = user.PhoneNumber;
             model.Id = user.Id;
+            model.ImgURL = user.ImgURL;
 
 
             return View(model);
@@ -129,15 +128,18 @@ namespace VeterinerApp.Controllers
         {
             UserEditValidator validator = new();
             ValidationResult result = validator.Validate(model);
+            var user = await _context.Users.FindAsync(model.Id);
 
-            var returnModel = new EditUserViewModel()
+            EditUserViewModel returnModel = new ()
             {
                 InsanAdi = model.InsanAdi.ToUpper(),
                 InsanSoyadi = model.InsanSoyadi.ToUpper(),
                 Email = model.Email.ToLower(),
                 UserName = model.UserName.ToUpper(),
                 PhoneNumber = model.PhoneNumber,
-                Id = model.Id
+                Id = model.Id,
+                ImgURL = user.ImgURL
+
             };
 
             if (!result.IsValid)
@@ -149,14 +151,13 @@ namespace VeterinerApp.Controllers
                 return View("EditUser", returnModel);
             }
 
-            var user = await _userManager.GetUserAsync(User);
             user.InsanAdi = model.InsanAdi.ToUpper();
             user.InsanSoyadi = model.InsanSoyadi.ToUpper();
             user.Email = model.Email.ToLower();
             user.PhoneNumber = model.PhoneNumber;
             user.UserName = model.UserName.ToUpper();
 
-            if (model.PhotoOption == "changePhoto")
+            if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
 
@@ -167,7 +168,12 @@ namespace VeterinerApp.Controllers
                 {
                     Directory.CreateDirectory(userKlasoru);
                 }
+                var eskiFotograflar = Directory.GetFiles(userKlasoru);
 
+                foreach (var eskiFotograf in eskiFotograflar)
+                {
+                    System.IO.File.Delete(eskiFotograf);
+                }
                 var filePath = Path.Combine(userKlasoru, dosyaAdi);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -181,18 +187,23 @@ namespace VeterinerApp.Controllers
                 user.ImgURL = fileUrl;
 
             }
-            else if (model.PhotoOption == "useDefault")
+            else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
+            {
+                user.ImgURL = _context.Users.FindAsync(model.Id).Result.ImgURL;
+            }
+            else if (model.PhotoOption == "deletePhoto")
             {
                 user.ImgURL = null;
             }
             else if (model.PhotoOption == "keepPhoto")
             {
-                user.ImgURL = user.ImgURL;
+                user.ImgURL = _context.Users.FindAsync(model.Id).Result.ImgURL;
             }
 
             _userManager.UpdateAsync(user).Wait();
+            returnModel.ImgURL = user.ImgURL;
 
-            TempData["EditUser"] = $"{user.InsanAdi} {user.InsanSoyadi} isimli kişinin kullanıcı bilgileriniz başarıyla güncellendi.";
+            TempData["EditUser"] = $"{user.InsanAdi} {user.InsanSoyadi} isimli kişinin kullanıcı bilgileri başarıyla güncellendi.";
 
             return View("EditUser",returnModel);
         }

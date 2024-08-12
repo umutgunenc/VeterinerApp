@@ -7,94 +7,130 @@
 @section editAnimal{
     <form asp-action="SaveEdit" asp-controller="Animal" method="post" enctype="multipart/form-data">
         <div class="form-col">
+            <div class="col-sm-12 d-inline-flex p-0">
+                <div class="d-block col-sm-9 p-0">
+                    <div class="form-group row mb-3">
+                        <label asp-for="HayvanAdi" class="col-sm-3 col-form-label pr-0">Hayvan Adı</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="HayvanDogumTarihi" class="col-sm-3 col-form-label pr-0 ">Doğum Tarihi</label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-form-label d-flex align-items-center pr-0">
+                            Ölüm Tarihi
+                            <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
+                        </label>
 
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanAdi" class="col-sm-2 col-form-label">Hayvan Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label">Doğum Tarihi</label>
-                <div class="col-sm-10">
-                    <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label class="col-sm-2 col-form-label d-flex align-items-center">
-                    Ölüm Tarihi
-                    <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
-                </label>
+                        <div class="col-sm-9 pl-0">
+                            <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanOlumTarihi"></span>
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="isDeath"></span>
 
-                <div class="col-sm-10">
-                    <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanOlumTarihi"></span>
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="isDeath"></span>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
+                        <div class="row-sm-2">
+                            <label asp-for="CinsId" class="row-sm-2 col-form-label">Cinsi</label>
+                            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                                <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row-sm-4">
+                            <label asp-for="TurId" class="row-sm-2 col-form-label">Türü</label>
+                            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
+                                <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row-sm-4">
+                            <label asp-for="RenkId" class="row-sm-2 col-form-label">Rengi</label>
+                            <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
+                                <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Cins Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row-sm-4">
+                            <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label">Cinsiyeti</label>
+                            <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+                                <option value="" disabled selected>Cinsiyet Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row-sm-4 mr-3">
+                            <label asp-for="HayvanKilo" class="row-sm-2 col-form-label">Hayvan Kilosu</label>
+                            <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
+                            </input>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
+                                </span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
-            </div>
+
+                <div class="d-inline-flex pl-3">
+                    <div class="d-flex flex-column align-items-end justify-content-start">
+                        <div class="profile-photo-container mb-2">
+                            <img id="photoPreview"
+                                 src="@if (Model.imgURl != null) { @Model.imgURl } else { @Url.Content("~/img/animal.png") }"
+                                 alt="Profil Fotoğrafı" class="rounded" style="height: 210px; object-fit: fill; width: 262px; cursor: pointer;" onclick="window.open(this.src, '_blank')" />
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="d-none" value="keepPhoto" checked="checked" />
+                            <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="d-none" value="changePhoto">
+                            <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="d-none" value="deletePhoto">
+                            <label for="customRadio1">
+                            </label>
+                            <label for="customRadio2">
+                                <div type="button" class="btn btn-dark rounded mr-2 mt-2" onclick="document.getElementById('photoInput').click()">
+                                    Değiştir
+                                    <i class="fa-solid fa-images"></i>
+                                </div>
+                            </label>
+                            <label for="customRadio3">
+                                <div type="button" class="btn btn-dark rounded mt-2" onclick="removePhoto()">
+                                    Sil
+                                    <i class="fa-solid fa-trash-arrow-up"></i>
+                                </div>
+                            </label>
 
 
-            <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
-                <div class="row-sm-2">
-                    <label asp-for="CinsId" class="row-sm-2 col-form-label">Cinsi</label>
-                    <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                        <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
-                        </span>
+                        </div>
+                        <input type="file" id="photoInput" asp-for="filePhoto" class="d-none" accept=".jpg,.jpeg,.png,.gif" onchange="previewPhoto(event)" />
                     </div>
                 </div>
-                <div class="row-sm-4">
-                    <label asp-for="TurId" class="row-sm-2 col-form-label">Türü</label>
-                    <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                        <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4">
-                    <label asp-for="RenkId" class="row-sm-2 col-form-label">Rengi</label>
-                    <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                        <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Cins Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4">
-                    <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label">Cinsiyeti</label>
-                    <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
-                        <option value="" disabled selected>Cinsiyet Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4 mr-3">
-                    <label asp-for="HayvanKilo" class="row-sm-2 col-form-label">Hayvan Kilosu</label>
-                    <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
-                    </input>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
-                        </span>
-                    </div>
-                </div>
+
             </div>
 
             <div class="form-group row mb-3">
@@ -122,39 +158,39 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group row mb-3">
-                <div class="col">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="keepPhoto" checked="checked">
-                        <label class="custom-control-label" for="customRadio1">Fotoğrafı Değiştirme</label>
+            @*<div class="form-group row mb-3">
+                    <div class="col">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="keepPhoto" checked="checked">
+                            <label class="custom-control-label" for="customRadio1">Fotoğrafı Değiştirme</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="changePhoto">
+                            <label class="custom-control-label" for="customRadio2">Fotoğrafı Değiştir</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="useDefault">
+                            <label class="custom-control-label" for="customRadio3">Fotoğraf Kullanma</label>
+                        </div>
                     </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="changePhoto">
-                        <label class="custom-control-label" for="customRadio2">Fotoğrafı Değiştir</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="custom-control-input" value="useDefault">
-                        <label class="custom-control-label" for="customRadio3">Fotoğraf Kullanma</label>
-                    </div>
-                </div>
 
 
-                <div class="col-sm-10 d-block">
-                    <div class="custom-file w-100 mh-100 h-75">
-                        <input type="file" class="custom-file-input h-100" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                        <label class="custom-file-label h-100 etiket" for="customFileLangHTML" data-browse="Seç">
-                            Fotoğraf Seç
-                        </label>
+                    <div class="col-sm-10 d-block">
+                        <div class="custom-file w-100 mh-100 h-75">
+                            <input type="file" class="custom-file-input h-100" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                            <label class="custom-file-label h-100 etiket" for="customFileLangHTML" data-browse="Seç">
+                                Fotoğraf Seç
+                            </label>
+                        </div>
+                        <div class="mt-2 mb-5">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+                            </span>
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
+                            </span>
+                        </div>
                     </div>
-                    <div class="mt-2 mb-5">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
-                        </span>
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
-                        </span>
-                    </div>
-                </div>
 
-            </div>
+                </div>*@
             <div class="form-group row mb-3">
                 <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>
                 <div class="col-sm-10">
@@ -179,7 +215,13 @@
 
             <input type="hidden" asp-for="HayvanId" />
         </div>
-        <button type="submit" class="col btn btn-dark rounded">Kaydet</button>
+        <button type="submit" class="col btn btn-dark rounded mb-3" id="button">Kaydet</button>
+        <div class="">
+            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+            </span>
+            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhotoOption">
+            </span>
+        </div>
     </form>
 
     @if (TempData["Edit"] != null)
@@ -225,13 +267,26 @@
                 var cinsId = $(this).val();
                 turleriGetir(cinsId);
             });
-        });
-        document.querySelector('.custom-file-input').addEventListener('change', function (event) {
-            var inputFile = event.currentTarget;
-            var fileName = inputFile.files[0].name;
-            var label = inputFile.nextElementSibling;
-            label.innerHTML = fileName;
-        });
+
+         });
+
+         function previewPhoto(event) {
+             var reader = new FileReader();
+             reader.onload = function (e) {
+                 document.getElementById('photoPreview').src = e.target.result;
+             };
+             reader.readAsDataURL(event.target.files[0]);
+         }
+
+
+         function removePhoto() {
+             document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
+             document.getElementById('photoInput').value = '';
+         }
+
+
+
+
 
     </script>
 }

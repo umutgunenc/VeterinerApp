@@ -113,13 +113,10 @@ namespace VeterinerApp.Models.Validators.Animal
                 .WithName("filePhoto");
 
             RuleFor(x => x.filePhoto)
-                .NotEmpty()
-                .When(x => x.PhotoOption == "changePhoto")
-                .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
-            RuleFor(x => x.filePhoto)
                 .Empty()
-                .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "useDefault")
+                .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "deletePhoto")
                 .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
+
             RuleFor(x=>x.filePhoto)
                 .Must(x => x.Length < 10485760)
                 .When(x => x.filePhoto != null)
