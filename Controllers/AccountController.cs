@@ -199,15 +199,12 @@ namespace VeterinerApp.Controllers
                         </html>";
 
 
-                try
+                if (_emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage).IsCompletedSuccessfully)
                 {
-                    _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
                     TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
-
                 }
-                catch
+                else
                 {
-
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
                     _context.Users.Remove(model);
                     _context.UserRoles.Remove(userRole);
@@ -444,15 +441,13 @@ namespace VeterinerApp.Controllers
                         </body>
                         </html>";
 
-                try
+                if (_emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage).IsCompletedSuccessfully)
                 {
-                    _emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage);
                     TempData["SifreGonderildi"] = $"{kullaniciAdSoyad} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
                     return View();
 
                 }
-                catch
-                {
+                else {
                     user.PasswordHash = eskiSifreHash;
                     user.SifreOlusturmaTarihi = EskiSifreOlusturmaTarihi;
                     user.SifreGecerlilikTarihi = EskiSifreGecerlilikTarihi;
@@ -460,8 +455,7 @@ namespace VeterinerApp.Controllers
 
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı.";
                     return View(model);
-                }
-
+                }              
 
             }
         }

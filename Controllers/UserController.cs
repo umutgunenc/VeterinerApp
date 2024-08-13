@@ -295,16 +295,13 @@ namespace VeterinerApp.Controllers
                     </body>
                     </html>";
 
-            try
+            if (_emailSender.SendEmailAsync(user.Email, "Hesap Silme Talebi", message).IsCompletedSuccessfully)
             {
-                await _emailSender.SendEmailAsync(user.Email, "Hesap Silme Talebi", message);
-
                 TempData["MailGonderildi"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderildi. Mail adresinizde bulunan linke tıklayarak hesabınızı silebilirsiniz.";
-                return RedirectToAction("Information"); 
+                return RedirectToAction("Information");
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderilemedi. Lütfen sistem yöneticisi ile iletişime geçiniz. " + ex.Message;
+            else {
+                TempData["ErrorMessage"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderilemedi. Lütfen sistem yöneticisi ile iletişime geçiniz. ";
 
                 return RedirectToAction("Information");
             }
