@@ -676,10 +676,17 @@ namespace VeterinerApp.Controllers
                         </body>
                         </html>";
 
-
-                if (_emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage).IsFaulted)
+                try
                 {
-                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
+                    _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
+                    TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
+                    return RedirectToAction();
+
+                }
+                catch (Exception ex)
+                {
+
+                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı." +" " + ex.Message ;
                     _veterinerDbContext.Users.Remove(calisan);
                     _veterinerDbContext.SaveChanges();
                     model = new InsanEkleViewModel
@@ -693,11 +700,6 @@ namespace VeterinerApp.Controllers
                     };
                     return View(model);
                 }
-                else
-                {
-                    TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
-                }
-
 
             }
             return RedirectToAction();

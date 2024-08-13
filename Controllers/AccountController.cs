@@ -198,19 +198,20 @@ namespace VeterinerApp.Controllers
                         </body>
                         </html>";
 
-
-                if (_emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage).IsCompletedSuccessfully)
+                try
                 {
+                    _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
                     TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
                 }
-                else
+                catch (Exception ex)
                 {
-                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
+                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı." + " " + ex.Message;
                     _context.Users.Remove(model);
                     _context.UserRoles.Remove(userRole);
                     _context.SaveChanges();
                     return View(model);
                 }
+
 
                 return View(model);
 
@@ -441,21 +442,24 @@ namespace VeterinerApp.Controllers
                         </body>
                         </html>";
 
-                if (_emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage).IsCompletedSuccessfully)
+                try
                 {
+                    _emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage);
                     TempData["SifreGonderildi"] = $"{kullaniciAdSoyad} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
                     return View();
 
                 }
-                else {
+                catch (Exception ex)
+                {
                     user.PasswordHash = eskiSifreHash;
                     user.SifreOlusturmaTarihi = EskiSifreOlusturmaTarihi;
                     user.SifreGecerlilikTarihi = EskiSifreGecerlilikTarihi;
                     await _userManager.UpdateAsync(user);
 
-                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı.";
+                    ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı." + " " + ex.Message;
                     return View(model);
-                }              
+                }
+             
 
             }
         }

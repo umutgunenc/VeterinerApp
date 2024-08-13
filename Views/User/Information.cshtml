@@ -139,7 +139,7 @@
 
                         <a href="/User/EditUser" class="btn btn-secondary mb-3">Düzenle</a>
                         @if (User.IsInRole("MÜŞTERİ"))
-                        {<a href="/User/SendDeletionEmail" class="btn btn-secondary ml-3 mb-3">Hesabımı Sil</a>}
+                        {<a href="/User/SendDeletionEmail" class="btn btn-secondary ml-3 mb-3" data-toggle="tooltip" data-placement="top" title="Mail adresinize bir onay maili gönderilcektir.">Hesabımı Sil</a>}
                         <a href="/User/ChangePassword" class="btn btn-secondary ml-3 mb-3">Şifremi Değiştir</a>
                         <a href="/Animal/AddAnimal" class="btn btn-secondary ml-3 mb-3">Hayvan Ekle</a>
                     </div>
