@@ -1,18 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.ViewModel.Animal;
 
 namespace VeterinerApp.Models.Validators.ValidateFunctions
 {
     public static class FunctionsValidator
     {
 
-        private static readonly VeterinerContext _context = new VeterinerContext();
+        private static readonly VeterinerContext _context = new();
 
         public static bool BeRenk(int Id)
         {
@@ -122,6 +126,16 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         public static bool BeRegisteredParentAnimal(int? animalId)
         {
             return !animalId.HasValue || _context.Hayvans.Any(a => a.HayvanId == animalId.Value);
+        }
+
+        public static bool BeValidHayvan(int hayvanId)
+        {
+            return _context.Hayvans.Any(h => h.HayvanId == hayvanId);
+        }
+
+        public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
+        {
+            return _context.SahipHayvans.Any(x => x.HayvanId == hayvanId && x.SahipTckn == model.SahipTckn);
         }
 
         public static bool LoginSucceed(AppUser user)

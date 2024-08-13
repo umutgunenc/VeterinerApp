@@ -113,16 +113,11 @@
 
                         }
                     <div class="d-flex">
-                        <form asp-action="EditAnimal" asp-controller="Animal">
-                            <input type="hidden" name="hayvanId" value="@Model.HayvanId" />
-                            <button type="submit" class="btn btn-secondary mb-3">Düzenle</button>
-                        </form>
-                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Sahip Ekleeee</a>
 
-                        <form asp-action="AddSahip" asp-controller="Animal">
-                            <input type="hidden" asp-for="HayvanId" value="@Model.HayvanId" />
-                            <button type="submit" class="btn btn-secondary ml-3 mb-3">Sahip Ekle</button>
-                        </form>
+                        <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
+
+                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
+
                     </div>
 
                     </div>
@@ -131,5 +126,5 @@
         </div>
     </div>
 
-    }
+}
 

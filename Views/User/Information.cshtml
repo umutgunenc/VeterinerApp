@@ -53,14 +53,10 @@
                                             <th scope="col" class="text-center">Ölüm Tarihi</th>
                                         </tr>
                                     </thead>
-                                    @foreach (var hayvan in hayvanlar)
-                                    {
-                                        <form asp-action="Information" asp-controller="Animal" method="post" id="form-@hayvan.HayvanId">
-                                            <input type="hidden" name="hayvanId" value="@hayvan.HayvanId" />
-                                        </form>
-
-                                        <tbody>
-                                            <tr role="button" class="clickable-row" id="row-@hayvan.HayvanId">
+                                    <tbody>
+                                        @foreach (var hayvan in hayvanlar)
+                                        {
+                                            <tr role="button" class="clickable-row" id="row-@hayvan.HayvanId" onclick="window.location.href='/Animal/Information?hayvanId=@hayvan.HayvanId'">
                                                 <td class="text-center">@hayvan.HayvanAdi.ToUpper()</td>
                                                 <td class="text-center">@hayvan.TurAdi</td>
                                                 <td class="text-center">@hayvan.CinsAdi</td>
@@ -88,19 +84,8 @@
                                                     }
                                                 </td>
                                             </tr>
-                                        </tbody>
-
-                                        <script>
-                                        document.addEventListener('DOMContentLoaded', () => {
-                                            const row = document.getElementById("row-@hayvan.HayvanId");
-                                            const form = document.getElementById('form-@hayvan.HayvanId');
-
-                                            row.addEventListener("click", () => {
-                                                form.submit();
-                                            });
-                                        });
-                                        </script>
-                                    }
+                                        }
+                                    </tbody>
                                 </table>
 
                             </div>
