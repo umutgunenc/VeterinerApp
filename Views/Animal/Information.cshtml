@@ -112,14 +112,20 @@
                             </table>
 
                         }
-
+                    <div class="d-flex">
                         <form asp-action="EditAnimal" asp-controller="Animal">
                             <input type="hidden" name="hayvanId" value="@Model.HayvanId" />
                             <button type="submit" class="btn btn-secondary mb-3">Düzenle</button>
                         </form>
+                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Sahip Ekleeee</a>
 
+                        <form asp-action="AddSahip" asp-controller="Animal">
+                            <input type="hidden" asp-for="HayvanId" value="@Model.HayvanId" />
+                            <button type="submit" class="btn btn-secondary ml-3 mb-3">Sahip Ekle</button>
+                        </form>
                     </div>
 
+                    </div>
                 </div>
             </div>
         </div>

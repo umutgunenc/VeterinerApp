@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -787,6 +788,119 @@ namespace VeterinerApp.Controllers
 
             return View("EditAnimal", returnModel);
 
+        }
+
+        [HttpGet]
+        public IActionResult AddSahip(int hayvanId)
+        {
+            var hayvan = _context.Hayvans.Find(hayvanId);
+            var user = _userManager.GetUserAsync(User).Result;
+
+            var userHayvan = _context.SahipHayvans
+                .Where(sh => sh.HayvanId == hayvanId && sh.SahipTckn == user.InsanTckn)
+                .FirstOrDefault();
+
+            if (userHayvan == null)
+            {
+                return View("BadRequest");
+            }
+
+            AddNewSahipViewModel model;
+
+            // TempData'dan model verisini al
+            if (TempData["AddNewSahipViewModel"] != null)
+            {
+                var modelJson = TempData["AddNewSahipViewModel"].ToString();
+                model = JsonConvert.DeserializeObject<AddNewSahipViewModel>(modelJson);
+
+                // TempData'dan hata mesajlarını al
+                if (TempData["ModelStateErrors"] != null)
+                {
+                    var modelStateJson = TempData["ModelStateErrors"].ToString();
+                    var modelStateErrors = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(modelStateJson);
+                    foreach (var error in modelStateErrors)
+                    {
+                        foreach (var message in error.Value)
+                        {
+                            ModelState.AddModelError(error.Key, message);
+                        }
+                    }
+                }
+
+                return View(model);
+            }
+
+            var defaultModel = new AddNewSahipViewModel()
+            {
+                HayvanId = hayvanId,
+                HayvanAdi = hayvan.HayvanAdi,
+                imgURl = hayvan.imgURl,
+                HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
+                HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
+                renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault(),
+                cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault(),
+                turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
+                HayvanCinsiyet = hayvan.HayvanCinsiyet,
+                HayvanKilo = hayvan.HayvanKilo,
+            };
+
+            return View(defaultModel);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddSahip(AddNewSahipViewModel model)
+        {
+            AddYeniSahipValidator validator = new AddYeniSahipValidator();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                     ModelState.AddModelError("", error.ErrorMessage);
+                }
+                // ModelState verilerini JSON formatında TempData'ya kaydedin
+                TempData["ModelStateErrors"] = JsonConvert.SerializeObject(ModelState.ToDictionary(x => x.Key, x => x.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
+
+
+                model.turAdi = _context.Turs.Where(t => t.Id == model.TurId).Select(t => t.tur).FirstOrDefault();
+                model.cinsAdi = _context.Cins.Where(c => c.Id == model.CinsId).Select(c => c.cins).FirstOrDefault();
+                model.renkAdi = _context.Renks.Where(r => r.Id == model.RenkId).Select(r => r.renk).FirstOrDefault();
+                model.imgURl= _context.Hayvans.Find(model.HayvanId).imgURl;
+                model.HayvanAdi = _context.Hayvans.Find(model.HayvanId).HayvanAdi;
+                model.HayvanCinsiyet = _context.Hayvans.Find(model.HayvanId).HayvanCinsiyet;
+                model.HayvanKilo = _context.Hayvans.Find(model.HayvanId).HayvanKilo;
+                model.HayvanDogumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanDogumTarihi;
+                model.HayvanOlumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanOlumTarihi;
+                model.yeniSahipTCKN="";
+                // Model verilerini JSON formatında TempData'ya kaydedin
+                TempData["AddNewSahipViewModel"] = JsonConvert.SerializeObject(model);
+
+                // Redirect to the AddSahip GET action
+                return RedirectToAction("AddSahip", "Animal", new { hayvanId = model.HayvanId });
+            }
+
+            return View("Information");
+        }
+
+
+        public async Task<IActionResult> SendMailYeniSahip(AddNewSahipViewModel model)
+        {
+            AddYeniSahipValidator validator = new AddYeniSahipValidator();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid) {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+
+                return View("AddSahip", new { hayvanId = model.HayvanId });
+
+            }
+
+            return View();
         }
     }
 }

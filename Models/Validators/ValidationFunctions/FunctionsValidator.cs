@@ -271,6 +271,10 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.TurCins.Any(x => x.TurId == id);
         }
+        public static bool BeNotOwnedAnimal(int hayvanId, string yeniSahipTCKN)
+        {
+            return !_context.SahipHayvans.Where(x=>x.SahipTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
+        }
 
 
         private static readonly List<string> radioValues = new List<string>

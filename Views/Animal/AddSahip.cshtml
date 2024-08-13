@@ -1,0 +1,62 @@
+﻿@model AddNewSahipViewModel
+@{
+    Layout = "_LayoutAccount";
+}
+
+<h2>Yeni Sahip Ekle</h2>
+<hr />
+<div class="card text-white bg-dark mb-3">
+    <form asp-action="AddSahip" asp-controller="Animal">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <div class="m-3 text-center">
+                    <img src="@if (Model.imgURl != null) { @Model.imgURl } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
+                </div>
+            </div>
+            <div class="col-md-8 align-self-start">
+                <div class="d-flex flex-column">
+                    <div class="card-header font-weight-bold pl-0">
+                        <h3>@Model.HayvanAdi.ToUpper()</h3>
+                    </div>
+                    <div>
+                        <h6 class="card-title mt-2">Türü : @Model.turAdi</h6>
+                        <h6 class="card-title mt-2">Cinsi : @Model.cinsAdi</h6>
+                        <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
+                        <h6 class="card-title mt-2">Rengi : @Model.renkAdi</h6>
+                        <h6 class="card-title mt-2">
+                            Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
+                            {
+                                @:Dişi
+                            }
+                            else
+                            {
+                                @:Erkek
+                            }
+                        </h6>
+                        <h6 class="card-title mt-2">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
+                        <h6 class="card-title mt-2">
+                            Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
+                            {
+                                @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                            }
+                            else
+                            {
+                                @:Hayatta
+                            }
+                        </h6>
+                        <div class="d-flex flex-column">
+                            <div class="col-sm-9 mb-2 px-0">
+                                <input type="text" asp-for="yeniSahipTCKN" class="form-control" placeholder="Yeni Sahibin TCKN numarasını giriniz.">
+                                <input type="hidden" asp-for="HayvanId" value="@Model.HayvanId" />
+                            </div>
+                            <button type="submit" class="col-sm-9 pl-0 btn btn-secondary mb-3">Yeni Sahip Ekle</button>
+                            <div>
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="yeniSahipTCKN"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
