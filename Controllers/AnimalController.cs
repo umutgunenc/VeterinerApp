@@ -71,7 +71,7 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),                    
                 })
                 .ToList();
 
@@ -122,14 +122,14 @@ namespace VeterinerApp.Controllers
                 {
                     Text = $"{h.SahipTckn.Substring(0, 3) + new string('*', Math.Max(h.SahipTckn.Length - 6, 0)) + h.SahipTckn.Substring(h.SahipTckn.Length - 3)} " +
                         $"{h.SahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.SahipAdSoyad.Length - 4, 0)) + h.SahipAdSoyad.Substring(h.SahipAdSoyad.Length - 2)} - " +
-                        $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                        $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu} {h.rengi} {h.HayvanDogumTarihi.ToString("dd-MM-yyyy")}",
                     Value = h.HayvanId.ToString()
                 }).ToList(),
                 HayvanBabaList = Babalar.Select(h => new SelectListItem
                 {
                     Text = $"{h.SahipTckn.Substring(0, 3) + new string('*', Math.Max(h.SahipTckn.Length - 6, 0)) + h.SahipTckn.Substring(h.SahipTckn.Length - 3)} " +
                         $"{h.SahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.SahipAdSoyad.Length - 4, 0)) + h.SahipAdSoyad.Substring(h.SahipAdSoyad.Length - 2)} - " +
-                        $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                        $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu} {h.rengi} {h.HayvanDogumTarihi.ToString("dd-MM-yyyy")} ",
                     Value = h.HayvanId.ToString()
                 }).ToList(),
                 CinsiyetList = cinsiyet,
@@ -437,7 +437,8 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
                 })
                 .ToList();
 
@@ -469,7 +470,8 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
                 })
                 .ToList();
 
@@ -517,14 +519,14 @@ namespace VeterinerApp.Controllers
                 {
                     Text = $"{h.SahipTckn.Substring(0, 3) + new string('*', Math.Max(h.SahipTckn.Length - 6, 0)) + h.SahipTckn.Substring(h.SahipTckn.Length - 3)} " +
                     $"{h.SahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.SahipAdSoyad.Length - 4, 0)) + h.SahipAdSoyad.Substring(h.SahipAdSoyad.Length - 2)} - " +
-                    $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                    $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu} {h.rengi} {h.HayvanDogumTarihi.ToString("dd-MM-yyyy")}",
                     Value = h.HayvanId.ToString()
                 }).ToList(),
                 HayvanBabaList = Babalar.Select(h => new SelectListItem
                 {
                     Text = $"{h.SahipTckn.Substring(0, 3) + new string('*', Math.Max(h.SahipTckn.Length - 6, 0)) + h.SahipTckn.Substring(h.SahipTckn.Length - 3)} " +
                     $"{h.SahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.SahipAdSoyad.Length - 4, 0)) + h.SahipAdSoyad.Substring(h.SahipAdSoyad.Length - 2)} - " +
-                    $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu}",
+                    $"{h.HayvanId} {h.HayvanAdi} {h.cinsi} {h.turu} {h.rengi} {h.HayvanDogumTarihi.ToString("dd-MM-yyyy")}",
                     Value = h.HayvanId.ToString()
                 }).ToList(),
                 CinsiyetList = cinsiyet,
@@ -590,7 +592,9 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
+
                 })
                 .ToList();
 
@@ -622,7 +626,9 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
+
                 })
                 .ToList();
 
@@ -717,11 +723,13 @@ namespace VeterinerApp.Controllers
                     Directory.CreateDirectory(hayvanKlasoru);
                 }
                 var eskiFotograflar=Directory.GetFiles(hayvanKlasoru);
-
-                foreach (var eskiFotograf in eskiFotograflar)
-                {
-                    System.IO.File.Delete(eskiFotograf);
+                if (eskiFotograflar.Length > 0) {
+                    foreach (var eskiFotograf in eskiFotograflar)
+                    {
+                        System.IO.File.Delete(eskiFotograf);
+                    }
                 }
+                
 
                 var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
 

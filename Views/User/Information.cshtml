@@ -136,26 +136,40 @@
                         </input>
                         <input type="hidden" name="id" value="@Model.Item1.Id" />
 
-                        <a href="/User/EditUser" class="btn btn-secondary mb-3" id="editUser">
-                            Düzenle
-                        </a>
+
+                        <a href="/User/EditUser" class="btn btn-secondary mb-3">Düzenle</a>
                         @if (User.IsInRole("MÜŞTERİ"))
-                        {<a href="#" class="btn btn-secondary ml-3 mb-3">
-                                Hesabımı Sil
-                            </a>
-                        }
-                        <a href="/User/ChangePassword" class="btn btn-secondary ml-3 mb-3">
-                            Şifremi Değiştir
-                        </a>
-                        <a href="/Animal/AddAnimal" class="btn btn-secondary ml-3 mb-3">
-                            Hayvan Ekle
-                        </a>
+                        {<a href="/User/SendDeletionEmail" class="btn btn-secondary ml-3 mb-3">Hesabımı Sil</a>}
+                        <a href="/User/ChangePassword" class="btn btn-secondary ml-3 mb-3">Şifremi Değiştir</a>
+                        <a href="/Animal/AddAnimal" class="btn btn-secondary ml-3 mb-3">Hayvan Ekle</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    
+    @if (TempData["MailGonderildi"] != null)
+    {
+        <div class="alert alert-success" id="MailGonderildi">@TempData["MailGonderildi"]</div>
+        <script>
+            setTimeout(function () {
+                var Message = document.getElementById("MailGonderildi");
+                Message.remove();
+            }, 5500);
+        </script>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" id="ErrorMessage">@TempData["ErrorMessage"]</div>
+        <script>
+            setTimeout(function () {
+                var Message = document.getElementById("ErrorMessage");
+                Message.remove();
+            }, 5500);
+        </script>
+    }
 
 }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,10 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
-using System.Threading;
 using VeterinerApp.Data;
-using VeterinerApp.Models;
+using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
+
 
 public class Startup
 {
@@ -34,6 +35,10 @@ public class Startup
         // DB bağlantısı için servis eklendi
         services.AddDbContext<VeterinerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+
+        // Email gönderme servisi eklendi
+        services.AddTransient<IEmailSender, EmailSender>();
+
 
         // Identity servisi eklendi
         services.AddIdentity<AppUser, AppRole>(options =>
@@ -78,10 +83,10 @@ public class Startup
         app.UseRouting();
 
         // Kültür ayarlarını yapılandır
-        var supportedCultures = new[] { new CultureInfo("en-US") };
+        var supportedCultures = new[] { new CultureInfo("tr-TR") };
         app.UseRequestLocalization(new RequestLocalizationOptions
         {
-            DefaultRequestCulture = new RequestCulture("en-US"),
+            DefaultRequestCulture = new RequestCulture("tr-TR"),
             SupportedCultures = supportedCultures,
             SupportedUICultures = supportedCultures
         });

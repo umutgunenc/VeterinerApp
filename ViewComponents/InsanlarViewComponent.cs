@@ -31,6 +31,7 @@ namespace VeterinerApp.ViewComponents
                 .Where(x => x.InsanTckn == secilenKisiTCKN)
                 .Select(x => new InsanDuzenleViewModel
                 {
+                    Id = x.Id,
                     InsanAdi = x.InsanAdi,
                     InsanSoyadi = x.InsanSoyadi,
                     InsanTckn = x.InsanTckn,

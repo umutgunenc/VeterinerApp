@@ -168,7 +168,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <summary>
         /// Girilen kişi dışındaki telefon numarası benzersiz olmalıdır.
         /// </summary>
-        /// <param name="InsanTckn"></param>
+        /// <param name="id"></param>
         /// <param name="insanTel"></param>
         /// <returns></returns>
         public static bool BeUniqueTel(int id, string insanTel)
@@ -189,7 +189,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <summary>
         /// Girilen kişi dışındaki diploma numarası benzersiz olmalıdır.
         /// </summary>
-        /// <param name="InsanTckn"></param>
+        /// <param name="id"></param>
         /// <param name="diplomaNo"></param>
         /// <returns></returns>
         public static bool BeUniqueOrNullDiplomaNo(int id, string diplomaNo)
@@ -208,7 +208,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <summary>
         /// Girilen kişi dışındaki kullanıcı adı benzersiz olmalıdır.
         /// </summary>
-        /// <param name="InsanTckn"></param>
+        /// <param name="id"></param>
         /// <param name="kullaniciAdi"></param>
         /// <returns></returns>
         public static bool BeUniqueKullaniciAdi(int id, string kullaniciAdi)
@@ -223,12 +223,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Insans.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
+            return !_context.Users.Any(x => x.Email.ToUpper() == insanMail.ToUpper() || x.Email.ToLower() == insanMail.ToLower());
         }
         /// <summary>
         /// Girilen kişi dışındaki mail adresi bezersiz olmalıdır.
         /// </summary>
-        /// <param name="InsanTckn"></param>
+        /// <param name="id"></param>
         /// <param name="insanMail"></param>
         /// <returns></returns>
         public static bool BeUniqueEmail(int id, string insanMail)
@@ -236,8 +236,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             if (string.IsNullOrEmpty(insanMail))
                 return true;
 
-            return !_context.Users
-                .Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
+            return !_context.Users.Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
         }
 
 

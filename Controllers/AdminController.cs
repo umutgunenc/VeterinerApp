@@ -625,11 +625,11 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public IActionResult CalisanSec(InsanSecViewModel model)
         {
-            var insanSec = new InsanSecViewModel() { InsanTckn = model.InsanTckn };
             var secilenKisi = _veterinerDbContext.Users
-                .Where(x => x.InsanTckn == insanSec.InsanTckn)
+                .Where(x => x.InsanTckn == model.InsanTckn)
                 .Select(x => new InsanDuzenleViewModel
                 {
+                    Id = x.Id,
                     InsanAdi = x.InsanAdi,
                     InsanSoyadi = x.InsanSoyadi,
                     InsanTckn = x.InsanTckn,
@@ -654,7 +654,9 @@ namespace VeterinerApp.Controllers
                                             .FirstOrDefault())
                         .Select(r => r.Name)
                         .FirstOrDefault()
-                }).FirstOrDefault();
+                })
+                .FirstOrDefault();
+
 
             InsanSecValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -675,7 +677,7 @@ namespace VeterinerApp.Controllers
         public IActionResult CalisanDuzenle(InsanDuzenleViewModel model)
         {
             var insan = _veterinerDbContext.Users.FirstOrDefault(x => x.InsanTckn == model.InsanTckn);
-            var rol = _veterinerDbContext.UserRoles.FirstOrDefault(x => x.UserId == insan.Id);
+            var rol = _veterinerDbContext.UserRoles.FirstOrDefault(x => x.UserId == model.Id);
 
             InsanDuzenleValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -691,6 +693,7 @@ namespace VeterinerApp.Controllers
                 .Where(x => x.InsanTckn == insanSec.InsanTckn)
                 .Select(x => new InsanDuzenleViewModel
                 {
+                    Id = x.Id,
                     InsanAdi = x.InsanAdi,
                     InsanSoyadi = x.InsanSoyadi,
                     InsanTckn = x.InsanTckn,
@@ -790,6 +793,7 @@ namespace VeterinerApp.Controllers
             var toplamKayit = _veterinerDbContext.Insans.Count();
             var calisanlar = _veterinerDbContext.Users.Select(insan => new CalisanListeleViewModel
             {
+
                 InsanTckn = insan.InsanTckn,
                 InsanAdi = insan.InsanAdi,
                 InsanSoyadi = insan.InsanSoyadi,
@@ -818,6 +822,7 @@ namespace VeterinerApp.Controllers
                 .Where(insan => insan.InsanTckn == secilenKisiTckn)
                 .Select(insan => new CalisanListeleViewModel
                 {
+
                     InsanAdi = insan.InsanAdi,
                     InsanSoyadi = insan.InsanSoyadi,
                     InsanTckn = insan.InsanTckn,

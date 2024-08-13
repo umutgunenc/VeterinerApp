@@ -12,6 +12,7 @@ using VeterinerApp.Models.ViewModel.Account;
 using System;
 using VeterinerApp.Fonksiyonlar;
 using System.IO;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace VeterinerApp.Controllers
 {
@@ -22,13 +23,15 @@ namespace VeterinerApp.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly VeterinerContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<AppUser> userManager, VeterinerContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+        public AccountController(UserManager<AppUser> userManager, VeterinerContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -45,10 +48,15 @@ namespace VeterinerApp.Controllers
                 .Select(r => r.Id)
                 .FirstOrDefault();
 
+            model.InsanAdi = model.InsanAdi.ToUpper();
+            model.InsanSoyadi = model.InsanSoyadi.ToUpper();
+            model.Email = model.Email.ToLower();
             model.CalisiyorMu = false;
             model.SifreOlusturmaTarihi = DateTime.Now;
             model.SifreGecerlilikTarihi = DateTime.Now.AddDays(120);
             model.UserName = model.UserName.ToUpper();
+
+            var sifre = model.PasswordHash;
 
             RegisterValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -61,7 +69,7 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
-            
+
             var createResult = await _userManager.CreateAsync(model, model.PasswordHash);
 
             if (!createResult.Succeeded)
@@ -110,23 +118,107 @@ namespace VeterinerApp.Controllers
 
             if (_context.SaveChanges() > 0)
             {
-                string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {model.UserName} \nŞifreniz : {model.PasswordHash}";
+                var loginUrl = Url.Action("Login", "Account", null, Request.Scheme);
+                var kullaniciAdSoyad = model.InsanAdi.ToUpper() + " "+ model.InsanSoyadi.ToUpper();
+                var kullaniciAdi = model.UserName;
+                var tarih = DateTime.Now.ToString("f");
 
-                string baslik = "Veteriner Bilgi Sistemi Kullanıcı Kaydı";
+                string mailMessage = $@"
+                        <!DOCTYPE html>
+                        <html lang='tr'>
+                        <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <title>Hoş Geldiniz!</title>
+                            <style>
+                                body {{
+                                    font-family: Arial, sans-serif;
+                                    background-color: #f4f4f4;
+                                    color: #333;
+                                    line-height: 1.6;
+                                }}
+                                .container {{
+                                    max-width: 600px;
+                                    margin: 20px auto;
+                                    background-color: #fff;
+                                    padding: 20px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                }}
+                                h1 {{
+                                    color: #444;
+                                    font-size: 24px;
+                                    text-align: center;
+                                    margin-bottom: 20px;
+                                }}
+                                p {{
+                                    font-size: 16px;
+                                    margin-bottom: 20px;
+                                }}
+                                .credentials {{
+                                    background-color: #f9f9f9;
+                                    border-left: 4px solid #007bff;
+                                    padding: 10px;
+                                    margin-bottom: 20px;
+                                    font-size: 16px;
+                                }}
+                                a.button {{
+                                    display: inline-block;
+                                    background-color: #28a745;
+                                    color: #fff;
+                                    padding: 10px 20px;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                }}
+                                a.button:hover {{
+                                    background-color: #218838;
+                                }}
+                                .footer {{
+                                    margin-top: 20px;
+                                    text-align: center;
+                                    font-size: 12px;
+                                    color: #777;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <h1>Hoş Geldiniz!</h1>
+                                <p>Sayın {kullaniciAdSoyad}, {tarih} tarihinde sisteme başarıyla üye oldunuz. Aşağıda giriş bilgileriniz yer almaktadır:</p>
+                                <div class='credentials'>
+                                    <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
+                                    <p><strong>Şifre:</strong> {sifre}</p>
+                                </div>
+                                <p style='text-align:center;'>
+                                    <a href='{loginUrl}' class='button'>Giriş Yap</a>
+                                </p>
+                                <p class='footer'>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                            </div>
+                        </body>
+                        </html>";
 
-                MailGonder mail = new MailGonder(model.Email, mailBody, baslik);
 
-                if (!mail.MailGonderHotmail(mail))
+                try
                 {
+                    _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
+                    TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
+
+                }
+                catch (Exception)
+                {
+
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
                     _context.Users.Remove(model);
                     _context.UserRoles.Remove(userRole);
                     _context.SaveChanges();
-
                     return View(model);
                 }
 
-                TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
+                return View(model);
+
+
             }
             return RedirectToAction();
         }
@@ -187,7 +279,7 @@ namespace VeterinerApp.Controllers
                         ModelState.AddModelError("LockoutEnd", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyiniz.");
                     }
                 }
-                else if (user.AccessFailedCount>=0)
+                else if (user.AccessFailedCount >= 0)
                 {
                     ModelState.AddModelError("AccessFailedCount", $"Hesabınıza 3 defa yanlış giriş yaptığınızda kitlenecektir. {user.AccessFailedCount} kere yanlış giriş yapıldı.");
                     ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
