@@ -3,7 +3,6 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using VeterinerApp.Fonksiyonlar.MailGonderme;
 
 namespace VeterinerApp.Fonksiyonlar
 {

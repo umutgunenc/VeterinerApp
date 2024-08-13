@@ -83,10 +83,10 @@ public class Startup
         app.UseRouting();
 
         // Kültür ayarlarını yapılandır
-        var supportedCultures = new[] { new CultureInfo("tr-TR") };
+        var supportedCultures = new[] { new CultureInfo("en-US") };
         app.UseRequestLocalization(new RequestLocalizationOptions
         {
-            DefaultRequestCulture = new RequestCulture("tr-TR"),
+            DefaultRequestCulture = new RequestCulture("en-US"),
             SupportedCultures = supportedCultures,
             SupportedUICultures = supportedCultures
         });

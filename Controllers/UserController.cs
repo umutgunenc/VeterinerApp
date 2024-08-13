@@ -285,7 +285,8 @@ namespace VeterinerApp.Controllers
                     <body>
                         <div class='container'>
                             <h1>Hesap Silme İsteği</h1>
-                            <p>Sayın {User.Identity.Name}, hesabınızı silmek için aşağıdaki butona tıklayın. Bu işlem geri alınamaz.</p>
+                            <p>Sayın {User.Identity.Name}, hesabınızı silmek için aşağıdaki butona tıklayın. </p>
+                            <p>Sistemde kayıtlı olan bir evcil hayvanınız var ise bilgileri silincektir. Bu işlem geri alınamaz.</p>
                             <p style='text-align:center;'>
                                 <a href='{callbackUrl}' class='button'>Hesabımı Sil</a>
                             </p>
@@ -329,14 +330,35 @@ namespace VeterinerApp.Controllers
                 return View("BadRequest");
             }
 
-            var kullaniciHayvanKayitlari = _context.SahipHayvans.Where(s => s.SahipTckn == user.InsanTckn).ToList();
-            foreach (var kayitlar in kullaniciHayvanKayitlari)
-            {
-                _context.SahipHayvans.RemoveRange(kayitlar);
 
-            }
+            // Kullanıcının sahip olduğu hayvan kayıtlarını al
+            var kullaniciHayvanKayitlari = _context.SahipHayvans
+                .Where(s => s.SahipTckn == user.InsanTckn)
+                .ToList();
+
+            // Kullanıcının sahip olduğu hayvanlara ait ID'leri listele
+            var kullaniciHayvanIds = kullaniciHayvanKayitlari
+                .Select(k => k.HayvanId)
+                .ToList();
+
+            // SahipHayvans tablosundan sadece bu kullanıcının kayıtlarını sil
+            _context.SahipHayvans.RemoveRange(kullaniciHayvanKayitlari);
+            _context.SaveChanges();
+
+            // Sahipsiz kalan hayvanları belirle
+            var sahipsizHayvanlar = _context.Hayvans
+                .Where(h => !(_context.SahipHayvans
+                    .Any(sh => sh.HayvanId == h.HayvanId)))
+                .ToList();
+
+            // Hayvans tablosundan sahipsiz hayvanları sil
+            _context.Hayvans.RemoveRange(sahipsizHayvanlar);
+            _context.SaveChanges();
+            
+
             await _signInManager.SignOutAsync();
             await _userManager.DeleteAsync(user);
+
             return RedirectToAction("Index", "Home");
         }
     }

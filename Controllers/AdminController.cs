@@ -5,7 +5,6 @@ using System.Linq;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Fonksiyonlar.MailGonderme;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinerApp.Models.ViewModel.Admin;
@@ -15,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using VeterinerApp.Models.Validators.Admin;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 
@@ -25,11 +25,13 @@ namespace VeterinerApp.Controllers
     {
         private readonly VeterinerContext _veterinerDbContext;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
-        public AdminController(VeterinerContext veterinerDbContext, UserManager<AppUser> userManager)
+        public AdminController(VeterinerContext veterinerDbContext, UserManager<AppUser> userManager, IEmailSender emailSender)
         {
             _veterinerDbContext = veterinerDbContext;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -528,7 +530,7 @@ namespace VeterinerApp.Controllers
             model.CalisiyorMu = true;
 
             sifre sifre = new sifre();
-            string kullaniciSifresi = sifre.GeneratePassword();
+            string kullaniciSifresi = sifre.GeneratePassword(8);
 
             var calisan = new AppUser
             {
@@ -588,11 +590,94 @@ namespace VeterinerApp.Controllers
 
             if (_veterinerDbContext.SaveChanges() > 0)
             {
-                string mailBody = $"Veteriner bilgi sistemine kaydınız {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde başarılı bir şekilde oluşturulmuştur.\nKullanıcı Adınız : {kullaniciAdi} \nŞifreniz : {kullaniciSifresi}";
-                string baslik= "Veteriner Bilgi Sistemi Kullanıcı Kaydı";
-                MailGonder mail = new MailGonder(model.Email,mailBody, baslik);
+                var loginUrl = Url.Action("Login", "Account", null, Request.Scheme);
+                var kullaniciAdSoyad = model.InsanAdi.ToUpper() + " " + model.InsanSoyadi.ToUpper();
+                var tarih = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
+                var rolAdi = _veterinerDbContext.Roles
+                    .Where(x => x.Id == model.rolId)
+                    .Select(x => x.Name)
+                    .FirstOrDefault();
 
-                if (!mail.MailGonderHotmail(mail))
+                string mailMessage = $@"
+                        <!DOCTYPE html>
+                        <html lang='tr'>
+                        <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <title>Hoş Geldiniz!</title>
+                            <style>
+                                body {{
+                                    font-family: Arial, sans-serif;
+                                    background-color: #f4f4f4;
+                                    color: #333;
+                                    line-height: 1.6;
+                                }}
+                                .container {{
+                                    max-width: 600px;
+                                    margin: 20px auto;
+                                    background-color: #fff;
+                                    padding: 20px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                }}
+                                h1 {{
+                                    color: #444;
+                                    font-size: 24px;
+                                    text-align: center;
+                                    margin-bottom: 20px;
+                                }}
+                                p {{
+                                    font-size: 16px;
+                                    margin-bottom: 20px;
+                                }}
+                                .credentials {{
+                                    background-color: #f9f9f9;
+                                    border-left: 4px solid #007bff;
+                                    padding: 10px;
+                                    margin-bottom: 20px;
+                                    font-size: 16px;
+                                }}
+                                a.button {{
+                                    display: inline-block;
+                                    background-color: #28a745;
+                                    color: #fff;
+                                    padding: 10px 20px;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                }}
+                                a.button:hover {{
+                                    background-color: #218838;
+                                }}
+                                .footer {{
+                                    margin-top: 20px;
+                                    text-align: center;
+                                    font-size: 12px;
+                                    color: #777;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <h1>Hoş Geldiniz!</h1>
+                                <p>Sayın {kullaniciAdSoyad}, {tarih} tarihinde sisteme {rolAdi} olarak başarıyla üye oldunuz. Aşağıda giriş bilgileriniz yer almaktadır.</p>
+                                <p>Giriş yaptıktan sonra lütfen şifrenizi değiştiriniz.</p>
+
+                                <div class='credentials'>
+                                    <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
+                                    <p><strong>Şifre:</strong> {kullaniciSifresi}</p>
+                                </div>
+                                <p style='text-align:center;'>
+                                    <a href='{loginUrl}' class='button'>Giriş Yap</a>
+                                </p>
+                                <p class='footer'>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                            </div>
+                        </body>
+                        </html>";
+
+
+                if (_emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage).IsFaulted)
                 {
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
                     _veterinerDbContext.Users.Remove(calisan);
@@ -608,11 +693,12 @@ namespace VeterinerApp.Controllers
                     };
                     return View(model);
                 }
-                var rolAdi = _veterinerDbContext.Roles
-                    .Where(x => x.Id == model.rolId)
-                    .Select(x => x.Name);
+                else
+                {
+                    TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
+                }
 
-                TempData["CalısanEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli calışan {rolAdi.First().ToUpper()} görevi ile sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
+
             }
             return RedirectToAction();
         }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar.MailGonderme;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Account;
 using VeterinerApp.Models.ViewModel.Account;
@@ -119,9 +118,9 @@ namespace VeterinerApp.Controllers
             if (_context.SaveChanges() > 0)
             {
                 var loginUrl = Url.Action("Login", "Account", null, Request.Scheme);
-                var kullaniciAdSoyad = model.InsanAdi.ToUpper() + " "+ model.InsanSoyadi.ToUpper();
+                var kullaniciAdSoyad = model.InsanAdi.ToUpper() + " " + model.InsanSoyadi.ToUpper();
                 var kullaniciAdi = model.UserName;
-                var tarih = DateTime.Now.ToString("f");
+                var tarih = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
 
                 string mailMessage = $@"
                         <!DOCTYPE html>
@@ -206,7 +205,7 @@ namespace VeterinerApp.Controllers
                     TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
 
                 }
-                catch (Exception)
+                catch
                 {
 
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı.";
@@ -336,7 +335,7 @@ namespace VeterinerApp.Controllers
             else
             {
                 sifre sifre = new sifre();
-                var yeniSifre = sifre.GeneratePassword();
+                var yeniSifre = sifre.GeneratePassword(8);
 
                 // Yeni şifreyi hashle
                 var hashedNewPassword = _userManager.PasswordHasher.HashPassword(user, yeniSifre);
@@ -362,12 +361,98 @@ namespace VeterinerApp.Controllers
                     return View(model);
                 }
 
-                string mailBody = $"Merhaba {user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()}! \nŞifreniz {DateTime.Now.Day}/{DateTime.Now.Month}/{DateTime.Now.Year} tarihinde yenilenmişsitr.\nKullanıcı Adınız: {user.UserName}\nŞifreniz: {yeniSifre}";
-                string baslik = "Veteriner Bilgi Sistemi Şifre Yenileme";
-                MailGonder mail = new MailGonder(user.Email, mailBody, baslik);
-                if (!mail.MailGonderHotmail(mail))
+                var loginUrl = Url.Action("Login", "Account", null, Request.Scheme);
+                var kullaniciAdSoyad = user.InsanAdi.ToUpper() + " " + user.InsanSoyadi.ToUpper();
+                var kullaniciAdi = user.UserName;
+                var tarih = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
+
+
+                string mailMessage = $@"
+                        <!DOCTYPE html>
+                        <html lang='tr'>
+                        <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <title>Şifre Yenileme</title>
+                            <style>
+                                body {{
+                                    font-family: Arial, sans-serif;
+                                    background-color: #f4f4f4;
+                                    color: #333;
+                                    line-height: 1.6;
+                                }}
+                                .container {{
+                                    max-width: 600px;
+                                    margin: 20px auto;
+                                    background-color: #fff;
+                                    padding: 20px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                }}
+                                h1 {{
+                                    color: #444;
+                                    font-size: 24px;
+                                    text-align: center;
+                                    margin-bottom: 20px;
+                                }}
+                                p {{
+                                    font-size: 16px;
+                                    margin-bottom: 20px;
+                                }}
+                                .credentials {{
+                                    background-color: #f9f9f9;
+                                    border-left: 4px solid #007bff;
+                                    padding: 10px;
+                                    margin-bottom: 20px;
+                                    font-size: 16px;
+                                }}
+                                a.button {{
+                                    display: inline-block;
+                                    background-color: #007bff;
+                                    color: #fff;
+                                    padding: 10px 20px;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                }}
+                                a.button:hover {{
+                                    background-color: #0056b3;
+                                }}
+                                .footer {{
+                                    margin-top: 20px;
+                                    text-align: center;
+                                    font-size: 12px;
+                                    color: #777;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <h1>Şifre Yenileme</h1>
+                                <p>Sayın {kullaniciAdSoyad},</p>
+                                <p>Şifre sıfırlama talebiniz {tarih} tarihinde başarıyla gerçekleştirilmiştir. Aşağıda yeni giriş bilgileriniz yer almaktadır:</p>
+                                <div class='credentials'>
+                                    <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
+                                    <p><strong>Yeni Şifre:</strong> {yeniSifre}</p>
+                                </div>
+                                <p style='text-align:center;'>
+                                    <a href='{loginUrl}' class='button'>Giriş Yap</a>
+                                </p>
+                                <p class='footer'>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                            </div>
+                        </body>
+                        </html>";
+
+                try
                 {
-                    // Mail gönderme başarısız olursa eski şifreyi geri yükle
+                    _emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage);
+                    TempData["SifreGonderildi"] = $"{kullaniciAdSoyad} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
+                    return View();
+
+                }
+                catch
+                {
                     user.PasswordHash = eskiSifreHash;
                     user.SifreOlusturmaTarihi = EskiSifreOlusturmaTarihi;
                     user.SifreGecerlilikTarihi = EskiSifreGecerlilikTarihi;
@@ -377,9 +462,7 @@ namespace VeterinerApp.Controllers
                     return View(model);
                 }
 
-                TempData["SifreGonderildi"] = $"{user.InsanAdi.ToUpper()} {user.InsanSoyadi.ToUpper()} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
 
-                return View();
             }
         }
     }

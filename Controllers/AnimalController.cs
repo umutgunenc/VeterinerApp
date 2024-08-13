@@ -71,7 +71,7 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault(),                    
+                        .FirstOrDefault(),
                 })
                 .ToList();
 
@@ -710,7 +710,7 @@ namespace VeterinerApp.Controllers
                 return View("EditAnimal", returnModel);
             }
             var hayvan = _context.Hayvans.FindAsync(model.HayvanId).Result;
-            if (model.PhotoOption=="changePhoto" && model.filePhoto!=null)
+            if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
 
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
@@ -722,14 +722,15 @@ namespace VeterinerApp.Controllers
                 {
                     Directory.CreateDirectory(hayvanKlasoru);
                 }
-                var eskiFotograflar=Directory.GetFiles(hayvanKlasoru);
-                if (eskiFotograflar.Length > 0) {
+                var eskiFotograflar = Directory.GetFiles(hayvanKlasoru);
+                if (eskiFotograflar.Length > 0)
+                {
                     foreach (var eskiFotograf in eskiFotograflar)
                     {
                         System.IO.File.Delete(eskiFotograf);
                     }
                 }
-                
+
 
                 var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
 
@@ -744,15 +745,15 @@ namespace VeterinerApp.Controllers
                 hayvan.imgURl = fileUrl;
 
             }
-            else if(model.PhotoOption == "changePhoto" && model.filePhoto== null)
+            else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
             {
                 hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
             }
-            else if(model.PhotoOption == "deletePhoto")
+            else if (model.PhotoOption == "deletePhoto")
             {
                 hayvan.imgURl = null;
             }
-            else if(model.PhotoOption == "keepPhoto")
+            else if (model.PhotoOption == "keepPhoto")
             {
                 hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
             }

@@ -8,7 +8,7 @@ namespace VeterinerApp.Fonksiyonlar
     {
         private static readonly Random random = new Random();
 
-        public string GeneratePassword(int length = 8)
+        public string GeneratePassword(int length)
         {
             const string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const string lowerCase = "abcdefghijklmnopqrstuvwxyz";
