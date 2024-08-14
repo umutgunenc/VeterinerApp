@@ -18,14 +18,6 @@ namespace VeterinerApp.Models.Validators.Animal
         public EditHayvanValidator()
         {
 
-            RuleFor(x => x.HayvanId)
-                .NotEmpty().WithMessage("Hayvan id boş olamaz.")
-                .NotNull().WithMessage("Hayvan id boş olamaz.")
-                .Must(FunctionsValidator.BeValidHayvan).WithMessage("Gönderilen hayvan bilgileri geçersiz.")
-                .Must((model, x) => FunctionsValidator.BeOwnedByCurrentUser(model, x))
-                .WithMessage("Hayvanın mevcut kullanıcıya ait olması gerekiyor.");
-
-
             RuleFor(x => x.HayvanAdi)
                 .MaximumLength(50).WithMessage("Hayvan adı maksimum 50 karakter uzunluğunda olmalı.")
                 .NotEmpty().WithMessage("Lütfen hayvan adı giriniz")

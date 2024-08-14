@@ -2,19 +2,30 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Reflection.Metadata;
+using System.Security.Policy;
+using System.Text.Unicode;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using VeterinerApp.Data;
+using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Animal;
 using VeterinerApp.Models.ViewModel.Animal;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VeterinerApp.Controllers
 {
@@ -23,10 +34,12 @@ namespace VeterinerApp.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly VeterinerContext _context;
-        public AnimalController(UserManager<AppUser> usermanager, VeterinerContext context)
+        private readonly IEmailSender _emailSender;
+        public AnimalController(UserManager<AppUser> usermanager, VeterinerContext context, IEmailSender emailSender)
         {
             _userManager = usermanager;
             _context = context;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -413,6 +426,9 @@ namespace VeterinerApp.Controllers
                 return View("BadRequest");
             }
 
+            // İmza oluştur
+            var signature = Signature.CreateSignature(hayvanId, kullanici.InsanTckn);
+
 
             var cinsAdlari = _context.Cins.Select(c => new SelectListItem
             {
@@ -557,7 +573,8 @@ namespace VeterinerApp.Controllers
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
                 imgURl = _context.Hayvans.Find(hayvanId).imgURl,
-                SahipTckn=SahipTCKN
+                SahipTckn = SahipTCKN,
+                Signature = signature
 
             };
 
@@ -567,6 +584,14 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAnimal(EditAnimalViewModel model)
         {
+
+            if (!Signature.VerifySignature(model.HayvanId, model.SahipTckn, model.Signature))
+            {
+                //ModelState.AddModelError("Signature", "Veri manipülasyonu tespit edildi.");
+                //return View("EditAnimal", returnModel);
+
+                return View("Badrequest");
+            }
             var cinsAdlari = _context.Cins.Select(c => new SelectListItem
             {
                 Text = c.cins,
@@ -648,9 +673,8 @@ namespace VeterinerApp.Controllers
                     new SelectListItem { Text = "Erkek", Value = "E" },
                     new SelectListItem { Text = "Dişi", Value = "D" }
                 };
-
-
             var SahipTCKN = _userManager.GetUserAsync(User).Result.InsanTckn;
+
             EditAnimalViewModel returnModel = new()
             {
                 HayvanId = model.HayvanId,
@@ -703,14 +727,15 @@ namespace VeterinerApp.Controllers
                     .Where(x => x.HayvanId == model.HayvanId && x.SahipTckn == SahipTCKN)
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
-                imgURl = _context.Hayvans.Find(model.HayvanId).imgURl
+                imgURl = _context.Hayvans.Find(model.HayvanId).imgURl,
+                Signature = model.Signature
 
             };
 
             EditHayvanValidator validator = new EditHayvanValidator();
             ValidationResult result = validator.Validate(model);
 
-           
+
 
             if (!result.IsValid)
             {
@@ -721,6 +746,7 @@ namespace VeterinerApp.Controllers
 
                 return View("EditAnimal", returnModel);
             }
+
             var hayvan = _context.Hayvans.FindAsync(model.HayvanId).Result;
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
@@ -815,33 +841,8 @@ namespace VeterinerApp.Controllers
             {
                 return View("BadRequest");
             }
-
-            AddNewSahipViewModel model;
-
-            // TempData'dan model verisini al
-            if (TempData["AddNewSahipViewModel"] != null)
-            {
-                var modelJson = TempData["AddNewSahipViewModel"].ToString();
-                model = JsonConvert.DeserializeObject<AddNewSahipViewModel>(modelJson);
-
-                // TempData'dan hata mesajlarını al
-                if (TempData["ModelStateErrors"] != null)
-                {
-                    var modelStateJson = TempData["ModelStateErrors"].ToString();
-                    var modelStateErrors = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(modelStateJson);
-                    foreach (var error in modelStateErrors)
-                    {
-                        foreach (var message in error.Value)
-                        {
-                            ModelState.AddModelError(error.Key, message);
-                        }
-                    }
-                }
-
-                return View(model);
-            }
-
-            var defaultModel = new AddNewSahipViewModel()
+            var signature = Signature.CreateSignature(hayvanId, user.InsanTckn);
+            var model = new AddNewSahipViewModel()
             {
                 HayvanId = hayvanId,
                 HayvanAdi = hayvan.HayvanAdi,
@@ -853,62 +854,268 @@ namespace VeterinerApp.Controllers
                 turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
                 HayvanCinsiyet = hayvan.HayvanCinsiyet,
                 HayvanKilo = hayvan.HayvanKilo,
+                userTCKN = user.InsanTckn,
+                Signature = signature
             };
 
-            return View(defaultModel);
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddSahip(AddNewSahipViewModel model)
         {
+
+            if (!Signature.VerifySignature(model.HayvanId, model.userTCKN, model.Signature))
+            {
+                return View("Badrequest");
+            }
+
             AddYeniSahipValidator validator = new AddYeniSahipValidator();
             ValidationResult result = validator.Validate(model);
+
+            var hayvan = _context.Hayvans.Find(model.HayvanId);
+
+            var returnModel = new AddNewSahipViewModel()
+            {
+                HayvanId = model.HayvanId,
+                HayvanAdi = hayvan.HayvanAdi,
+                imgURl = hayvan.imgURl,
+                HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
+                HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
+                renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault(),
+                cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault(),
+                turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
+                HayvanCinsiyet = hayvan.HayvanCinsiyet,
+                HayvanKilo = hayvan.HayvanKilo,
+                userTCKN = model.userTCKN,
+                Signature = model.Signature,
+                yeniSahipTCKN = ""
+            };
 
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
-                     ModelState.AddModelError("", error.ErrorMessage);
-                }
-                // ModelState verilerini JSON formatında TempData'ya kaydedin
-                TempData["ModelStateErrors"] = JsonConvert.SerializeObject(ModelState.ToDictionary(x => x.Key, x => x.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
-
-
-                model.turAdi = _context.Turs.Where(t => t.Id == model.TurId).Select(t => t.tur).FirstOrDefault();
-                model.cinsAdi = _context.Cins.Where(c => c.Id == model.CinsId).Select(c => c.cins).FirstOrDefault();
-                model.renkAdi = _context.Renks.Where(r => r.Id == model.RenkId).Select(r => r.renk).FirstOrDefault();
-                model.imgURl= _context.Hayvans.Find(model.HayvanId).imgURl;
-                model.HayvanAdi = _context.Hayvans.Find(model.HayvanId).HayvanAdi;
-                model.HayvanCinsiyet = _context.Hayvans.Find(model.HayvanId).HayvanCinsiyet;
-                model.HayvanKilo = _context.Hayvans.Find(model.HayvanId).HayvanKilo;
-                model.HayvanDogumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanDogumTarihi;
-                model.HayvanOlumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanOlumTarihi;
-                model.yeniSahipTCKN="";
-                // Model verilerini JSON formatında TempData'ya kaydedin
-                TempData["AddNewSahipViewModel"] = JsonConvert.SerializeObject(model);
-
-                // Redirect to the AddSahip GET action
-                return RedirectToAction("AddSahip", "Animal", new { hayvanId = model.HayvanId });
-            }
-
-            return View("Information");
-        }
-
-        public async Task<IActionResult> SendMailYeniSahip(AddNewSahipViewModel model)
-        {
-            AddYeniSahipValidator validator = new AddYeniSahipValidator();
-            ValidationResult result = validator.Validate(model);
-            if (!result.IsValid) {
-                foreach (var error in result.Errors)
-                {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+                return View(returnModel);
+            }
+            
+            var yeniSahip = _context.Users.Where(u => u.InsanTckn == model.yeniSahipTCKN).FirstOrDefault();
+            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza=Signature.CreateSignature(model.HayvanId,model.yeniSahipTCKN)}, Request.Scheme, Request.Host.Value);
+            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.yeniSahipTCKN) }, Request.Scheme, Request.Host.Value);
+            var cinsiyet = hayvan.HayvanCinsiyet == "D" ? "Dişi" : "Erkek";
+            var dogumTarihi = hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy");
+            var olumTarihi = hayvan.HayvanOlumTarihi != null ? hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy") : "Hayatta";
+            var sahipAdSoyad = _userManager.GetUserAsync(User).Result.InsanAdi + " " + _userManager.GetUserAsync(User).Result.InsanSoyadi;
+            var turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault();
+            var cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault();
+            var renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault();
+            var hayvanAdi= hayvan.HayvanAdi;
+            // Uygulamanızın geçerli URL'sini almak için
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+            string resimYolu = hayvan.imgURl != null ? hayvan.imgURl : Url.Content("/img/animal.png");
+            string imgUrl = $"{baseUrl}{resimYolu}";
 
-                return View("AddSahip", new { hayvanId = model.HayvanId });
+
+            string mailBody = $@"
+            <!DOCTYPE html>
+            <html>
+            <head>
+
+             <style>
+                  body {{
+                      font-family: Arial, sans-serif;
+                      color: #333;
+                      margin: 0;
+                      padding: 0;
+                      font-size: 1.2rem;
+                      background-color: #f8f9fa;
+                  }}
+                  h2 {{font-size: 1.8rem;
+                  }}
+                  h3 {{font-size: 1.6rem;
+                  }}
+                  h6 {{font-size: 1.2rem;
+                  }}
+                  .container {{
+                      padding: 20px;
+                      max-width: 600px;
+                      margin: auto;
+                      background-color: #ffffff;
+                      border-radius: 8px;
+                      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+                  }}
+                  .header {{
+                      background-color: #343a40;
+                      color: white;
+                      padding: 10px;
+                      border-radius: 8px 8px 0 0;
+                      text-align: center;
+                  }}
+                  .content {{
+                      padding: 20px;
+                  }}
+                  .btn {{
+                      display: inline-block;
+                      padding: 10px 20px;
+                      color: white !important;
+                      text-decoration: none;
+                      border-radius: 5px;
+                      font-weight: bold;
+                      text-align: center;
+                      margin-top: 10px;
+                      background-color: #6c757d;
+                      border: none;
+                  }}
+                  .btn:hover {{
+                      background-color: #5a6268;
+                  }}
+                  .btn-secondary {{
+                      background-color: #6c757d;
+                      margin-right: 10px;
+                  }}
+                  .img-container {{
+                      text-align: center;
+                      margin-bottom: 20px;
+                  }}
+                  .img-container img {{
+                      border-radius: 8px;
+                      max-width: 100%;
+                      height: auto;
+                      object-fit: cover;
+                  }}
+                  .details {{
+                      margin-top: 20px;
+                  }}
+                  .details h6 {{
+                      margin: 0 0 10px 0;
+                  }}
+                  .footer {{
+                      text-align: center;
+                      padding: 20px;
+                      font-size: 12px;
+                      color: #888;
+                      border-top: 1px solid #e9ecef;
+                      margin-top: 20px;
+                  }}
+            </style>
+            </head>
+            <body>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h2>Hayvan Sahiplendirme Talebi</h2>
+                    </div>
+                    <div class='content'>
+                        <h3>Merhaba {yeniSahip.InsanAdi} {yeniSahip.InsanSoyadi},</h3>
+                        <p>{sahipAdSoyad} isimli kullanıcı size bir hayvan sahiplendirme talebi gönderdi. Aşağıda hayvana ait bilgileri bulabilirsiniz:</p>
+                        
+                        <div class='img-container'>
+                            <img src='{imgUrl}' alt='{hayvanAdi}' />
+                        </div>
+
+                        <div class='details'>
+                            <h6><strong>Hayvan Adı:</strong> {hayvanAdi}</h6>
+                            <h6><strong>Türü:</strong> {turAdi}</h6>
+                            <h6><strong>Cinsi:</strong> {cinsAdi}</h6>
+                            <h6><strong>Rengi:</strong> {renkAdi}</h6>
+                            <h6><strong>Kilosu:</strong> {hayvan.HayvanKilo} kg</h6>
+                            <h6><strong>Cinsiyeti:</strong> {cinsiyet}</h6>
+                            <h6><strong>Doğum Tarihi:</strong> {dogumTarihi}</h6>
+                            <h6><strong>Ölüm Tarihi:</strong> {olumTarihi}</h6>
+                        </div>
+
+                        <div>
+                            <a href='{acceptUrl}' class='btn btn-secondary'>Kabul Et</a>
+                            <a href='{declineUrl}' class='btn btn-secondary'>Red Et</a>
+                        </div>
+                    </div>
+                    <div class='footer'>
+                        <p>Bu e-postayı aldıysanız ancak bu talebi yapmadıysanız, lütfen bizimle iletişime geçin.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+
+
+            try
+            {
+                _emailSender.SendEmailAsync(yeniSahip.Email, "Hayvan Sahiplenme", mailBody);
+                ViewBag.Mail = "Yeni sahip ekleme talebi, kişinin mail adresine başarıyla gönderildi.";
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.MailHata = "Mail gönderilirken bir hata oluştu. Hata: " + ex.Message;
+                return View(returnModel);
 
             }
 
-            return View();
+            return View(returnModel);
+        }
+
+        public async Task<IActionResult> EmailConfirmYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
+        {   
+            var user=_userManager.GetUserAsync(User).Result;
+            if (user.InsanTckn != yeniSahipTCKN)
+            {
+                return View("BadRequest");
+            }
+            else
+            {
+                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                {
+                    return View("BadRequest");
+                }
+
+                var hayvan = _context.Hayvans.Find(hayvanId);
+                var yeniSahip = _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefault();
+                if (!_context.SahipHayvans.Any(x => x.HayvanId == hayvanId && x.SahipTckn == yeniSahipTCKN))
+                {
+                    _context.SahipHayvans.Add(new SahipHayvan
+                    {
+                        HayvanId = hayvanId,
+                        SahipTckn = yeniSahipTCKN,
+                        SahiplikTarihi = DateTime.Now
+                    });
+                    if (_context.SaveChanges() > 0)
+                    {
+                        TempData["YeniHayvanEklendi"] = $"{hayvan.HayvanAdi.ToUpper()} isimli yeni evcil hayvanınız hesabınıza başarı ile eklendi.";
+                    }
+                    else
+                    {
+                        TempData["YeniHayvanEklendiHata"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvan hesabınıza eklenirken bir hata oluştu.";
+                    }
+                }
+                else {
+                    TempData["HayvanSahibisiniz"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanın zaten sahibisiniz.";
+                }
+
+                return RedirectToAction("Information", "User");
+            }
+
+        }
+
+        public async Task<IActionResult> EmailRejectYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            if (user.InsanTckn != yeniSahipTCKN)
+            {
+                return View("BadRequest");
+            }
+            else
+            {
+                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                {
+                    return View("BadRequest");
+                }
+                var hayvan = _context.Hayvans.Find(hayvanId);
+
+                TempData["EvcilHayvanRed"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanı hesabınıza eklemek istemediniz.";
+                return RedirectToAction("Information", "User");
+            }
         }
     }
 }

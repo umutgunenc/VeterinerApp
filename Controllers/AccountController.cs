@@ -123,80 +123,101 @@ namespace VeterinerApp.Controllers
                 var tarih = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
 
                 string mailMessage = $@"
-                        <!DOCTYPE html>
-                        <html lang='tr'>
-                        <head>
-                            <meta charset='UTF-8'>
-                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                            <title>Hoş Geldiniz!</title>
-                            <style>
-                                body {{
-                                    font-family: Arial, sans-serif;
-                                    background-color: #f4f4f4;
-                                    color: #333;
-                                    line-height: 1.6;
-                                }}
-                                .container {{
-                                    max-width: 600px;
-                                    margin: 20px auto;
-                                    background-color: #fff;
-                                    padding: 20px;
-                                    border-radius: 8px;
-                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                }}
-                                h1 {{
-                                    color: #444;
-                                    font-size: 24px;
-                                    text-align: center;
-                                    margin-bottom: 20px;
-                                }}
-                                p {{
-                                    font-size: 16px;
-                                    margin-bottom: 20px;
-                                }}
-                                .credentials {{
-                                    background-color: #f9f9f9;
-                                    border-left: 4px solid #007bff;
-                                    padding: 10px;
-                                    margin-bottom: 20px;
-                                    font-size: 16px;
-                                }}
-                                a.button {{
-                                    display: inline-block;
-                                    background-color: #28a745;
-                                    color: #fff;
-                                    padding: 10px 20px;
-                                    text-decoration: none;
-                                    border-radius: 5px;
-                                    font-weight: bold;
-                                    text-align: center;
-                                }}
-                                a.button:hover {{
-                                    background-color: #218838;
-                                }}
-                                .footer {{
-                                    margin-top: 20px;
-                                    text-align: center;
-                                    font-size: 12px;
-                                    color: #777;
-                                }}
-                            </style>
-                        </head>
-                        <body>
-                            <div class='container'>
-                                <h1>Hoş Geldiniz!</h1>
-                                <p>Sayın {kullaniciAdSoyad}, {tarih} tarihinde sisteme başarıyla üye oldunuz. Aşağıda giriş bilgileriniz yer almaktadır:</p>
-                                <div class='credentials'>
-                                    <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
-                                    <p><strong>Şifre:</strong> {sifre}</p>
-                                </div>
-                                <p style='text-align:center;'>
-                                    <a href='{loginUrl}' class='button'>Giriş Yap</a>
-                                </p>
-                                <p class='footer'>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                <!DOCTYPE html>
+                <html lang='tr'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Hoş Geldiniz!</title>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            color: #333;
+                            margin: 0;
+                            padding: 0;
+                            font-size: 1.2rem;
+                            background-color: #f8f9fa;
+                        }}
+                        h1 {{
+                            font-size: 1.8rem;
+                            text-align: center;
+                            margin-bottom: 20px;
+                            color: #fff;
+                        }}
+                        .container {{
+                            padding: 20px;
+                            max-width: 600px;
+                            margin: auto;
+                            background-color: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+                        }}
+                        .header {{
+                            background-color: #343a40;
+                            color: white;
+                            padding: 10px;
+                            border-radius: 8px 8px 0 0;
+                            text-align: center;
+                        }}
+                        .content {{
+                            padding: 20px;
+                        }}
+                        .credentials {{
+                            background-color: #f9f9f9;
+                            border-left: 4px solid #007bff;
+                            padding: 10px;
+                            margin-bottom: 20px;
+                            font-size: 1.2rem;
+                        }}
+                        a.button {{
+                            display: inline-block;
+                            background-color: #007bff;
+                            color: white !important;
+                            padding: 10px 20px;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            text-align: center;
+                            margin-top: 10px;
+                            background-color: #6c757d;
+                        }}
+                        a.button:hover {{
+                            background-color: #5a6268;
+                        }}
+                        .footer {{
+                            margin-top: 20px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                            border-top: 1px solid #e9ecef;
+                            padding-top: 20px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h1>Hoş Geldiniz!</h1>
+                        </div>
+                        <div class='content'>
+                            <p>Sayın {kullaniciAdSoyad}, {tarih} tarihinde sisteme başarıyla üye oldunuz. Aşağıda giriş bilgileriniz yer almaktadır:</p>
+                            <div class='credentials'>
+                                <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
+                                <p><strong>Şifre:</strong> {sifre}</p>
                             </div>
-                        </body>
-                        </html>";
+                            <p style='text-align:center;'>
+                                <a href='{loginUrl}' class='button'>Giriş Yap</a>
+                            </p>
+                        </div>
+                        <div class='footer'>
+                            <p>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
+
+               
 
                 try
                 {
@@ -366,81 +387,100 @@ namespace VeterinerApp.Controllers
 
 
                 string mailMessage = $@"
-                        <!DOCTYPE html>
-                        <html lang='tr'>
-                        <head>
-                            <meta charset='UTF-8'>
-                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                            <title>Şifre Yenileme</title>
-                            <style>
-                                body {{
-                                    font-family: Arial, sans-serif;
-                                    background-color: #f4f4f4;
-                                    color: #333;
-                                    line-height: 1.6;
-                                }}
-                                .container {{
-                                    max-width: 600px;
-                                    margin: 20px auto;
-                                    background-color: #fff;
-                                    padding: 20px;
-                                    border-radius: 8px;
-                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                }}
-                                h1 {{
-                                    color: #444;
-                                    font-size: 24px;
-                                    text-align: center;
-                                    margin-bottom: 20px;
-                                }}
-                                p {{
-                                    font-size: 16px;
-                                    margin-bottom: 20px;
-                                }}
-                                .credentials {{
-                                    background-color: #f9f9f9;
-                                    border-left: 4px solid #007bff;
-                                    padding: 10px;
-                                    margin-bottom: 20px;
-                                    font-size: 16px;
-                                }}
-                                a.button {{
-                                    display: inline-block;
-                                    background-color: #007bff;
-                                    color: #fff;
-                                    padding: 10px 20px;
-                                    text-decoration: none;
-                                    border-radius: 5px;
-                                    font-weight: bold;
-                                    text-align: center;
-                                }}
-                                a.button:hover {{
-                                    background-color: #0056b3;
-                                }}
-                                .footer {{
-                                    margin-top: 20px;
-                                    text-align: center;
-                                    font-size: 12px;
-                                    color: #777;
-                                }}
-                            </style>
-                        </head>
-                        <body>
-                            <div class='container'>
-                                <h1>Şifre Yenileme</h1>
-                                <p>Sayın {kullaniciAdSoyad},</p>
-                                <p>Şifre sıfırlama talebiniz {tarih} tarihinde başarıyla gerçekleştirilmiştir. Aşağıda yeni giriş bilgileriniz yer almaktadır:</p>
-                                <div class='credentials'>
-                                    <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
-                                    <p><strong>Yeni Şifre:</strong> {yeniSifre}</p>
-                                </div>
-                                <p style='text-align:center;'>
-                                    <a href='{loginUrl}' class='button'>Giriş Yap</a>
-                                </p>
-                                <p class='footer'>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                <!DOCTYPE html>
+                <html lang='tr'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Şifre Yenileme</title>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            color: #333;
+                            margin: 0;
+                            padding: 0;
+                            font-size: 1.2rem;
+                            background-color: #f8f9fa;
+                        }}
+                        h1 {{
+                            font-size: 1.8rem;
+                            text-align: center;
+                            margin-bottom: 20px;
+                            color: #fff;
+                        }}
+                        .container {{
+                            padding: 20px;
+                            max-width: 600px;
+                            margin: auto;
+                            background-color: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+                        }}
+                        .header {{
+                            background-color: #343a40;
+                            color: white;
+                            padding: 10px;
+                            border-radius: 8px 8px 0 0;
+                            text-align: center;
+                        }}
+                        .content {{
+                            padding: 20px;
+                        }}
+                        .credentials {{
+                            background-color: #f9f9f9;
+                            border-left: 4px solid #007bff;
+                            padding: 10px;
+                            margin-bottom: 20px;
+                            font-size: 1.2rem;
+                        }}
+                        a.button {{
+                            display: inline-block;
+                            background-color: #007bff;
+                            color: white !important;
+                            padding: 10px 20px;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            text-align: center;
+                            margin-top: 10px;
+                            background-color: #6c757d;
+                        }}
+                        a.button:hover {{
+                            background-color: #5a6268;
+                        }}
+                        .footer {{
+                            margin-top: 20px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                            border-top: 1px solid #e9ecef;
+                            padding-top: 20px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h1>Şifre Yenileme</h1>
+                        </div>
+                        <div class='content'>
+                            <p>Sayın {kullaniciAdSoyad},</p>
+                            <p>Şifre sıfırlama talebiniz {tarih} tarihinde başarıyla gerçekleştirilmiştir. Aşağıda yeni giriş bilgileriniz yer almaktadır:</p>
+                            <div class='credentials'>
+                                <p><strong>Kullanıcı Adı:</strong> {kullaniciAdi}</p>
+                                <p><strong>Yeni Şifre:</strong> {yeniSifre}</p>
                             </div>
-                        </body>
-                        </html>";
+                            <p style='text-align:center;'>
+                                <a href='{loginUrl}' class='button'>Giriş Yap</a>
+                            </p>
+                        </div>
+                        <div class='footer'>
+                            <p>Bu e-posta otomatik olarak gönderilmiştir, lütfen yanıtlamayın.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
 
                 try
                 {
