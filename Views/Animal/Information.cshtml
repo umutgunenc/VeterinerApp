@@ -6,8 +6,15 @@
 }
 
 @section animalInformation{
-    <h2>Hayvan Bilgileri</h2>
-    <hr />
+    <h3 class="font-weight-bold text-white">
+        Hayvan Bilgileri   @if (Model.CinsAdi.ToUpper() == "KÖPEK")
+        {<i class="fa-solid fa-dog"></i> }
+        else if (Model.CinsAdi.ToUpper() == "KEDI")
+        {<i class="fa-solid fa-cat"></i>}
+        else
+        {<i class="fa-solid fa-dove"></i> }
+        <hr />
+    </h3>
     <div class="card text-white bg-dark mb-3">
         <div class="row no-gutters">
             <div class="col-md-4">
@@ -112,13 +119,13 @@
                             </table>
 
                         }
-                    <div class="d-flex">
+                        <div class="d-flex">
 
-                        <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
+                            <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
 
-                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
+                            <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
 
-                    </div>
+                        </div>
 
                     </div>
                 </div>

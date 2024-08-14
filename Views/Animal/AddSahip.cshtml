@@ -3,8 +3,11 @@
     Layout = "_LayoutAccount";
 }
 
-<h2>Yeni Sahip Ekle</h2>
-<hr />
+<h3 class="font-weight-bold text-white">
+    Yeni Sahip Ekle   <i class="fa-solid fa-user-pen"></i>
+
+    <hr />
+</h3>
 <div class="card text-white bg-dark mb-3">
     <form asp-action="AddSahip" asp-controller="Animal">
         <div class="row no-gutters">
@@ -15,7 +18,7 @@
             </div>
             <div class="col-md-8 align-self-start">
                 <div class="d-flex flex-column">
-                    <div class="card-header font-weight-bold pl-0">
+                    <div class="card-header font-weight-bold pl-0 ">
                         <h3>@Model.HayvanAdi.ToUpper()</h3>
                     </div>
                     <div>

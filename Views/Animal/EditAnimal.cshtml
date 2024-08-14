@@ -5,12 +5,16 @@
 }
 
 @section editAnimal{
+    <h3 class="font-weight-bold text-white">
+        Bilgileri Düzenle   <i class="fa-solid fa-user-pen"></i>
+        <hr />
+    </h3>
     <form asp-action="EditAnimal" asp-controller="Animal" method="post" enctype="multipart/form-data">
         <div class="form-col">
             <div class="col-sm-12 d-inline-flex p-0">
                 <div class="d-block col-sm-9 p-0">
                     <div class="form-group row mb-3">
-                        <label asp-for="HayvanAdi" class="col-sm-3 col-form-label pr-0">Hayvan Adı</label>
+                        <label asp-for="HayvanAdi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Hayvan Adı</label>
                         <div class="col-sm-9 pl-0">
                             <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
                             <div class="mt-2">
@@ -20,7 +24,7 @@
                         </div>
                     </div>
                     <div class="form-group row mb-3">
-                        <label asp-for="HayvanDogumTarihi" class="col-sm-3 col-form-label pr-0 ">Doğum Tarihi</label>
+                        <label asp-for="HayvanDogumTarihi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Doğum Tarihi</label>
                         <div class="col-sm-9 pl-0">
                             <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                             <div class="mt-2">
@@ -30,7 +34,7 @@
                         </div>
                     </div>
                     <div class="form-group row mb-3">
-                        <label class="col-sm-3 col-form-label d-flex align-items-center pr-0">
+                        <label class="col-sm-3 col-form-label d-flex align-items-center pr-0 font-weight-bold text-white">
                             Ölüm Tarihi
                             <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
                         </label>
@@ -47,7 +51,7 @@
 
                     <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
                         <div class="row-sm-2">
-                            <label asp-for="CinsId" class="row-sm-2 col-form-label">Cinsi</label>
+                            <label asp-for="CinsId" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsi</label>
                             <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
                                 <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
                             </select>
@@ -57,7 +61,7 @@
                             </div>
                         </div>
                         <div class="row-sm-4">
-                            <label asp-for="TurId" class="row-sm-2 col-form-label">Türü</label>
+                            <label asp-for="TurId" class="row-sm-2 col-form-label font-weight-bold text-white">Türü</label>
                             <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
                                 <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
                             </select>
@@ -67,7 +71,7 @@
                             </div>
                         </div>
                         <div class="row-sm-4">
-                            <label asp-for="RenkId" class="row-sm-2 col-form-label">Rengi</label>
+                            <label asp-for="RenkId" class="row-sm-2 col-form-label font-weight-bold text-white">Rengi</label>
                             <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
                                 <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Cins Seçin</option>
                             </select>
@@ -77,7 +81,7 @@
                             </div>
                         </div>
                         <div class="row-sm-4">
-                            <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label">Cinsiyeti</label>
+                            <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsiyeti</label>
                             <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
                                 <option value="" disabled selected>Cinsiyet Seçin</option>
                             </select>
@@ -87,7 +91,7 @@
                             </div>
                         </div>
                         <div class="row-sm-4 mr-3">
-                            <label asp-for="HayvanKilo" class="row-sm-2 col-form-label">Hayvan Kilosu</label>
+                            <label asp-for="HayvanKilo" class="row-sm-2 col-form-label font-weight-bold text-white">Hayvan Kilosu</label>
                             <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
                             </input>
                             <div class="mt-2">
@@ -134,7 +138,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label">Hayvan Annesi</label>
+                <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Annesi</label>
                 <div class="col-sm-10">
                     <select id="cins" asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
                         <option value="" disabled selected>Anne Seçin</option>
@@ -147,7 +151,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label">Hayvan Babası</label>
+                <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Babası</label>
                 <div class="col-sm-10">
                     <select id="cins" asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
                         <option value="" disabled selected>Baba Seçin</option>
@@ -159,7 +163,7 @@
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label">Sahiplenme Tarihi</label>
+                <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplenme Tarihi</label>
                 <div class="col-sm-10">
                     <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                     <div class="mt-2">
@@ -170,7 +174,7 @@
             </div>
 
             <div class="form-group row mb-3">
-                <label asp-for="SahiplikCikisTarihi" class="col-sm-2 col-form-label">Sahiplik Çıkış Tarihi</label>
+                <label asp-for="SahiplikCikisTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplik Çıkış Tarihi</label>
                 <div class="col-sm-10">
                     <input type="date" asp-for="SahiplikCikisTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                     <div class="mt-2">
