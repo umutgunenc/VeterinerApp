@@ -226,8 +226,6 @@ namespace VeterinerApp.Controllers
                             .FirstOrDefault())
                             .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                             .FirstOrDefault()
-
-
                     })
                     .ToList();
 
@@ -316,7 +314,7 @@ namespace VeterinerApp.Controllers
             sahipHayvan.HayvanId = hayvan.HayvanId;
 
 
-            if (model.filePhoto != null)
+            if(model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
                 var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
@@ -341,9 +339,16 @@ namespace VeterinerApp.Controllers
                 hayvan.imgURl = fileUrl;
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                hayvan.imgURl = null;
+                await _context.SaveChangesAsync();
+
+            }
 
             _context.SahipHayvans.Add(sahipHayvan);
-            _context.SaveChanges();
+
+            _context.SaveChangesAsync();
 
             TempData["AddAnimal"] = $"{model.HayvanAdi} isimli hayvan başarıyla eklendi.";
 

@@ -81,11 +81,21 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
                 .GreaterThanOrEqualTo(x => x.HayvanDogumTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
+            RuleFor(x => x.PhotoOption)
+                .NotEmpty().WithMessage("Lütfen bir seçenek seçiniz.")
+                .NotNull().WithMessage("Lütfen bir seçenek seçiniz.")
+                .Must(FunctionsValidator.BeValidRadioPhotoAdd).WithMessage("Geçersiz seçenek.");
+
             RuleFor(x => x.filePhoto)
                 .Must(FunctionsValidator.BeValidExtensionForPhoto)
                 .WithMessage("Yalnızca jpg, jpeg, png ve bmp uzantılı dosyalar yüklenebilir.")
-                .When(x => x.filePhoto != null)
+                .When(x => x.PhotoOption == "changePhoto" && x.filePhoto != null)
                 .WithName("filePhoto");
+
+            RuleFor(x => x.filePhoto)
+                .Empty()
+                .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "deletePhoto")
+                .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
 
             RuleFor(x => x.filePhoto)
                 .Must(x => x.Length < 10485760)

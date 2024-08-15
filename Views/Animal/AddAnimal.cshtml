@@ -132,12 +132,9 @@
             </div>
         </div>
 
-        <input type="hidden" asp-for="HayvanId" />
-        <input type="hidden" asp-for="SahipTckn" />
-        <input type="hidden" asp-for="Signature" />
+
         <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="filePhoto"></span>
         <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="PhotoOption"></span>
-        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="Signature"></span>
         <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="HayvanKilo"></span>
         <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="CinsId"></span>
         <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="TurId"></span>
@@ -154,7 +151,6 @@
 @if (TempData["AddAnimal"] != null)
 {
     <div class="alert alert-success" id="successMessage">@TempData["AddAnimal"]</div>
-
 }
 
 @section scripts {
