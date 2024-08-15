@@ -4,50 +4,51 @@
     @await Html.PartialAsync("_AdminMenu")
 }
 
-@section CinsTur {
-    <form asp-action="CinsTur" asp-controller="Admin" method="post">
-        <div class="form-row">
-            <div class="col">
-                <select asp-for="CinsId" class="form-control">
-                    <option selected disabled>Eşleşecek Cinsi Seçiniz</option>
-                    @foreach (var cins in Model.Cinsler)
-                    {
-                        <option value="@cins.Value">@cins.Text</option>
-                    }
-                </select>
-            </div>
-            <div class="col">
-                <select asp-for="TurId" class="form-control">
-                    <option selected disabled>Eşleşecek Türü Seçiniz</option>
-                    @foreach (var tur in Model.Turler)
-                    {
-                        <option value="@tur.Value">@tur.Text</option>
-                    }
-                </select>
-            </div>
-            <button type="submit" class="btn btn-dark rounded mb-2">Eşleştir</button>
-        </div>
-
+<form asp-action="CinsTur" asp-controller="Admin" method="post">
+    <div class="form-row">
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="CinsId">
-            </span>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="TurId">
-            </span>
+            <select asp-for="CinsId" class="form-control">
+                <option selected disabled>Eşleşecek Cinsi Seçiniz</option>
+                @foreach (var cins in Model.Cinsler)
+                {
+                    <option value="@cins.Value">@cins.Text</option>
+                }
+            </select>
         </div>
-    </form>
-
-    @if (TempData["CinsTurEklendi"] != null)
-    {
-        <div class="alert alert-success" role="alert" id="CinsTurEklendi">
-            @TempData["CinsTurEklendi"]
+        <div class="col">
+            <select asp-for="TurId" class="form-control">
+                <option selected disabled>Eşleşecek Türü Seçiniz</option>
+                @foreach (var tur in Model.Turler)
+                {
+                    <option value="@tur.Value">@tur.Text</option>
+                }
+            </select>
         </div>
-        <script>
-            setTimeout(function () {
-                var message = document.getElementById("CinsTurEklendi");
-                message.remove();
-            }, 2500);
-        </script>
-    }
+        <button type="submit" class="btn btn-dark rounded mb-2">Eşleştir</button>
+    </div>
 
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="CinsId">
+        </span>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="TurId">
+        </span>
+    </div>
+</form>
+
+@if (TempData["CinsTurEklendi"] != null)
+{
+    <div class="alert alert-success" role="alert" id="CinsTurEklendi">
+        @TempData["CinsTurEklendi"]
+    </div>
 
 }
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("CinsTurEklendi");
+            message.remove();
+        }, 2500);
+    </script>
+}
+

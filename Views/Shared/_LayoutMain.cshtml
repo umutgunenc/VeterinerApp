@@ -28,21 +28,25 @@
         @await Html.PartialAsync("_topBar")
     }
     <div class="container mt-3">
-        <div class="col-md-12 p-0">
+        @if (IsSectionDefined("AdminMenu"))
+        {<div class="d-flex">
+                <div class="col-sm-3 p-0">
+                    @RenderSection("AdminMenu")
+                </div>
+                <div class="col-sm-9 p-1">
+                    @RenderBody()
+                </div>
+            </div>
 
-            @RenderBody()
-            @RenderSection("register", false)
-            @RenderSection("login", false)
-            @RenderSection("forgotPassword", false)
-            @RenderSection("AccessDenied", false)
-            @RenderSection("Information", false)
-            @RenderSection("changePassword", false)
-            @RenderSection("AddAnimal", false)
-            @RenderSection("animalInformation", false)
-            @RenderSection("editAnimal", false)
-            @RenderSection("editUser", false)
+        }
+        else
+        { <div class="col-sm-12 p-0">
+           
+                @RenderBody()
 
-        </div>
+            </div>
+        }
+
     </div>
 
 

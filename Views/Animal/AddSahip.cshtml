@@ -1,7 +1,5 @@
 ﻿@model AddNewSahipViewModel
-@{
-    Layout = "_LayoutAccount";
-}
+
 
 <h3 class="font-weight-bold text-white">
     Yeni Sahip Ekle   <i class="fa-solid fa-user-pen"></i>
@@ -65,24 +63,13 @@
                             <div class="alert alert-success" role="alert" id="Mail">
                                 @ViewBag.Mail
                             </div>
-                            <script>
-                                setTimeout(function () {
-                                    var message = document.getElementById("Mail");
-                                    message.remove();
-                                }, 3500);
-                            </script>
                         }
                         @if (ViewBag.MailHata != null)
                         {
                             <div class="alert alert-danger" role="alert" id="MailHata">
                                 @ViewBag.MailHata
                             </div>
-                            <script>
-                                setTimeout(function () {
-                                    var message = document.getElementById("MailHata");
-                                    message.remove();
-                                }, 3500);
-                            </script>
+
                         }
                     </div>
                 </div>
@@ -90,3 +77,18 @@
         </div>
     </form>
 </div>
+
+@section Scripts
+{
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("MailHata");
+            message.remove();
+        }, 3500);
+
+        setTimeout(function () {
+            var message = document.getElementById("Mail");
+            message.remove();
+        }, 3500);
+    </script>
+}

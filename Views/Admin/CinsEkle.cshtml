@@ -5,32 +5,33 @@
 }
 
 
-@section CinsEkle {
-    <form asp-action="CinsEkle" asp-controller="Admin" method="post">
-        <div class="form-row">
-            <div class="col">
-                <input asp-for="cins" class="form-control" placeholder="Cins Adı">
-            </div>
-            <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
-        </div>
+<form asp-action="CinsEkle" asp-controller="Admin" method="post">
+    <div class="form-row">
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="cins">
-            </span>
-         </div>
+            <input asp-for="cins" class="form-control" placeholder="Cins Adı">
+        </div>
+        <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="cins">
+        </span>
+    </div>
 
-    </form>
+</form>
 
-    @if (TempData["CinsEklendi"] != null)
-    {
-        <div class="alert alert-success" id="successMessage">@TempData["CinsEklendi"]</div>
-        <script>
-            setTimeout(function () {
-                var successMessage = document.getElementById("successMessage");
-                successMessage.remove();
-            }, 2500);
-        </script>
-    }
+@if (TempData["CinsEklendi"] != null)
+{
+    <div class="alert alert-success" id="successMessage">@TempData["CinsEklendi"]</div>
 
+}
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            successMessage.remove();
+        }, 2500);
+    </script>
 }
 
 

@@ -49,7 +49,7 @@ namespace VeterinerApp.Models.Validators.User
 
             RuleFor(x => x.filePhoto)
                 .Must(FunctionsValidator.BeValidExtensionForPhoto)
-                .WithMessage("Yalnızca jpg, jpeg, png ve gif uzantılı dosyalar yüklenebilir.")
+                .WithMessage("Yalnızca jpg, jpeg, png ve bmp uzantılı dosyalar yüklenebilir.")
                 .When(x => x.PhotoOption == "changePhoto" && x.filePhoto != null)
                 .WithName("filePhoto");
 

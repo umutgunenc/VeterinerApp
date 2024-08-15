@@ -4,7 +4,6 @@
     @await Html.PartialAsync("_AdminMenu")
 }
 
-@section calisanListele {
     <form asp-action="CalisanListele" asp-controller="Admin" method="post" id="calisanListeleForm">
         <input type="hidden" name="sayfaNumarasi" value="@Model.SayfaNumarasi" />
         <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
@@ -101,8 +100,7 @@
         @await Component.InvokeAsync("CalisanlarListele", ViewBag.SecilenKisi)
     }
 
-}
-<script>
+@section scripts{<script>
     document.addEventListener('DOMContentLoaded', () => {
         const rows = document.querySelectorAll('.clickable-row');
         const form = document.getElementById('calisanListeleForm');
@@ -116,8 +114,7 @@
                 input.value = tckn;
                 form.appendChild(input);
                 form.submit();
-
             });
         });
     });
-</script>
+</script> }
