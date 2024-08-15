@@ -23,5 +23,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public DateTime SahiplikTarihi { get; set; }
         public DateTime? SahiplikCikisTarihi { get; set; }
         public IFormFile filePhoto { get; set; }
+        public string PhotoOption { get; set; }
+        public string Signature { get; set; }
     }
 }

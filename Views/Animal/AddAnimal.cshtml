@@ -1,142 +1,166 @@
 ﻿@model AddAnimalViewModel
 
-<h2>Hayvan Kaydı</h2>
-<hr />
+<h3 class="font-weight-bold text-white">
+    Hayvan Kaydı   <i class="fa-solid fa-user-pen"></i>
+    <hr />
+</h3>
 
-
-<form asp-action="AddAnimal" asp-controller="Animal" method="post" enctype="multipart/form-data">
+<form asp-action="AddAnimal" asp-controller="Animal" method="post" enctype="multipart/form-data" id="addAnimalForm">
     <div class="form-col">
+        <div class="form-col">
+            <div class="col-sm-12 d-inline-flex p-0">
+                <div class="d-block col-sm-9 p-0">
+                    <div class="form-group row mb-2">
+                        <label asp-for="HayvanAdi" class="col-sm-3 pr-0 col-form-label pr-0 font-weight-bold text-white">Hayvan Adı</label>
+                        <div class="col-sm-9 pl-5">
+                            <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label asp-for="HayvanAnneId" class="col-sm-3 pr-0 col-form-label pr-0 font-weight-bold text-white">Hayvan Annesi</label>
+                        <div class="col-sm-9 pl-5">
+                            <select asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
+                                <option value="">Anne Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label asp-for="HayvanBabaId" class="col-sm-3 pr-0 col-form-label pr-0 font-weight-bold text-white">Hayvan Babası</label>
+                        <div class="col-sm-9 pl-5">
+                            <select asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
+                                <option value="">Baba Seçin</option>
+                            </select>
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label asp-for="HayvanDogumTarihi" class="col-sm-3 pr-0 col-form-label pr-0 font-weight-bold text-white">Doğum Tarihi</label>
+                        <div class="col-sm-9 pl-5">
+                            <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label asp-for="SahiplikTarihi" class="col-sm-3 pr-0 col-form-label pr-0 font-weight-bold text-white">Sahiplenme Tarihi</label>
+                        <div class="col-sm-9 pl-5">
+                            <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                            <div class="mt-2">
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col mb-2 px-0 d-flex justify-content-between">
 
-        <div class="form-group row mb-3">
-            <label asp-for="HayvanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Adı</label>
-            <div class="col-sm-10">
-                <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
-                    </span>
+                        <div class="col-sm-3 px-0 d-flex">
+                            <label asp-for="HayvanKilo" class="col-sm-7 col-form-label font-weight-bold text-white px-0">Hayvan Kilosu</label>
+                            <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
+                        </div>
+
+
+                        <div class="col-sm pr-0">
+                            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                                <option value="" disabled selected>Cins Seçin</option>
+                            </select>
+                        </div>
+                        <div class="col-sm pr-0">
+                            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
+                                <option value="" disabled selected>Tür Seçin</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm pr-0">
+                            <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
+                                <option value="" disabled selected>Renk Seçin</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm pr-0">
+                            <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+                                <option value="" disabled selected>Cinsiyet Seçin</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="d-inline-flex col-sm-3 pr-0">
+                    <div class="d-flex flex-column align-items-end justify-content-start w-100">
+                        <div class="profile-photo-container mb-1" style="max-width: 100%; max-height: 100%;">
+                            <img id="photoPreview"
+                                 src="@if (Model.imgURl != null) { @Model.imgURl } else { @Url.Content("~/img/animal.png") }"
+                                 alt="Profil Fotoğrafı"
+                                 class="rounded"
+                                 style="max-width: 100%; height: auto; object-fit: cover; width: 100%; cursor: pointer;" />
+                        </div>
+                        <div class="d-flex justify-content-center w-100 pt-1">
+                            <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="d-none" value="keepPhoto" checked="checked" />
+                            <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="d-none" value="changePhoto">
+                            <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="d-none" value="deletePhoto">
+                            <label for="customRadio2" class="col pl-0 pr-2 m-0">
+                                <div type="button" class="btn btn-dark rounded mt-0 w-100 px-0" onclick="document.getElementById('photoInput').click()">
+                                    Ekle
+                                    <i class="fa-solid fa-images"></i>
+                                </div>
+                            </label>
+                            <label for="customRadio3" class="col pr-0 pl-2 m-0">
+                                <div type="button" class="btn btn-dark rounded mt-0 w-100 px-0" onclick="removePhoto()">
+                                    Sil
+                                    <i class="fa-solid fa-trash-arrow-up"></i>
+                                </div>
+                            </label>
+                        </div>
+                        <input type="file" id="photoInput" asp-for="filePhoto" class="d-none" accept=".jpg,.jpeg,.png,.bmp" onchange="previewPhoto(event)" />
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="form-group row mb-3">
-            <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Doğum Tarihi</label>
-            <div class="col-sm-10">
-                <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-3">
-            <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplenme Tarihi</label>
-            <div class="col-sm-10">
-                <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-3">
-            <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Fotoğrafı</label>
-            <div class="col-sm-10">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFileLangHTML" name="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                    <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
-                </div>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
-            <div class="row-sm-2">
-                <label asp-for="CinsId" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsi</label>
-                <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                    <option value="" disabled selected>Cins Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
-                    </span>
-                </div>
-            </div>
-            <div class="row-sm-4">
-                <label asp-for="TurId" class="row-sm-2 col-form-label font-weight-bold text-white">Türü</label>
-                <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                    <option value="" disabled selected>Tür Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
-                    </span>
-                </div>
-            </div>
-            <div class="row-sm-4">
-                <label asp-for="RenkId" class="row-sm-2 col-form-label font-weight-bold text-white">Rengi</label>
-                <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                    <option value="" disabled selected>Cins Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
-                    </span>
-                </div>
-            </div>
-            <div class="row-sm-4">
-                <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsiyeti</label>
-                <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
-                    <option value="" disabled selected>Cinsiyet Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
-                    </span>
-                </div>
-            </div>
-            <div class="row-sm-4 mr-3">
-                <label asp-for="HayvanKilo" class="row-sm-2 col-form-label font-weight-bold text-white">Hayvan Kilosu</label>
-                <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
-                </input>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-3">
-            <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label">Hayvan Annesi</label>
-            <div class="col-sm-10">
-                <select id="cins" asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
-                    <option value="">Anne Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-3">
-            <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label">Hayvan Babası</label>
-            <div class="col-sm-10">
-                <select id="cins" asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
-                    <option value="">Baba Seçin</option>
-                </select>
-                <div class="mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
-                    </span>
-                </div>
-            </div>
-        </div>
+
+        <input type="hidden" asp-for="HayvanId" />
+        <input type="hidden" asp-for="SahipTckn" />
+        <input type="hidden" asp-for="Signature" />
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="filePhoto"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="PhotoOption"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="Signature"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="HayvanKilo"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="CinsId"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="TurId"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="HayvanCinsiyet"></span>
+        <span class="d-table font-weight-bold text-danger bg-light text-danger rounded my-1" asp-validation-for="RenkId"></span>
+
+        <button type="submit" class="col btn btn-dark rounded mb-2" id="button">Kaydet</button>
+
+
     </div>
-    <button type="submit" class="col btn btn-dark rounded">Kaydet</button>
 
 </form>
 
 @if (TempData["AddAnimal"] != null)
 {
     <div class="alert alert-success" id="successMessage">@TempData["AddAnimal"]</div>
- 
+
 }
 
 @section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+
     <script>
 
         $(document).ready(function () {
@@ -161,17 +185,91 @@
         });
 
 
-        document.querySelector('.custom-file-input').addEventListener('change', function (event) {
-            var inputFile = event.currentTarget;
-            var fileName = inputFile.files[0].name;
-            var label = inputFile.nextElementSibling;
-            label.innerHTML = fileName;
-        });
-
         setTimeout(function () {
             var successMessage = document.getElementById("successMessage");
             successMessage.remove();
         }, 2500);
+
+        let cropper;
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = document.getElementById('photoPreview');
+                    image.src = e.target.result;
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 4 / 3,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        ready: function () {
+                            // Fotoğraf yüklendiğinde yapılacak işlemler
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function startCrop() {
+            const image = document.getElementById('photoPreview');
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                ready: function () {
+                    // Fotoğraf yüklendiğinde yapılacak işlemler
+                }
+            });
+        }
+
+        function saveCroppedPhoto() {
+            if (cropper) {
+                cropper.getCroppedCanvas().toBlob(function (blob) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(new File([blob], 'cropped_photo.jpg', { type: 'image/jpeg' }));
+                    const fileInput = document.getElementById('photoInput');
+                    fileInput.files = dataTransfer.files;
+
+                    // Formu gönder
+                    document.getElementById('addAnimalForm').submit();
+                });
+            }
+        }
+
+        function removePhoto() {
+            document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
+            const fileInput = document.getElementById('photoInput');
+            fileInput.value = ''; // Fotoğraf inputunu temizle
+            if (cropper) {
+                cropper.destroy();
+            }
+        }
+
+        // Formun submit olayını yakala ve fotoğrafı işleyip gönder
+        document.getElementById('addAnimalForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun normal submit işlemini engelle
+
+            const fileInput = document.getElementById('photoInput');
+
+            if (fileInput.files.length === 0) {
+                // Fotoğraf yüklenmediyse doğrudan formu post et
+                this.submit();
+            } else if (cropper) {
+                // Fotoğraf yüklenmiş ve kırpıcı aktifse, kırp ve post et
+                saveCroppedPhoto();
+            } else {
+                // Fotoğraf yüklenmiş ama kırpıcı aktif değilse, doğrudan formu post et
+                this.submit();
+            }
+        });
 
     </script>
 
