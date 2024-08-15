@@ -28,27 +28,22 @@
         @await Html.PartialAsync("_topBar")
     }
     <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12">
-                        @RenderBody()
-                        @RenderSection("register", false)
-                        @RenderSection("login", false)
-                        @RenderSection("forgotPassword", false)
-                        @RenderSection("AccessDenied", false)
-                        @RenderSection("Information", false)
-                        @RenderSection("changePassword", false)
-                        @RenderSection("AddAnimal", false)
-                        @RenderSection("animalInformation", false)
-                        @RenderSection("editAnimal", false)
-                        @RenderSection("editUser", false)
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-12 p-0">
+
+            @RenderBody()
+            @RenderSection("register", false)
+            @RenderSection("login", false)
+            @RenderSection("forgotPassword", false)
+            @RenderSection("AccessDenied", false)
+            @RenderSection("Information", false)
+            @RenderSection("changePassword", false)
+            @RenderSection("AddAnimal", false)
+            @RenderSection("animalInformation", false)
+            @RenderSection("editAnimal", false)
+            @RenderSection("editUser", false)
+
         </div>
     </div>
-
 
 
 
@@ -58,7 +53,6 @@
     <script src="https://kit.fontawesome.com/7cc8b9dbd2.js" crossorigin="anonymous"></script>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 
     <script>
@@ -66,5 +60,7 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+    @RenderSection("scripts", false)
+
 </body>
 </html>
