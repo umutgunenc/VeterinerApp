@@ -197,9 +197,6 @@ namespace VeterinerApp.Controllers
 
                 user.ImgURL = fileUrl;
 
-
-
-
             }
             else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
             {

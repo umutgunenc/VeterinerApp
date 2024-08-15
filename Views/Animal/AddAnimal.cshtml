@@ -73,7 +73,7 @@
                                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
                                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
                                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="RenkId"></span>
-                                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="HayvanCinsiyet"></span>                                
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="HayvanCinsiyet"></span>
                             </div>
                         </div>
                     </div>
@@ -186,95 +186,139 @@
                 });
             });
         });
+    </script>
 
+    <script>
 
         setTimeout(function () {
             var successMessage = document.getElementById("successMessage");
             successMessage.remove();
         }, 2500);
 
-        let cropper;
 
-        function previewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const image = document.getElementById('photoPreview');
-                    image.src = e.target.result;
-                    if (cropper) {
-                        cropper.destroy();
-                    }
-                    cropper = new Cropper(image, {
-                        aspectRatio: 4 / 3,
-                        viewMode: 1,
-                        autoCropArea: 1,
-                        ready: function () {
-                            // Fotoğraf yüklendiğinde yapılacak işlemler
-                        }
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function startCrop() {
-            const image = document.getElementById('photoPreview');
-            if (cropper) {
-                cropper.destroy();
-            }
-            cropper = new Cropper(image, {
-                aspectRatio: 1,
-                viewMode: 1,
-                autoCropArea: 1,
-                ready: function () {
-                    // Fotoğraf yüklendiğinde yapılacak işlemler
-                }
-            });
-        }
-
-        function saveCroppedPhoto() {
-            if (cropper) {
-                cropper.getCroppedCanvas().toBlob(function (blob) {
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(new File([blob], 'cropped_photo.jpg', { type: 'image/jpeg' }));
-                    const fileInput = document.getElementById('photoInput');
-                    fileInput.files = dataTransfer.files;
-
-                    // Formu gönder
-                    document.getElementById('addAnimalForm').submit();
-                });
-            }
-        }
-
-        function removePhoto() {
-            document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
-            const fileInput = document.getElementById('photoInput');
-            fileInput.value = ''; // Fotoğraf inputunu temizle
-            if (cropper) {
-                cropper.destroy();
-            }
-        }
-
-        // Formun submit olayını yakala ve fotoğrafı işleyip gönder
-        document.getElementById('addAnimalForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Formun normal submit işlemini engelle
-
-            const fileInput = document.getElementById('photoInput');
-
-            if (fileInput.files.length === 0) {
-                // Fotoğraf yüklenmediyse doğrudan formu post et
-                this.submit();
-            } else if (cropper) {
-                // Fotoğraf yüklenmiş ve kırpıcı aktifse, kırp ve post et
-                saveCroppedPhoto();
-            } else {
-                // Fotoğraf yüklenmiş ama kırpıcı aktif değilse, doğrudan formu post et
-                this.submit();
-            }
-        });
 
     </script>
+
+    <script>
+         let originalFileSize = 0;
+         let cropper;
+
+         function previewPhoto(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Fotoğrafın orijinal boyutunu kaydet
+                    originalFileSize = file.size;
+
+                    const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const image = document.getElementById('photoPreview');
+                            image.src = e.target.result;
+                            if (cropper) {
+                                cropper.destroy();
+                            }
+                            cropper = new Cropper(image, {
+                                aspectRatio: 4 / 3,
+                                viewMode: 1,
+                                autoCropArea: 1,
+                                    ready: function () {
+                                    // Fotoğraf yüklendiğinde yapılacak işlemler
+                                    }
+                            });
+                        };
+                reader.readAsDataURL(file);
+                }
+         }
+
+         function startCrop() {
+                const image = document.getElementById('photoPreview');
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(image, {
+                     aspectRatio: 1,
+                     viewMode: 1,
+                     autoCropArea: 1,
+                     ready: function () {
+                     // Fotoğraf yüklendiğinde yapılacak işlemler
+                     }
+                });
+         }
+
+         function saveCroppedPhoto() {
+                if (cropper) {
+                    cropper.getCroppedCanvas().toBlob(function (blob) {
+                    // Kırpılmış fotoğrafın boyutunu kontrol et
+                    if (blob.size > originalFileSize) {
+                        // Fotoğraf boyutu sınırını aşıyor, kalitesini ayarla
+                        reduceImageQuality(blob, function (optimizedBlob) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(new File([optimizedBlob], 'cropped_photo.jpg', { type: 'image/jpeg' }));
+                            const fileInput = document.getElementById('photoInput');
+                            fileInput.files = dataTransfer.files;
+
+                            // Formu gönder
+                            document.getElementById('addAnimalForm').submit();
+                        });
+                    }else {
+                        // Fotoğraf boyutu sınırını aşmıyor, doğrudan formu gönder
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(new File([blob], 'cropped_photo.jpg', { type: 'image/jpeg' }));
+                        const fileInput = document.getElementById('photoInput');
+                        fileInput.files = dataTransfer.files;
+
+                        // Formu gönder
+                        document.getElementById('addAnimalForm').submit();
+                    }
+                }, 'image/jpeg');
+                }
+         }
+
+         function reduceImageQuality(blob, callback) {
+                const img = new Image();
+                const url = URL.createObjectURL(blob);
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                        // Kaliteyi düşürerek yeni blob oluştur
+                        canvas.toBlob(function (optimizedBlob) {
+                        callback(optimizedBlob);
+                        URL.revokeObjectURL(url);
+                        }, 'image/jpeg', 0.7); // Kaliteyi ayarlayın
+                };
+         img.src = url;
+         }
+
+        function removePhoto() {
+                document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
+                const fileInput = document.getElementById('photoInput');
+                fileInput.value = ''; // Fotoğraf inputunu temizle
+                if (cropper) {
+                cropper.destroy();
+                }
+        }
+
+        document.getElementById('addAnimalForm').addEventListener('submit', function (event) {
+                event.preventDefault(); // Formun normal submit işlemini engelle
+
+                const fileInput = document.getElementById('photoInput');
+
+                 if (fileInput.files.length === 0) {
+                // Fotoğraf yüklenmediyse doğrudan formu post et
+                this.submit();
+                } else if (cropper) {
+                // Fotoğraf yüklenmiş ve kırpıcı aktifse, kırp ve post et
+                saveCroppedPhoto();
+                } else {
+                // Fotoğraf yüklenmiş ama kırpıcı aktif değilse, doğrudan formu post et
+                this.submit();
+                }
+        });
+    </script>
+
 
 }
 

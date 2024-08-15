@@ -7,7 +7,7 @@
 
     <hr />
 </h3>
-<form asp-action="SaveEdit" asp-controller="User" method="post" enctype="multipart/form-data">
+<form asp-action="SaveEdit" asp-controller="User" method="post" enctype="multipart/form-data" id="SaveEdit">
     <div class="form-col">
         <div class="col-sm-12 d-inline-flex p-0">
             <div class="d-block col-sm-9 p-0">
@@ -64,42 +64,40 @@
 
             </div>
 
-            <div class="d-inline-flex pl-3">
-                <div class="d-flex flex-column align-items-end justify-content-start">
-                    <div class="profile-photo-container mb-2">
+            <div class="d-inline-flex col-sm-3 pr-0">
+                <div class="d-flex flex-column align-items-end justify-content-start w-100">
+                    <div class="profile-photo-container mb-2" style="max-width: 100%; max-height: 100%;">
                         <img id="photoPreview"
-                             src="@if (Model.ImgURL != null) { @Model.ImgURL } else { @Url.Content("~/img/user.svg") }"
-                             alt="Profil Fotoğrafı" class="rounded" style="height: 240px; object-fit: fill; width: 262px; cursor: pointer;" onclick="window.open(this.src, '_blank')" />
+                             src="@if (Model.ImgURL != null) { @Model.ImgURL } else { @Url.Content("~/img/animal.png") }"
+                             alt="Profil Fotoğrafı"
+                             class="rounded"
+                             style="max-width: 100%; height: auto; object-fit: cover; width: 100%; cursor: pointer;" />
                     </div>
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-center w-100 mt-2 pt-1">
                         <input type="radio" id="customRadio1" name="photoOption" asp-for="PhotoOption" class="d-none" value="keepPhoto" checked="checked" />
                         <input type="radio" id="customRadio2" name="photoOption" asp-for="PhotoOption" class="d-none" value="changePhoto">
                         <input type="radio" id="customRadio3" name="photoOption" asp-for="PhotoOption" class="d-none" value="deletePhoto">
-                        <label for="customRadio1">
-                        </label>
-                        <label for="customRadio2">
-                            <div type="button" class="btn btn-dark rounded mr-2 mt-2" onclick="document.getElementById('photoInput').click()">
+                        <label for="customRadio2" class="col pl-0 pr-2 m-0">
+                            <div type="button" class="btn btn-dark rounded mt-0 w-100 px-0" onclick="document.getElementById('photoInput').click()">
                                 Değiştir
                                 <i class="fa-solid fa-images"></i>
                             </div>
                         </label>
-                        <label for="customRadio3">
-                            <div type="button" class="btn btn-dark rounded mt-2" onclick="removePhoto()">
+                        <label for="customRadio3" class="col pr-0 pl-2 m-0">
+                            <div type="button" class="btn btn-dark rounded mt-0 w-100 px-0" onclick="removePhoto()">
                                 Sil
                                 <i class="fa-solid fa-trash-arrow-up"></i>
                             </div>
                         </label>
-
-
                     </div>
-                    <input type="file" id="photoInput" asp-for="filePhoto" class="d-none" accept=".jpg,.jpeg,.png,.gif" onchange="previewPhoto(event)" />
+                    <input type="file" id="photoInput" asp-for="filePhoto" class="d-none" accept=".jpg,.jpeg,.png,.bmp" onchange="previewPhoto(event)" />
                 </div>
             </div>
 
         </div>
         <input type="hidden" asp-for="Id" />
     </div>
-    <button type="submit" class="col btn btn-dark rounded mb-3">Düzenle</button>
+    <button type="submit" class="col btn btn-dark rounded mb-3">Kaydet</button>
     <div class="">
         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
         </span>
@@ -113,35 +111,148 @@
 
 }
 @section scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
     <script>
+
+
         setTimeout(function () {
             var successMessage = document.getElementById("successMessage");
             successMessage.remove();
         }, 2500);
 
-
-        document.querySelector('.custom-file-input').addEventListener('change', function (event) {
-            var inputFile = event.currentTarget;
-            var fileName = inputFile.files[0].name;
-            var label = inputFile.nextElementSibling;
-            label.innerHTML = fileName;
-        });
-
-         function previewPhoto(event) {
-         var reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('photoPreview').src = e.target.result;
-            };
-         reader.readAsDataURL(event.target.files[0]);
-         }
-
-
-         function removePhoto() {
-             document.getElementById('photoPreview').src = '@Url.Content("~/img/user.svg")';
-             document.getElementById('photoInput').value = '';
-         }
-
     </script>
+    <script>
+
+    <script>
+    
+        let originalFileSize = 0;
+        let cropper;
+        
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Fotoğrafın orijinal boyutunu kaydet
+                originalFileSize = file.size;
+        
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const image = document.getElementById('photoPreview');
+                    image.src = e.target.result;
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 4 / 3,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        ready: function() {
+                            // Fotoğraf yüklendiğinde yapılacak işlemler
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function startCrop() {
+            const image = document.getElementById('photoPreview');
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                ready: function() {
+                    // Fotoğraf yüklendiğinde yapılacak işlemler
+                }
+            });
+        }
+        
+        function saveCroppedPhoto() {
+            if (cropper) {
+                cropper.getCroppedCanvas().toBlob(function(blob) {
+                    // Kırpılmış fotoğrafın boyutunu kontrol et
+                    if (blob.size > originalFileSize) {
+                        // Fotoğraf boyutu sınırını aşıyor, kalitesini ayarla
+                        reduceImageQuality(blob, function(optimizedBlob) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(new File([optimizedBlob], 'cropped_photo.jpg', {
+                                type: 'image/jpeg'
+                            }));
+                            const fileInput = document.getElementById('photoInput');
+                            fileInput.files = dataTransfer.files;
+        
+                            // Formu gönder
+                            document.getElementById('SaveEdit').submit();
+                        });
+                    } else {
+                        // Fotoğraf boyutu sınırını aşmıyor, doğrudan formu gönder
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(new File([blob], 'cropped_photo.jpg', {
+                            type: 'image/jpeg'
+                        }));
+                        const fileInput = document.getElementById('photoInput');
+                        fileInput.files = dataTransfer.files;
+        
+                        // Formu gönder
+                        document.getElementById('SaveEdit').submit();
+                    }
+                }, 'image/jpeg');
+            }
+        }
+        
+        function reduceImageQuality(blob, callback) {
+            const img = new Image();
+            const url = URL.createObjectURL(blob);
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+        
+                // Kaliteyi düşürerek yeni blob oluştur
+                canvas.toBlob(function(optimizedBlob) {
+                    callback(optimizedBlob);
+                    URL.revokeObjectURL(url);
+                }, 'image/jpeg', 0.7); // Kaliteyi ayarlayın
+            };
+            img.src = url;
+        }
+        
+        function removePhoto() {
+            document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
+            const fileInput = document.getElementById('photoInput');
+            fileInput.value = ''; // Fotoğraf inputunu temizle
+            if (cropper) {
+                cropper.destroy();
+            }
+        }
+        
+        document.getElementById('SaveEdit').addEventListener('submit', function(event) {
+            event.preventDefault(); // Formun normal submit işlemini engelle
+        
+            const fileInput = document.getElementById('photoInput');
+        
+            if (fileInput.files.length === 0) {
+                // Fotoğraf yüklenmediyse doğrudan formu post et
+                this.submit();
+            } else if (cropper) {
+                // Fotoğraf yüklenmiş ve kırpıcı aktifse, kırp ve post et
+                saveCroppedPhoto();
+            } else {
+                // Fotoğraf yüklenmiş ama kırpıcı aktif değilse, doğrudan formu post et
+                this.submit();
+            }
+        });
+        
+    </script>
+
+
+
 
 }
 
