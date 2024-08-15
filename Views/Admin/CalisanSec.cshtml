@@ -4,37 +4,37 @@
     @await Html.PartialAsync("_AdminMenu")
 }
 
-@section CalisanSec{
-    <form asp-action="CalisanSec" asp-controller="Admin" method="post">
-        <div class="form-row mb-2">
-            <div class="col">
-                <input asp-for="InsanTckn" class="form-control" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
-            </div>
-            <div class="input-group-append">
-                <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
-            </div>
-        </div>
+<form asp-action="CalisanSec" asp-controller="Admin" method="post">
+    <div class="form-row mb-2">
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
-            </span>
+            <input asp-for="InsanTckn" class="form-control" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
         </div>
-    </form>
-    @if (ViewBag.SecilenKisi != null)
-    {
-        @await Component.InvokeAsync("Insanlar", ViewBag.SecilenKisi)
-    }
+        <div class="input-group-append">
+            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+        </div>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+        </span>
+    </div>
+</form>
+@if (ViewBag.SecilenKisi != null)
+{
+    @await Component.InvokeAsync("Insanlar", ViewBag.SecilenKisi)
+}
 
-    @if (TempData["KisiGuncellendi"] != null)
-    {
-        <div class="alert alert-success" id="successMessage">@TempData["KisiGuncellendi"]</div>
-        <script>
-            setTimeout(function () {
-                var successMessage = document.getElementById("successMessage");
-                successMessage.remove();
-            }, 2500);
-        </script>
-    }
+@if (TempData["KisiGuncellendi"] != null)
+{
+    <div class="alert alert-success" id="successMessage">@TempData["KisiGuncellendi"]</div>
+
+}
 
 
-
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            successMessage.remove();
+        }, 2500);
+    </script>
 }

@@ -5,38 +5,38 @@
 }
 
 
-@section RolSil{
-    <form asp-action="RolSil" asp-controller="Admin" method="post">
-        <div class="form-row">
-            <div class="col">
-                <select asp-for="Id" class="form-control">
-                    <option selected disabled>Silinecek Rolü Seçiniz</option>
-                    @foreach (var rol in Model.Roller)
-                    {
-                        <option value="@rol.Value">@rol.Text</option>
-                    }
-                </select>
-            </div>
-            <button type="submit" class="btn btn-dark rounded mb-2">Sil</button>
-        </div>
+<form asp-action="RolSil" asp-controller="Admin" method="post">
+    <div class="form-row">
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Id">
-            </span>
-
+            <select asp-for="Id" class="form-control">
+                <option selected disabled>Silinecek Rolü Seçiniz</option>
+                @foreach (var rol in Model.Roller)
+                {
+                    <option value="@rol.Value">@rol.Text</option>
+                }
+            </select>
         </div>
-    </form>
+        <button type="submit" class="btn btn-dark rounded mb-2">Sil</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Id">
+        </span>
 
-    @if (TempData["RolSilindi"] != null)
-    {
-        <div class="alert alert-success" id="successMessage">@TempData["RolSilindi"]</div>
-        <script>
-            setTimeout(function () {
-                var successMessage = document.getElementById("successMessage");
-                successMessage.remove();
-            }, 2500);
-        </script>
-    }
+    </div>
+</form>
 
+@if (TempData["RolSilindi"] != null)
+{
+    <div class="alert alert-success" id="successMessage">@TempData["RolSilindi"]</div>
 
 }
+
+@section scripts{
+<script>
+    setTimeout(function () {
+        var successMessage = document.getElementById("successMessage");
+        successMessage.remove();
+    }, 2500);
+</script>}
+
 

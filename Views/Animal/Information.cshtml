@@ -1,137 +1,132 @@
 ﻿@model HayvanlarViewModel
 
-
-@{
-    Layout = "_LayoutAccount";
-}
-
-@section animalInformation{
-    <h3 class="font-weight-bold text-white">
-        Hayvan Bilgileri   @if (Model.CinsAdi.ToUpper() == "KÖPEK")
-        {<i class="fa-solid fa-dog"></i> }
-        else if (Model.CinsAdi.ToUpper() == "KEDI")
-        {<i class="fa-solid fa-cat"></i>}
-        else
-        {<i class="fa-solid fa-dove"></i> }
-        <hr />
-    </h3>
-    <div class="card text-white bg-dark mb-3">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-                <div class="m-3 text-center">
-                    <img src="@if (Model.imgURL != null) { @Model.imgURL } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
-                </div>
+<h3 class="font-weight-bold text-white">
+    Hayvan Bilgileri   @if (Model.CinsAdi.ToUpper() == "KÖPEK")
+    {<i class="fa-solid fa-dog"></i> }
+    else if (Model.CinsAdi.ToUpper() == "KEDI")
+    {<i class="fa-solid fa-cat"></i>}
+    else
+    {<i class="fa-solid fa-dove"></i>}
+    <hr />
+</h3>
+<div class="card text-white bg-dark mb-3">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <div class="m-3 text-center">
+                <img src="@if (Model.imgURL != null) { @Model.imgURL } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
             </div>
-
-            <div class="col-md-8 align-self-start">
-                <div class="d-flex flex-column">
-                    <div class="card-header font-weight-bold pl-0">
-                        <h3>@Model.HayvanAdi.ToUpper()<h3>
-                    </div>
-                    <div class="">
-                        <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
-                        <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
-                        <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
-                        <h6 class="card-title mt-2">
-                            Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
-                            {
-                                @:Dişi
-                            }
-                            else
-                            {
-                                @:Erkek
-                            }
-                        </h6>
-                        <h6 class="card-title mt-2">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
-                        <h6 class="card-title mt-2">Sahiplik Tarihi : @Model.SahiplikTarihi.ToString("dd-MM-yyyy")</h6>
-
-                        <h6 class="card-title mt-2">
-                            Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
-                            {
-                                @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
-                            }
-                            else
-                            {
-                                @:Hayatta
-                            }
-                        </h6>
-                        <h6 class="card-title mt-2">
-                            Hayvan Annesi : @if (Model.HayvanAnneAdi != null)
-                            {
-                                @Model.HayvanAnneAdi.ToUpper()
-                            }
-                            else
-                            {
-                                @: Bilinmiyor
-                            }
-                        </h6>
-                        <h6 class="card-title mt-2">
-                            Hayvan Babası : @if (Model.HayvanBabaAdi != null)
-                            {
-                                @Model.HayvanBabaAdi.ToUpper()
-                            }
-                            else
-                            {
-                                @: Bilinmiyor
-                            }
-                        </h6>
-
-
-
-                        @if (Model.Muayeneler.Count > 0)
+        </div>
+        <div class="col-md-8 align-self-start">
+            <div class="d-flex flex-column">
+                <div class="card-header font-weight-bold pl-0">
+                    <h3>@Model.HayvanAdi.ToUpper()<h3>
+                </div>
+                <div class="">
+                    <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
+                    <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
+                    <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
+                    <h6 class="card-title mt-2">
+                        Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
                         {
-                            <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
-
-                            <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="text-center">Muayene Tarihi</th>
-                                        <th scope="col" class="text-center">Hekim Adı</th>
-                                    </tr>
-                                </thead>
-                                @foreach (var muayene in Model.Muayeneler)
-                                {
-
-                                    <form method="post" id="form-@muayene.MuayeneNo">
-                                        <input type="hidden" name="hayvanId" value="@muayene.MuayeneNo" />
-                                    </form>
-
-                                    <tbody>
-                                        <tr role="button" class="clickable-row" data-form-id="form-@muayene.HayvanId">
-                                            <td class="text-center">@muayene.MuayeneTarihi</td>
-                                            <td class="text-center">@muayene.HekimkTckn</td>
-                                        </tr>
-                                    </tbody>
-
-
-                                    <script>
-                                    document.addEventListener('DOMContentLoaded', () => {
-                                        const rows = document.querySelectorAll(".clickable-row");
-                                        rows.forEach(row => {
-                                            row.addEventListener("click", () => {
-                                                const form = document.getElementById("form-@muayene.HayvanId");
-                                                form.submit();
-                                            });
-                                        });
-                                    });
-                                    </script>
-                                }
-                            </table>
-
+                            @:Dişi
                         }
-                        <div class="d-flex">
+                        else
+                        {
+                            @:Erkek
+                        }
+                    </h6>
+                    <h6 class="card-title mt-2">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
+                    <h6 class="card-title mt-2">Sahiplik Tarihi : @Model.SahiplikTarihi.ToString("dd-MM-yyyy")</h6>
 
-                            <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
+                    <h6 class="card-title mt-2">
+                        Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
+                        {
+                            @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                        }
+                        else
+                        {
+                            @:Hayatta
+                        }
+                    </h6>
+                    <h6 class="card-title mt-2">
+                        Hayvan Annesi : @if (Model.HayvanAnneAdi != null)
+                        {
+                            @Model.HayvanAnneAdi.ToUpper()
+                        }
+                        else
+                        {
+                            @: Bilinmiyor
+                        }
+                    </h6>
+                    <h6 class="card-title mt-2">
+                        Hayvan Babası : @if (Model.HayvanBabaAdi != null)
+                        {
+                            @Model.HayvanBabaAdi.ToUpper()
+                        }
+                        else
+                        {
+                            @: Bilinmiyor
+                        }
+                    </h6>
 
-                            <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
+                    @if (Model.Muayeneler.Count > 0)
+                    {
+                        <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
 
-                        </div>
+                        <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">Muayene Tarihi</th>
+                                    <th scope="col" class="text-center">Hekim Adı</th>
+                                </tr>
+                            </thead>
+                            @foreach (var muayene in Model.Muayeneler)
+                            {
+
+                                <form method="post" id="form-@muayene.MuayeneNo">
+                                    <input type="hidden" name="hayvanId" value="@muayene.MuayeneNo" />
+                                </form>
+
+                                <tbody>
+                                    <tr role="button" class="clickable-row" data-form-id="form-@muayene.HayvanId">
+                                        <td class="text-center">@muayene.MuayeneTarihi</td>
+                                        <td class="text-center">@muayene.HekimkTckn</td>
+                                    </tr>
+                                </tbody>
+
+                            }
+                        </table>
+                    }
+                    <div class="d-flex">
+
+                        <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
+
+                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
 
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
+@section scripts {
+    @if (Model.Muayeneler.Count > 0)
+    {
+        @foreach (var muayene in Model.Muayeneler)
+        {
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const rows = document.querySelectorAll(".clickable-row");
+                    rows.forEach(row => {
+                        row.addEventListener("click", () => {
+                            const form = document.getElementById("form-@muayene.HayvanId");
+                            form.submit();
+                        });
+                    });
+                });
+            </script>
+        }
+    }
 }
-

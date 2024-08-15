@@ -5,32 +5,34 @@
     @await Html.PartialAsync("_AdminMenu")
 }
 
-@section RenkEkle {
-    <form asp-action="RenkEkle" asp-controller="Admin" method="post">
-        <div class="form-row">
-            <div class="col">
-                <input asp-for="renk" class="form-control" placeholder="Renk">
-            </div>
-            <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
-        </div>
+
+<form asp-action="RenkEkle" asp-controller="Admin" method="post">
+    <div class="form-row">
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="renk">
-            </span>
+            <input asp-for="renk" class="form-control" placeholder="Renk">
         </div>
-    </form>
+        <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="renk">
+        </span>
+    </div>
+</form>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success" id="successMessage">@TempData["Success"]</div>
-        <script>
-            setTimeout(function () {
-                var successMessage = document.getElementById("successMessage");
-                successMessage.remove();
-            }, 2500);
-        </script>
-    }
-
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" id="successMessage">@TempData["Success"]</div>
 
 }
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            successMessage.remove();
+        }, 2500);
+    </script>
+}
+
 
 

@@ -1,11 +1,6 @@
 ﻿@model LoginViewModel
 
-@{
-    Layout = "_LayoutAccount";
-}
 
-
-@section login {
 
     <h3 class="font-weight-bold text-white">
                 Giriş Yap   <i class="fa-solid fa-user-check"></i>
@@ -72,24 +67,26 @@
         </div>
     </form>
 
-}
+@section scripts
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+            var passBtn = document.getElementById("passBtn");
+            var password = document.getElementById("password");
+            var eyeIcon = document.getElementById("eyeIcon");
 
-        var passBtn = document.getElementById("passBtn");
-        var password = document.getElementById("password");
-        var eyeIcon = document.getElementById("eyeIcon");
+            passBtn.addEventListener("click", function () {
+                if (password.type === "password") {
+                    password.type = "text";
+                    eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
+                } else {
+                    password.type = "password";
+                    eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
+                }
+            });
 
-        passBtn.addEventListener("click", function () {
-            if (password.type === "password") {
-                password.type = "text";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
-            } else {
-                password.type = "password";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
-            }
         });
+    </script>}
 
-    });
-</script>
+

@@ -1,210 +1,210 @@
 ﻿@model RegisterViewModel
 
-@{
-    Layout = "_LayoutAccount";
-}
 
 
-@section register {
+<h3 class="font-weight-bold text-white">
+    Kayıt Ol    <i class="fa-solid fa-id-card"></i>
+    <hr />
+</h3>
+<form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
+    <div class="form-col">
 
-    <h3 class="font-weight-bold text-white">
-                Kayıt Ol    <i class="fa-solid fa-id-card"></i>
-        <hr />
-    </h3>
-    <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
-        <div class="form-col">
-
-            <div class="form-group row mb-3">
-                <label asp-for="InsanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
-                        </span>
-                    </div>
+        <div class="form-group row mb-3">
+            <label asp-for="InsanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Adı</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                    </span>
                 </div>
             </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label font-weight-bold text-white">Soyadı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="InsanTckn" class="col-sm-2 col-form-label font-weight-bold text-white">TCKN</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanTckn">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="Email" class="col-sm-2 col-form-label font-weight-bold text-white">Email Adresi</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="Email" class="form-control" placeholder="Email Adresi">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="PhoneNumber" class="col-sm-2 col-form-label font-weight-bold text-white">Telefon Numarası</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="UserName" class="col-sm-2 col-form-label font-weight-bold text-white">Kullanıcı Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Profil Fotoğrafı</label>
-                <div class="col-sm-10">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                        <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
-                    </div>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="form-group row mb-3">
-                <label asp-for="PasswordHash" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
-                <div class="col-sm-10 input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text rounded-left" id="passBtn">
-                            <span id="eyeIcon">
-                                <i class="fa-solid fa-eye-slash"></i>
-                            </span>
-                        </span>
-                    </div>
-                    <input type="password" asp-for="PasswordHash" class="form-control rounded-right" id="password">
-                </div>
-                <div class="col-sm-10 offset-sm-2 mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PasswordHash"></span>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
-                <div class="col-sm-10 input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text rounded-left" id="confirmPassBtn">
-                            <span id="confirmedEyeIcon">
-                                <i class="fa-solid fa-eye-slash"></i>
-                            </span>
-                        </span>
-                    </div>
-                    <input type="password" asp-for="ConfirmPassword" class="form-control rounded-right" id="confirmPassword">
-
-                </div>
-                <div class="col-sm-10 offset-sm-2 mt-2">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="ConfirmPassword"></span>
-                </div>
-            </div>
-
-            <div class="form-check mb-3 h5">
-                <input class="form-check-input" type="checkbox" asp-for="TermOfUse" id="invalidCheck" style="width:18px;height:18px">
-                <label class="form-check-label pl-2" for="invalidCheck">
-                    Kullanım şartlarını kabul ediyorum.
-                </label>
-
-                <a href="#" class="font-weight-bold text-white">
-                    Kullanım şartlarını okumak için buraya tıklayınız
-                    <i class="fa-regular fa-copyright"></i>
-                </a>
-            </div>
-            <span class="font-weight-bold text-danger bg-light text-danger rounded mb-3" asp-validation-for="TermOfUse">
-            </span>
-            <button type="submit" class="col btn btn-dark rounded mb-2">Kayıt Ol</button>
-            @if (ViewBag.Hata != null)
-            {
-                <div class="font-weight-bold text-danger bg-light text-danger rounded" role="alert">
-                    @ViewBag.Hata
-                </div>
-            }
         </div>
 
-    </form>
-
-
-
-    @if (TempData["KisiEklendi"] != null)
-    {
-        <div class="alert alert-success" role="alert" id="KisiEklendi">
-            @TempData["KisiEklendi"]
+        <div class="form-group row mb-3">
+            <label asp-for="InsanSoyadi" class="col-sm-2 col-form-label font-weight-bold text-white">Soyadı</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
+                    </span>
+                </div>
+            </div>
         </div>
-        <script>
-            setTimeout(function () {
-                var message = document.getElementById("KisiEklendi");
-                message.remove();
-            }, 5000);
-        </script>
-    }
+        <div class="form-group row mb-3">
+            <label asp-for="InsanTckn" class="col-sm-2 col-form-label font-weight-bold text-white">TCKN</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanTckn">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="Email" class="col-sm-2 col-form-label font-weight-bold text-white">Email Adresi</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="Email" class="form-control" placeholder="Email Adresi">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="PhoneNumber" class="col-sm-2 col-form-label font-weight-bold text-white">Telefon Numarası</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="UserName" class="col-sm-2 col-form-label font-weight-bold text-white">Kullanıcı Adı</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Profil Fotoğrafı</label>
+            <div class="col-sm-10">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFileLangHTML" asp-for="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                    <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
+                </div>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group row mb-3">
+            <label asp-for="PasswordHash" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
+            <div class="col-sm-10 input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text rounded-left" id="passBtn">
+                        <span id="eyeIcon">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </span>
+                    </span>
+                </div>
+                <input type="password" asp-for="PasswordHash" class="form-control rounded-right" id="password">
+            </div>
+            <div class="col-sm-10 offset-sm-2 mt-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PasswordHash"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label font-weight-bold text-white">Şifre</label>
+            <div class="col-sm-10 input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text rounded-left" id="confirmPassBtn">
+                        <span id="confirmedEyeIcon">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </span>
+                    </span>
+                </div>
+                <input type="password" asp-for="ConfirmPassword" class="form-control rounded-right" id="confirmPassword">
+
+            </div>
+            <div class="col-sm-10 offset-sm-2 mt-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="ConfirmPassword"></span>
+            </div>
+        </div>
+
+        <div class="form-check mb-3 h5">
+            <input class="form-check-input" type="checkbox" asp-for="TermOfUse" id="invalidCheck" style="width:18px;height:18px">
+            <label class="form-check-label pl-2" for="invalidCheck">
+                Kullanım şartlarını kabul ediyorum.
+            </label>
+
+            <a href="#" class="font-weight-bold text-white">
+                Kullanım şartlarını okumak için buraya tıklayınız
+                <i class="fa-regular fa-copyright"></i>
+            </a>
+        </div>
+        <span class="font-weight-bold text-danger bg-light text-danger rounded mb-3" asp-validation-for="TermOfUse">
+        </span>
+        <button type="submit" class="col btn btn-dark rounded mb-2">Kayıt Ol</button>
+        @if (ViewBag.Hata != null)
+        {
+            <div class="font-weight-bold text-danger bg-light text-danger rounded" role="alert">
+                @ViewBag.Hata
+            </div>
+        }
+    </div>
+
+</form>
+
+
+
+@if (TempData["KisiEklendi"] != null)
+{
+    <div class="alert alert-success" role="alert" id="KisiEklendi">
+        @TempData["KisiEklendi"]
+    </div>
 }
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
 
-        var passBtn = document.getElementById("passBtn");
-        var password = document.getElementById("password");
-        var eyeIcon = document.getElementById("eyeIcon");
+@section scripts{
 
-        var confirmPassBtn = document.getElementById("confirmPassBtn");
-        var confirmPassword = document.getElementById("confirmPassword");
-        var confirmedEyeIcon = document.getElementById("confirmedEyeIcon");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-        passBtn.addEventListener("click", function () {
-            if (password.type === "password") {
-                password.type = "text";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
-            } else {
-                password.type = "password";
-                eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
-            }
+            var passBtn = document.getElementById("passBtn");
+            var password = document.getElementById("password");
+            var eyeIcon = document.getElementById("eyeIcon");
+
+            var confirmPassBtn = document.getElementById("confirmPassBtn");
+            var confirmPassword = document.getElementById("confirmPassword");
+            var confirmedEyeIcon = document.getElementById("confirmedEyeIcon");
+
+            passBtn.addEventListener("click", function () {
+                if (password.type === "password") {
+                    password.type = "text";
+                    eyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
+                } else {
+                    password.type = "password";
+                    eyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
+                }
+            });
+
+            confirmPassBtn.addEventListener("click", function () {
+                if (confirmPassword.type === "password") {
+                    confirmPassword.type = "text";
+                    confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
+                } else {
+                    confirmPassword.type = "password";
+                    confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
+                }
+            });
+
+            document.querySelector('.custom-file-input').addEventListener('change', function (event) {
+
+                var inputFile = event.currentTarget;
+                var fileName = inputFile.files[0].name;
+                var label = inputFile.nextElementSibling;
+                label.innerHTML = fileName;
+            });
+
+
         });
 
-        confirmPassBtn.addEventListener("click", function () {
-            if (confirmPassword.type === "password") {
-                confirmPassword.type = "text";
-                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye"></i>`;
-            } else {
-                confirmPassword.type = "password";
-                confirmedEyeIcon.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`;
-            }
-        });
 
-        document.querySelector('.custom-file-input').addEventListener('change', function (event) {
+        setTimeout(function () {
+            var message = document.getElementById("KisiEklendi");
+            message.remove();
+        }, 5000);
+    </script>
 
-            var inputFile = event.currentTarget;
-            var fileName = inputFile.files[0].name;
-            var label = inputFile.nextElementSibling;
-            label.innerHTML = fileName;
-        });
+}
 
-
-});
-</script>
 

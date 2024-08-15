@@ -127,12 +127,10 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !animalId.HasValue || _context.Hayvans.Any(a => a.HayvanId == animalId.Value);
         }
-
         public static bool BeValidHayvan(int hayvanId)
         {
             return _context.Hayvans.Any(h => h.HayvanId == hayvanId);
         }
-
         public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
         {
             return _context.SahipHayvans.Any(x => x.HayvanId == hayvanId && x.SahipTckn == model.SahipTckn);
@@ -143,7 +141,6 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return _context.Users.Any(x => x.UserName == user.UserName && x.PasswordHash == user.PasswordHash); 
         
         }
-
         //public static async Task<bool> BeCorrectOldPasswordAsync(string oldPassword, string userName, UserManager<AppUser> userManager, CancellationToken cancellationToken)
         //{
         //    var user = await userManager.FindByNameAsync(userName);
@@ -154,7 +151,6 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
         //    return await userManager.CheckPasswordAsync(user, oldPassword);
         //}
-
         public static bool BeUniqueTCKN(string girilenTCKN)
         {
             return !_context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
@@ -297,7 +293,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             "changePhoto",
             "deletePhoto"
         };
-        private static readonly string[] allowedExtensionsForPhoto = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] allowedExtensionsForPhoto = { ".jpg", ".jpeg", ".png", ".bmp" };
 
     }
 }

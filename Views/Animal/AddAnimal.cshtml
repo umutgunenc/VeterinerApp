@@ -1,155 +1,142 @@
 ﻿@model AddAnimalViewModel
 
-@{
-    Layout = "_LayoutAccount";
-}
-
-@section AddAnimal{
-    <h2>Hayvan Kaydı</h2>
-    <hr />
+<h2>Hayvan Kaydı</h2>
+<hr />
 
 
-    <form asp-action="AddAnimal" asp-controller="Animal" method="post" enctype="multipart/form-data">
-        <div class="form-col">
+<form asp-action="AddAnimal" asp-controller="Animal" method="post" enctype="multipart/form-data">
+    <div class="form-col">
 
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Adı</label>
-                <div class="col-sm-10">
-                    <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Doğum Tarihi</label>
-                <div class="col-sm-10">
-                    <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplenme Tarihi</label>
-                <div class="col-sm-10">
-                    <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Fotoğrafı</label>
-                <div class="col-sm-10">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFileLangHTML" name="filePhoto" accept=".jpg,.jpeg,.png,.gif">
-                        <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
-                    </div>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
-                <div class="row-sm-2">
-                    <label asp-for="CinsId" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsi</label>
-                    <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                        <option value="" disabled selected>Cins Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4">
-                    <label asp-for="TurId" class="row-sm-2 col-form-label font-weight-bold text-white">Türü</label>
-                    <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                        <option value="" disabled selected>Tür Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4">
-                    <label asp-for="RenkId" class="row-sm-2 col-form-label font-weight-bold text-white">Rengi</label>
-                    <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                        <option value="" disabled selected>Cins Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4">
-                    <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsiyeti</label>
-                    <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
-                        <option value="" disabled selected>Cinsiyet Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
-                        </span>
-                    </div>
-                </div>
-                <div class="row-sm-4 mr-3">
-                    <label asp-for="HayvanKilo" class="row-sm-2 col-form-label font-weight-bold text-white">Hayvan Kilosu</label>
-                    <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
-                    </input>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label">Hayvan Annesi</label>
-                <div class="col-sm-10">
-                    <select id="cins" asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
-                        <option value="" disabled selected>Anne Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label">Hayvan Babası</label>
-                <div class="col-sm-10">
-                    <select id="cins" asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
-                        <option value="" disabled selected>Baba Seçin</option>
-                    </select>
-                    <div class="mt-2">
-                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
-                        </span>
-                    </div>
+        <div class="form-group row mb-3">
+            <label asp-for="HayvanAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Adı</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="HayvanAdi" class="form-control" placeholder="Hayvan Adı">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAdi">
+                    </span>
                 </div>
             </div>
         </div>
-        <button type="submit" class="col btn btn-dark rounded">Kaydet</button>
+        <div class="form-group row mb-3">
+            <label asp-for="HayvanDogumTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Doğum Tarihi</label>
+            <div class="col-sm-10">
+                <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplenme Tarihi</label>
+            <div class="col-sm-10">
+                <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="filePhoto" class="col-sm-2 col-form-label font-weight-bold text-white">Hayvan Fotoğrafı</label>
+            <div class="col-sm-10">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFileLangHTML" name="filePhoto" accept=".jpg,.jpeg,.png,.gif">
+                    <label class="custom-file-label" for="customFileLangHTML" data-browse="Seç">Fotoğraf Seç</label>
+                </div>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3 pl-3 d-flex justify-content-between">
+            <div class="row-sm-2">
+                <label asp-for="CinsId" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsi</label>
+                <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                    <option value="" disabled selected>Cins Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
+                    </span>
+                </div>
+            </div>
+            <div class="row-sm-4">
+                <label asp-for="TurId" class="row-sm-2 col-form-label font-weight-bold text-white">Türü</label>
+                <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
+                    <option value="" disabled selected>Tür Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
+                    </span>
+                </div>
+            </div>
+            <div class="row-sm-4">
+                <label asp-for="RenkId" class="row-sm-2 col-form-label font-weight-bold text-white">Rengi</label>
+                <select id="cins" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
+                    <option value="" disabled selected>Cins Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
+                    </span>
+                </div>
+            </div>
+            <div class="row-sm-4">
+                <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsiyeti</label>
+                <select id="cins" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+                    <option value="" disabled selected>Cinsiyet Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanCinsiyet">
+                    </span>
+                </div>
+            </div>
+            <div class="row-sm-4 mr-3">
+                <label asp-for="HayvanKilo" class="row-sm-2 col-form-label font-weight-bold text-white">Hayvan Kilosu</label>
+                <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
+                </input>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="HayvanAnneId" class="col-sm-2 col-form-label">Hayvan Annesi</label>
+            <div class="col-sm-10">
+                <select id="cins" asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
+                    <option value="">Anne Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="HayvanBabaId" class="col-sm-2 col-form-label">Hayvan Babası</label>
+            <div class="col-sm-10">
+                <select id="cins" asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
+                    <option value="">Baba Seçin</option>
+                </select>
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="col btn btn-dark rounded">Kaydet</button>
 
-    </form>
+</form>
 
-    @if (TempData["AddAnimal"] != null)
-    {
-        <div class="alert alert-success" id="successMessage">@TempData["AddAnimal"]</div>
-        <script>
-            setTimeout(function () {
-                var successMessage = document.getElementById("successMessage");
-                successMessage.remove();
-            }, 2500);
-        </script>
-    }
+@if (TempData["AddAnimal"] != null)
+{
+    <div class="alert alert-success" id="successMessage">@TempData["AddAnimal"]</div>
+ 
+}
 
+@section scripts {
     <script>
 
         $(document).ready(function () {
@@ -181,6 +168,12 @@
             label.innerHTML = fileName;
         });
 
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            successMessage.remove();
+        }, 2500);
+
     </script>
+
 }
 
