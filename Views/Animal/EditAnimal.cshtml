@@ -100,9 +100,18 @@
             </div>
         </div>
     </div>
-    <div class="form-group row mb-2 pl-3 d-flex justify-content-between">
-        <div class="row-sm-2">
-            <label asp-for="CinsId" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsi</label>
+    <div class="form-group col mb-2 px-0 d-flex justify-content-between">
+        <div class="col-sm-3 px-0 d-flex">
+            <label asp-for="HayvanKilo" class="col-sm-7 mr-3 col-form-label font-weight-bold text-white px-0">Hayvan Kilosu</label>
+            <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
+            </input>
+            <div class="mt-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
+                </span>
+            </div>
+        </div>
+
+        <div class="col-sm pr-0">
             <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
                 <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
             </select>
@@ -111,8 +120,7 @@
                 </span>
             </div>
         </div>
-        <div class="row-sm-4">
-            <label asp-for="TurId" class="row-sm-2 col-form-label font-weight-bold text-white">Türü</label>
+        <div class="col-sm pr-0">
             <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
                 <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
             </select>
@@ -121,8 +129,7 @@
                 </span>
             </div>
         </div>
-        <div class="row-sm-4">
-            <label asp-for="RenkId" class="row-sm-2 col-form-label font-weight-bold text-white">Rengi</label>
+        <div class="col-sm pr-0">
             <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
                 <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Cins Seçin</option>
             </select>
@@ -131,8 +138,7 @@
                 </span>
             </div>
         </div>
-        <div class="row-sm-4">
-            <label asp-for="HayvanCinsiyet" class="row-sm-2 col-form-label font-weight-bold text-white">Cinsiyeti</label>
+        <div class="col-sm pr-0">
             <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
                 <option value="" disabled selected>Cinsiyet Seçin</option>
             </select>
@@ -141,15 +147,7 @@
                 </span>
             </div>
         </div>
-        <div class="row-sm-4 mr-3">
-            <label asp-for="HayvanKilo" class="row-sm-2 col-form-label font-weight-bold text-white">Hayvan Kilosu</label>
-            <input type="number" asp-for="HayvanKilo" class="form-control" placeholder="Hayvan Kilosu" step="0.1" min="0">
-            </input>
-            <div class="mt-2">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanKilo">
-                </span>
-            </div>
-        </div>
+
     </div>
     <div class="form-group row mb-2">
         <label asp-for="SahiplikTarihi" class="col-sm-2 col-form-label font-weight-bold text-white">Sahiplenme Tarihi</label>
