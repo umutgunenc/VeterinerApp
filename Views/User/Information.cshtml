@@ -25,16 +25,16 @@
 
         <div class="col-md-8 align-self-start">
             <div class="d-flex flex-column">
-                <div class="card-header font-weight-bold pl-0">
+                <div class="card-header font-weight-bold pl-0 ml-2 ml-lg-0">
                     <h3>@user.InsanAdi.ToUpper() @user.InsanSoyadi.ToUpper()</h3>
                 </div>
                 <div class="">
-                    <h6 class="card-title mt-2">TCKN: @user.InsanTckn</h6>
-                    <h6 class="card-title mt-2">Şifre Geçerlilik Süresi: @kalanSure Gün</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">TCKN: @user.InsanTckn</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Şifre Geçerlilik Süresi: @kalanSure Gün</h6>
 
                     @if (hayvanlar.Count > 0)
                     {
-                        <h6 class="card-title">Sahip Olunan Hayvanlar</h6>
+                        <h6 class="card-title ml-2 ml-lg-0">Sahip Olunan Hayvanlar</h6>
                         <div class="table-responsive-xl">
                             <table class="table table-hover table-dark text-center mb-0 rounded-top-lg">
                                 <thead>
@@ -87,7 +87,7 @@
                         </div>
 
                     }
-                    <p class="card-text">
+                    <p class="card-text ml-2 ml-lg-0">
                         E-Mail Adresi: <a href="mailto:@user.Email">@user.Email</a>
                     </p>
 
@@ -96,7 +96,7 @@
                         var formattedTelNo = FormatTelefon(user.PhoneNumber);
                         var telNo = "9" + user.PhoneNumber;
 
-                        <p class="card-text">Telefonu: <a href="https://api.whatsapp.com/send?phone=@telNo" target="_blank">@formattedTelNo</a></p>
+                        <p class="card-text ml-2 ml-lg-0">Telefonu: <a href="https://api.whatsapp.com/send?phone=@telNo" target="_blank">@formattedTelNo</a></p>
                     }
 
                     @functions {
@@ -117,12 +117,15 @@
                     </input>
                     <input type="hidden" name="id" value="@Model.Item1.Id" />
 
-
-                    <a href="/User/EditUser" class="btn btn-secondary mb-3">Düzenle</a>
-                    @if (User.IsInRole("MÜŞTERİ"))
-                    {<a href="/User/SendDeletionEmail" class="btn btn-secondary ml-3 mb-3" data-toggle="tooltip" data-placement="top" title="Mail adresinize bir onay maili gönderilcektir.">Hesabımı Sil</a>}
-                    <a href="/User/ChangePassword" class="btn btn-secondary ml-3 mb-3">Şifremi Değiştir</a>
-                    <a href="/Animal/AddAnimal" class="btn btn-secondary ml-3 mb-3">Hayvan Ekle</a>
+                    <div class="d-flex flex-lg-row flex-column">
+                        <a href="/User/EditUser" class="btn btn-secondary m-2 m-lg-0 mb-lg-2">Düzenle</a>
+                        @if (User.IsInRole("MÜŞTERİ"))
+                        {
+                            <a href="/User/SendDeletionEmail" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2" data-toggle="tooltip" data-placement="top" title="Mail adresinize bir onay maili gönderilcektir.">Hesabımı Sil</a>
+                        }
+                        <a href="/User/ChangePassword" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Şifremi Değiştir</a>
+                        <a href="/Animal/AddAnimal" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Hayvan Ekle</a>
+                    </div>
                 </div>
             </div>
         </div>

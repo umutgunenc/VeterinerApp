@@ -18,14 +18,14 @@
         </div>
         <div class="col-md-8 align-self-start">
             <div class="d-flex flex-column">
-                <div class="card-header font-weight-bold pl-0">
+                <div class="card-header font-weight-bold pl-0 ml-2 ml-lg-0">
                     <h3>@Model.HayvanAdi.ToUpper()<h3>
                 </div>
                 <div class="">
-                    <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
-                    <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
-                    <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
-                    <h6 class="card-title mt-2">
+                    <h6 class="card-title ml-2 ml-lg-0">Türü : @Model.TurAdi</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Cinsi : @Model.CinsAdi</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Kilosu : @Model.HayvanKilo</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">
                         Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
                         {
                             @:Dişi
@@ -35,10 +35,10 @@
                             @:Erkek
                         }
                     </h6>
-                    <h6 class="card-title mt-2">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
-                    <h6 class="card-title mt-2">Sahiplik Tarihi : @Model.SahiplikTarihi.ToString("dd-MM-yyyy")</h6>
-
-                    <h6 class="card-title mt-2">
+                    <h6 class="card-title ml-2 ml-lg-0">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Sahiplik Tarihi : @Model.SahiplikTarihi.ToString("dd-MM-yyyy")</h6>
+                                          
+                    <h6 class="card-title ml-2 ml-lg-0">
                         Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
                         {
                             @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
@@ -48,7 +48,7 @@
                             @:Hayatta
                         }
                     </h6>
-                    <h6 class="card-title mt-2">
+                    <h6 class="card-title ml-2 ml-lg-0">
                         Hayvan Annesi : @if (Model.HayvanAnneAdi != null)
                         {
                             @Model.HayvanAnneAdi.ToUpper()
@@ -58,7 +58,7 @@
                             @: Bilinmiyor
                         }
                     </h6>
-                    <h6 class="card-title mt-2">
+                    <h6 class="card-title ml-2 ml-lg-0">
                         Hayvan Babası : @if (Model.HayvanBabaAdi != null)
                         {
                             @Model.HayvanBabaAdi.ToUpper()
@@ -97,11 +97,11 @@
                             }
                         </table>
                     }
-                    <div class="d-flex">
+                    <div class="d-flex flex-lg-row flex-column">
 
-                        <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary mb-3">Düzenle</a>
+                        <a href="@Url.Action("EditAnimal", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary m-2 m-lg-0 mb-lg-2">Düzenle</a>
 
-                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary ml-3 mb-3">Yeni Sahip Ekle</a>
+                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Yeni Sahip Ekle</a>
 
                     </div>
 
