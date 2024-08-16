@@ -9,62 +9,8 @@
 </h3>
 <form asp-action="SaveEdit" asp-controller="User" method="post" enctype="multipart/form-data" id="SaveEdit">
     <div class="form-col">
-        <div class="col-sm-12 d-inline-flex p-0">
-            <div class="d-block col-sm-9 p-0">
-                <div class="form-group row mb-3">
-                    <label asp-for="InsanAdi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Adı</label>
-                    <div class="col-sm-9 pl-0">
-                        <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row mb-3">
-                    <label asp-for="InsanSoyadi" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Soyadı</label>
-                    <div class="col-sm-9 pl-0">
-                        <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Adı">
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row mb-3">
-                    <label asp-for="PhoneNumber" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Telefon</label>
-                    <div class="col-sm-9 pl-0">
-                        <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon">
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row mb-3">
-                    <label asp-for="Email" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">EMail</label>
-                    <div class="col-sm-9 pl-0">
-                        <input type="email" asp-for="Email" class="form-control" placeholder="EMail">
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row mb-3">
-                    <label asp-for="UserName" class="col-sm-3 col-form-label pr-0 font-weight-bold text-white">Kullanıcı Adı</label>
-                    <div class="col-sm-9 pl-0">
-                        <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="d-inline-flex col-sm-3 pr-0">
+        <div class="col d-inline-flex p-0 flex-column flex-md-row">
+            <div class="d-inline-flex col col-md-3 pr-0 order-1 order-md-2">
                 <div class="d-flex flex-column align-items-end justify-content-start w-100">
                     <div class="profile-photo-container mb-2" style="max-width: 100%; max-height: 100%;">
                         <img id="photoPreview"
@@ -94,10 +40,66 @@
                 </div>
             </div>
 
+            <div class="d-block col col-md-9 p-2 p-m-0 order-2 order-md-1">
+                <!-- Form Grupları -->
+                <div class="form-group row mb-3">
+                    <label asp-for="InsanAdi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Adı</label>
+                    <div class="col-md-9 pl-md-0">
+                        <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanAdi">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="InsanSoyadi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Soyadı</label>
+                    <div class="col-md-9 pl-md-0">
+                        <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="InsanSoyadi">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="PhoneNumber" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Telefon</label>
+                    <div class="col-md-9 pl-md-0">
+                        <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Telefon">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="PhoneNumber">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="Email" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">EMail</label>
+                    <div class="col-md-9 pl-md-0">
+                        <input type="email" asp-for="Email" class="form-control" placeholder="EMail">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Email">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label asp-for="UserName" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Kullanıcı Adı</label>
+                    <div class="col-md-9 pl-md-0">
+                        <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı">
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UserName">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <input type="hidden" asp-for="Id" />
     </div>
-    <button type="submit" class="col btn btn-dark rounded mb-3">Kaydet</button>
+    <div class="=form-group row mb-3 pl-2 pr-1 pr-md-0">
+        <button type="submit" class="col btn btn-dark rounded mb-3 mx-3">Kaydet</button>
+    </div>
     <div class="">
         <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="filePhoto">
         </span>
@@ -125,16 +127,16 @@
     </script>
 
     <script>
-    
+
         let originalFileSize = 0;
         let cropper;
-        
+
         function previewPhoto(event) {
             const file = event.target.files[0];
             if (file) {
                 // Fotoğrafın orijinal boyutunu kaydet
                 originalFileSize = file.size;
-        
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const image = document.getElementById('photoPreview');
@@ -154,7 +156,7 @@
                 reader.readAsDataURL(file);
             }
         }
-        
+
         function startCrop() {
             const image = document.getElementById('photoPreview');
             if (cropper) {
@@ -169,7 +171,7 @@
                 }
             });
         }
-        
+
         function saveCroppedPhoto() {
             if (cropper) {
                 cropper.getCroppedCanvas().toBlob(function(blob) {
@@ -183,7 +185,7 @@
                             }));
                             const fileInput = document.getElementById('photoInput');
                             fileInput.files = dataTransfer.files;
-        
+
                             // Formu gönder
                             document.getElementById('SaveEdit').submit();
                         });
@@ -195,14 +197,14 @@
                         }));
                         const fileInput = document.getElementById('photoInput');
                         fileInput.files = dataTransfer.files;
-        
+
                         // Formu gönder
                         document.getElementById('SaveEdit').submit();
                     }
                 }, 'image/jpeg');
             }
         }
-        
+
         function reduceImageQuality(blob, callback) {
             const img = new Image();
             const url = URL.createObjectURL(blob);
@@ -212,7 +214,7 @@
                 canvas.width = img.width;
                 canvas.height = img.height;
                 ctx.drawImage(img, 0, 0);
-        
+
                 // Kaliteyi düşürerek yeni blob oluştur
                 canvas.toBlob(function(optimizedBlob) {
                     callback(optimizedBlob);
@@ -221,7 +223,7 @@
             };
             img.src = url;
         }
-        
+
         function removePhoto() {
             document.getElementById('photoPreview').src = '@Url.Content("~/img/animal.png")';
             const fileInput = document.getElementById('photoInput');
@@ -230,12 +232,12 @@
                 cropper.destroy();
             }
         }
-        
+
         document.getElementById('SaveEdit').addEventListener('submit', function(event) {
             event.preventDefault(); // Formun normal submit işlemini engelle
-        
+
             const fileInput = document.getElementById('photoInput');
-        
+
             if (fileInput.files.length === 0) {
                 // Fotoğraf yüklenmediyse doğrudan formu post et
                 this.submit();
@@ -247,7 +249,7 @@
                 this.submit();
             }
         });
-        
+
     </script>
 
 
