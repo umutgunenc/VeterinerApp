@@ -21,6 +21,7 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult Muayene()
         {

@@ -17,7 +17,6 @@
 </head>
 <body class="bg-secondary">
 
-
     @await Html.PartialAsync("_navbar")
 
     @if (User.Identity.IsAuthenticated)
@@ -40,6 +39,7 @@
         { <div class="col-md-12 p-0">
 
                 @RenderBody()
+                @RenderSection("badRequest", required: false)
 
             </div>
         }

@@ -86,6 +86,7 @@ namespace VeterinerApp.Controllers
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
                 })
                 .ToList();
 
@@ -117,7 +118,8 @@ namespace VeterinerApp.Controllers
                         .Select(s => s.SahipTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    HayvanDogumTarihi = h.HayvanDogumTarihi
                 })
                 .ToList();
 
@@ -225,7 +227,8 @@ namespace VeterinerApp.Controllers
                             .Select(s => s.SahipTckn)
                             .FirstOrDefault())
                             .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                        HayvanDogumTarihi = h.HayvanDogumTarihi
                     })
                     .ToList();
 
@@ -257,7 +260,9 @@ namespace VeterinerApp.Controllers
                             .Select(s => s.SahipTckn)
                             .FirstOrDefault())
                             .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                        HayvanDogumTarihi = h.HayvanDogumTarihi
+
                     })
                     .ToList();
 
