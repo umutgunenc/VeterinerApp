@@ -159,7 +159,7 @@ namespace VeterinerApp.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "fd617bdc-62ea-4049-836d-d825b95aa2dd",
+                            ConcurrencyStamp = "24ceea9f-5800-4893-b38e-9dccb4413525",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -272,7 +272,7 @@ namespace VeterinerApp.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "94d258d0-f997-4e18-91d2-8d734115da3e",
+                            ConcurrencyStamp = "93592a65-3aa2-4f57-a26c-3b08f7abd296",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -281,12 +281,12 @@ namespace VeterinerApp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAİL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELlZZDq38Wo2VBntllwLZH7V/vqaQWS3nD6FHspvf+mj6uMk3VcMFhDGKb8/JS3zZQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGdFBhhR2NV2QP0YN64jk5msYjVxQTShKTDFMiuOYxugM+zpfP+3bOfKzkttw97CxA==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ce5f1deb-64d3-4999-a497-06125e896682",
-                            SifreGecerlilikTarihi = new DateTime(3023, 9, 9, 15, 20, 1, 82, DateTimeKind.Local).AddTicks(5652),
-                            SifreOlusturmaTarihi = new DateTime(2024, 9, 9, 15, 20, 1, 81, DateTimeKind.Local).AddTicks(5406),
+                            SecurityStamp = "6317c9c4-45e7-4c68-8a53-1c50bd8d601e",
+                            SifreGecerlilikTarihi = new DateTime(3023, 9, 9, 17, 40, 37, 460, DateTimeKind.Local).AddTicks(746),
+                            SifreOlusturmaTarihi = new DateTime(2024, 9, 9, 17, 40, 37, 458, DateTimeKind.Local).AddTicks(5096),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -552,8 +552,11 @@ namespace VeterinerApp.Migrations
                     b.Property<int>("HayvanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SahipId")
+                    b.Property<int?>("SahipId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SahipTckn")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SahiplikCikisTarihi")
                         .HasColumnType("datetime2");
@@ -908,9 +911,7 @@ namespace VeterinerApp.Migrations
 
                     b.HasOne("VeterinerApp.Models.Entity.AppUser", "Sahip")
                         .WithMany("SahipHayvanlar")
-                        .HasForeignKey("SahipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SahipId");
 
                     b.Navigation("Hayvan");
 

@@ -10,8 +10,8 @@ using VeterinerApp.Data;
 namespace VeterinerApp.Migrations
 {
     [DbContext(typeof(VeterinerDBContext))]
-    [Migration("20240908233218_migration3")]
-    partial class migration3
+    [Migration("20240909144038_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,21 +20,6 @@ namespace VeterinerApp.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
-
-            modelBuilder.Entity("AppUserHayvan", b =>
-                {
-                    b.Property<int>("HayvanlarHayvanId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SahiplerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HayvanlarHayvanId", "SahiplerId");
-
-                    b.HasIndex("SahiplerId");
-
-                    b.ToTable("AppUserHayvan");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -116,6 +101,13 @@ namespace VeterinerApp.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -135,36 +127,6 @@ namespace VeterinerApp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("MuayeneStok", b =>
-                {
-                    b.Property<int>("MuayenelerMuayeneId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StoklarId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MuayenelerMuayeneId", "StoklarId");
-
-                    b.HasIndex("StoklarId");
-
-                    b.ToTable("MuayeneStok");
-                });
-
-            modelBuilder.Entity("MuayeneTedavi", b =>
-                {
-                    b.Property<int>("MuayenelerMuayeneId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TedavilerTedaviId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MuayenelerMuayeneId", "TedavilerTedaviId");
-
-                    b.HasIndex("TedavilerTedaviId");
-
-                    b.ToTable("MuayeneTedavi");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.AppRole", b =>
@@ -194,6 +156,15 @@ namespace VeterinerApp.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "24ceea9f-5800-4893-b38e-9dccb4413525",
+                            Name = "ADMIN",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.AppUser", b =>
@@ -222,6 +193,9 @@ namespace VeterinerApp.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("HayvanId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImgURL")
                         .HasColumnType("nvarchar(max)");
@@ -282,6 +256,8 @@ namespace VeterinerApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HayvanId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -291,6 +267,32 @@ namespace VeterinerApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            CalisiyorMu = true,
+                            ConcurrencyStamp = "93592a65-3aa2-4f57-a26c-3b08f7abd296",
+                            Email = "umutgunenc@gmail.com",
+                            EmailConfirmed = false,
+                            InsanAdi = "Umut",
+                            InsanSoyadi = "Günenç",
+                            InsanTckn = "33080423902",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "UMUTGUNENC@GMAİL.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGdFBhhR2NV2QP0YN64jk5msYjVxQTShKTDFMiuOYxugM+zpfP+3bOfKzkttw97CxA==",
+                            PhoneNumber = "05300000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6317c9c4-45e7-4c68-8a53-1c50bd8d601e",
+                            SifreGecerlilikTarihi = new DateTime(3023, 9, 9, 17, 40, 37, 460, DateTimeKind.Local).AddTicks(746),
+                            SifreOlusturmaTarihi = new DateTime(2024, 9, 9, 17, 40, 37, 458, DateTimeKind.Local).AddTicks(5096),
+                            TermOfUse = true,
+                            TwoFactorEnabled = false,
+                            UserName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Birim", b =>
@@ -325,13 +327,20 @@ namespace VeterinerApp.Migrations
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.CinsTur", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
                     b.Property<int>("CinsId")
                         .HasColumnType("int");
 
                     b.Property<int>("TurId")
                         .HasColumnType("int");
 
-                    b.HasKey("CinsId", "TurId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinsId");
 
                     b.HasIndex("TurId");
 
@@ -371,10 +380,10 @@ namespace VeterinerApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("CinsTurCinsId")
+                    b.Property<int>("CinsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CinsTurTurId")
+                    b.Property<int?>("CinsTurId")
                         .HasColumnType("int");
 
                     b.Property<string>("HayvanAdi")
@@ -404,15 +413,18 @@ namespace VeterinerApp.Migrations
                     b.Property<int>("RenkId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TurId")
+                        .HasColumnType("int");
+
                     b.HasKey("HayvanId");
+
+                    b.HasIndex("CinsTurId");
 
                     b.HasIndex("HayvanAnneId");
 
                     b.HasIndex("HayvanBabaId");
 
                     b.HasIndex("RenkId");
-
-                    b.HasIndex("CinsTurCinsId", "CinsTurTurId");
 
                     b.ToTable("Hayvanlar");
                 });
@@ -495,9 +507,31 @@ namespace VeterinerApp.Migrations
                     b.ToTable("Muayeneler");
                 });
 
-            modelBuilder.Entity("VeterinerApp.Models.Entity.Renk", b =>
+            modelBuilder.Entity("VeterinerApp.Models.Entity.MuayeneStok", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("MuayeneId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StokId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MuayeneId");
+
+                    b.HasIndex("StokId");
+
+                    b.ToTable("MuayeneStoklar");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.Renk", b =>
+                {
+                    b.Property<int>("RenkId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
@@ -505,9 +539,40 @@ namespace VeterinerApp.Migrations
                     b.Property<string>("RenkAdi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("RenkId");
 
                     b.ToTable("Renkler");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.SahipHayvan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("HayvanId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SahipId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SahipTckn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SahiplikCikisTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SahiplikTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HayvanId");
+
+                    b.HasIndex("SahipId");
+
+                    b.ToTable("SahipHayvanlar");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Stok", b =>
@@ -590,6 +655,31 @@ namespace VeterinerApp.Migrations
                     b.ToTable("StokHareketler");
                 });
 
+            modelBuilder.Entity("VeterinerApp.Models.Entity.StokMuayene", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("IlacBarkod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MuayeneId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StokId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MuayeneId");
+
+                    b.HasIndex("StokId");
+
+                    b.ToTable("StokMuayeneler");
+                });
+
             modelBuilder.Entity("VeterinerApp.Models.Entity.Tedavi", b =>
                 {
                     b.Property<int>("TedaviId")
@@ -608,9 +698,31 @@ namespace VeterinerApp.Migrations
                     b.ToTable("Tedaviler");
                 });
 
-            modelBuilder.Entity("VeterinerApp.Models.Entity.Tur", b =>
+            modelBuilder.Entity("VeterinerApp.Models.Entity.TedaviMuayene", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("MuayeneId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TedaviId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MuayeneId");
+
+                    b.HasIndex("TedaviId");
+
+                    b.ToTable("TedaviMuayeneler");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.Tur", b =>
+                {
+                    b.Property<int>("TurId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
@@ -618,24 +730,9 @@ namespace VeterinerApp.Migrations
                     b.Property<string>("TurAdi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TurId");
 
                     b.ToTable("Turler");
-                });
-
-            modelBuilder.Entity("AppUserHayvan", b =>
-                {
-                    b.HasOne("VeterinerApp.Models.Entity.Hayvan", null)
-                        .WithMany()
-                        .HasForeignKey("HayvanlarHayvanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VeterinerApp.Models.Entity.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("SahiplerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -689,34 +786,11 @@ namespace VeterinerApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MuayeneStok", b =>
+            modelBuilder.Entity("VeterinerApp.Models.Entity.AppUser", b =>
                 {
-                    b.HasOne("VeterinerApp.Models.Entity.Muayene", null)
-                        .WithMany()
-                        .HasForeignKey("MuayenelerMuayeneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VeterinerApp.Models.Entity.Stok", null)
-                        .WithMany()
-                        .HasForeignKey("StoklarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MuayeneTedavi", b =>
-                {
-                    b.HasOne("VeterinerApp.Models.Entity.Muayene", null)
-                        .WithMany()
-                        .HasForeignKey("MuayenelerMuayeneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VeterinerApp.Models.Entity.Tedavi", null)
-                        .WithMany()
-                        .HasForeignKey("TedavilerTedaviId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("VeterinerApp.Models.Entity.Hayvan", null)
+                        .WithMany("Sahipler")
+                        .HasForeignKey("HayvanId");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.CinsTur", b =>
@@ -751,6 +825,10 @@ namespace VeterinerApp.Migrations
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Hayvan", b =>
                 {
+                    b.HasOne("VeterinerApp.Models.Entity.CinsTur", "CinsTur")
+                        .WithMany("Hayvanlar")
+                        .HasForeignKey("CinsTurId");
+
                     b.HasOne("VeterinerApp.Models.Entity.Hayvan", "HayvanAnne")
                         .WithMany("AnneCocuklari")
                         .HasForeignKey("HayvanAnneId")
@@ -764,12 +842,6 @@ namespace VeterinerApp.Migrations
                     b.HasOne("VeterinerApp.Models.Entity.Renk", "Renk")
                         .WithMany("Hayvanlar")
                         .HasForeignKey("RenkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VeterinerApp.Models.Entity.CinsTur", "CinsTur")
-                        .WithMany("Hayvanlar")
-                        .HasForeignKey("CinsTurCinsId", "CinsTurTurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -812,6 +884,42 @@ namespace VeterinerApp.Migrations
                     b.Navigation("Hekim");
                 });
 
+            modelBuilder.Entity("VeterinerApp.Models.Entity.MuayeneStok", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.Muayene", "Muayene")
+                        .WithMany("MuayeneStoklar")
+                        .HasForeignKey("MuayeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerApp.Models.Entity.Stok", "Stok")
+                        .WithMany("MuayeneStoklar")
+                        .HasForeignKey("StokId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Muayene");
+
+                    b.Navigation("Stok");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.SahipHayvan", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.Hayvan", "Hayvan")
+                        .WithMany()
+                        .HasForeignKey("HayvanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerApp.Models.Entity.AppUser", "Sahip")
+                        .WithMany("SahipHayvanlar")
+                        .HasForeignKey("SahipId");
+
+                    b.Navigation("Hayvan");
+
+                    b.Navigation("Sahip");
+                });
+
             modelBuilder.Entity("VeterinerApp.Models.Entity.Stok", b =>
                 {
                     b.HasOne("VeterinerApp.Models.Entity.Birim", "Birim")
@@ -850,11 +958,49 @@ namespace VeterinerApp.Migrations
                     b.Navigation("Stok");
                 });
 
+            modelBuilder.Entity("VeterinerApp.Models.Entity.StokMuayene", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.Muayene", "Muayene")
+                        .WithMany()
+                        .HasForeignKey("MuayeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerApp.Models.Entity.Stok", "Stok")
+                        .WithMany()
+                        .HasForeignKey("StokId");
+
+                    b.Navigation("Muayene");
+
+                    b.Navigation("Stok");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.TedaviMuayene", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.Muayene", "Muayene")
+                        .WithMany("TedaviMuayeneler")
+                        .HasForeignKey("MuayeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerApp.Models.Entity.Tedavi", "TedaviTedavi")
+                        .WithMany("TedaviMuayeneler")
+                        .HasForeignKey("TedaviId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Muayene");
+
+                    b.Navigation("TedaviTedavi");
+                });
+
             modelBuilder.Entity("VeterinerApp.Models.Entity.AppUser", b =>
                 {
                     b.Navigation("MaasOdemeleri");
 
                     b.Navigation("Muayeneler");
+
+                    b.Navigation("SahipHayvanlar");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Birim", b =>
@@ -879,11 +1025,20 @@ namespace VeterinerApp.Migrations
                     b.Navigation("BabaCocuklari");
 
                     b.Navigation("Muayeneler");
+
+                    b.Navigation("Sahipler");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Kategori", b =>
                 {
                     b.Navigation("Stoklar");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.Muayene", b =>
+                {
+                    b.Navigation("MuayeneStoklar");
+
+                    b.Navigation("TedaviMuayeneler");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Renk", b =>
@@ -895,7 +1050,14 @@ namespace VeterinerApp.Migrations
                 {
                     b.Navigation("FiyatListeleri");
 
+                    b.Navigation("MuayeneStoklar");
+
                     b.Navigation("StokHareketleri");
+                });
+
+            modelBuilder.Entity("VeterinerApp.Models.Entity.Tedavi", b =>
+                {
+                    b.Navigation("TedaviMuayeneler");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Tur", b =>

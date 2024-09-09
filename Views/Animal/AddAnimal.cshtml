@@ -61,27 +61,27 @@
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
-                        <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
-                        <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                            <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
-                        </select>
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
-                        </div>
-                    </div>
-                    <div class="col d-flex flex-column px-3 pr-md-0">
                         <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
                         <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                            <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
+                            <option value="@Model.TurId" contextmenu="@Model.Turu" disabled selected>Tür Seçin</option>
                         </select>
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
+                        <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
+                        <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                            <option value="@Model.CinsId" contextmenu="@Model.Cinsi" disabled selected>Cins Seçin</option>
+                        </select>
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
+                        </div>
+                    </div>
+                    <div class="col d-flex flex-column px-3 pr-md-0">
                         <label asp-for="RenkId" class="col-form-label font-weight-bold text-white px-0">Rengi</label>
                         <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                            <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Renk Seçin</option>
+                            <option value="@Model.RenkId" contextmenu="@Model.Rengi" disabled selected>Renk Seçin</option>
                         </select>
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="RenkId"></span>
@@ -100,7 +100,7 @@
                 <div class="form-group row mb-3">
                     <label asp-for="HayvanDogumTarihi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Doğum Tarihi</label>
                     <div class="col-md-9 pl-md-0">
-                        <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now" value="">
+                        <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
                             </span>
@@ -110,7 +110,7 @@
                 <div class="form-group row mb-3">
                     <label asp-for="SahiplikTarihi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Sahiplik Tarihi</label>
                     <div class="col-md-9 pl-md-0">
-                        <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now" value="">
+                        <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
                             </span>
@@ -167,18 +167,19 @@
 
     <script>
 
+
         $(document).ready(function () {
-            $('#cins').change(function () {
-                var cinsId = $(this).val();
+            $('#tur').change(function () {
+                var turId = $(this).val();
 
-                $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
+                $.getJSON('@Url.Action("CinsleriGetir", "Animal")', { turId: turId }, function (data) {
 
-                    var turSelect = $('#tur');
-                    turSelect.empty();
-                    turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
+                    var cinsSelect = $('#cins');
+                    cinsSelect.empty();
+                    cinsSelect.append('<option value="" disabled selected>Tür Seçin</option>');
 
                     $.each(data, function (index, item) {
-                        turSelect.append($('<option>', {
+                        cinsSelect.append($('<option>', {
                             value: item.value,
                             text: item.text
                         }));

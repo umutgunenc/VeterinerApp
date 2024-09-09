@@ -56,7 +56,7 @@
                 <div class="form-group row mb-3">
                     <label asp-for="HayvanDogumTarihi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Doğum Tarihi</label>
                     <div class="col-md-9 pl-md-0">
-                        <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now">
+                        <input type="date" asp-for="HayvanDogumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanDogumTarihi">
                             </span>
@@ -69,7 +69,7 @@
                         <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
                     </label>
                     <div class="col-md-9 pl-md-0">
-                        <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now">
+                        <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanOlumTarihi">
                             </span>
@@ -106,7 +106,7 @@
     <div class="form-group row mb-3">
         <label asp-for="SahiplikTarihi" class="col-md-2 col-form-label pl-4 pl-sm-4 mr-md-3 mr-lg-4 pl-md-4 pr-md-0 font-weight-bold text-white">Sahiplik Tarihi</label>
         <div class="col-md pr-3 pl-sm-4 pl-md-1 pl-4 pr-4 pl-lg-0 pl-xl-1 pr-sm-4 pr-lg-3 pr-md-3">
-            <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now">
+            <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
                 </span>
@@ -116,7 +116,7 @@
     <div class="form-group row mb-0">
         <label asp-for="SahiplikCikisTarihi" class="col-md-2 col-form-label pl-4 pl-sm-4 mr-md-3 mr-lg-4 pl-md-4 pr-md-0 font-weight-bold text-white">Sahiplik Çıkış Tarihi</label>
         <div class="col-md pr-3 pl-sm-4 pl-md-1 pl-4 pr-4 pl-lg-0 pl-xl-1 pr-sm-4 pr-lg-3 pr-md-3">
-            <input type="date" asp-for="SahiplikCikisTarihi" class="form-control" max="@DateTime.Now">
+            <input type="date" asp-for="SahiplikCikisTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" data-toggle="tooltip" data-placement="top" title="Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.">
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikCikisTarihi">
                 </span>
@@ -133,22 +133,22 @@
         </div>
 
         <div class="col d-flex flex-column px-4 pr-md-0">
-            <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
-            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
-            </select>
-            <div class="mt-2">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
-
-            </div>
-        </div>
-        <div class="col d-flex flex-column px-4 pr-md-0">
             <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
             <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
                 <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
             </select>
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
+
+            </div>
+        </div>
+        <div class="col d-flex flex-column px-4 pr-md-0">
+            <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
+            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
+                <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
+            </select>
+            <div class="mt-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
 
             </div>
         </div>
@@ -181,7 +181,7 @@
     <input type="hidden" asp-for="SahipTckn" />
     <input type="hidden" asp-for="Signature" />
     <div class="px-2 pr-md-0">
-        <button type="submit" class="col btn btn-dark rounded mb-2" id="button">Kaydet</button>
+        <button type="submit" class="col btn btn-dark rounded mb-2" id="button" onclick="Onayla(event)">Kaydet</button>
         <div class="mb-2">
             <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="filePhoto"></span>
             <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="PhotoOption"></span>
@@ -199,38 +199,57 @@
 
 @section scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        function Onayla(event) {
+            var sahiplikCikisTarihi = document.getElementById('SahiplikCikisTarihi');
+            var button = document.getElementById('button');
+            var form = document.getElementById('editAnimalForm');
+            console.log(sahiplikCikisTarihi.value);
+            if (sahiplikCikisTarihi.value != '') {
+                button.type = 'button';
+                event.preventDefault();
+                if (window.confirm('Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.')) {
+                    form.submit();
+                }
+                else {
+                    sahiplikCikisTarihi.value = '';
+                    button.type = 'submit';
+                };
 
+            }
+        }
+    </script>
     <script>
          $(document).ready(function () {
-            function turleriGetir(cinsId, seciliTurId) {
-                $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (veri) {
-                    var turSecim = $('#tur');
-                    turSecim.empty();
-                    turSecim.append('<option value="" disabled selected>Tür Seçin</option>');
+             function cinsleriGetir(turId, seciliCinsId) {
+                $.getJSON('@Url.Action("CinsleriGetir", "Animal")', { turId: turId }, function (veri) {
+                    var cinsSecim = $('#cins');
+                    cinsSecim.empty();
+                    cinsSecim.append('<option value="" disabled selected>Cins Seçin</option>');
 
                     $.each(veri, function (index, item) {
-                        turSecim.append($('<option>', {
+                        cinsSecim.append($('<option>', {
                             value: item.value,
                             text: item.text
                         }));
                     });
 
-                    if (seciliTurId) {
-                        turSecim.val(seciliTurId);
+                    if (seciliCinsId) {
+                        cinsSecim.val(seciliCinsId);
                     }
                 });
             }
 
-            var ilkCinsId = $('#cins').val();
-            var seciliTurId = '@Model.TurId';
+            var ilkTurId = $('#tur').val();
+            var seciliCinsId = '@Model.CinsId';
 
-            if (ilkCinsId) {
-                turleriGetir(ilkCinsId, seciliTurId);
+             if (ilkTurId) {
+                 cinsleriGetir(ilkTurId, seciliCinsId);
             }
 
-            $('#cins').change(function () {
-                var cinsId = $(this).val();
-                turleriGetir(cinsId);
+            $('#tur').change(function () {
+                var turId = $(this).val();
+                cinsleriGetir(turId);
             });
 
          });

@@ -43,7 +43,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             model.rolId = _context.Roles
-                .Where(x => x.Name == "MÜŞTERİ")
+                .Where(x => x.Name == "MÜŞTERI")
                 .Select(r => r.Id)
                 .FirstOrDefault();
 

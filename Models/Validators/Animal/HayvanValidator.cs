@@ -49,8 +49,7 @@ namespace VeterinerApp.Models.Validators.Animal
             RuleFor(x => x.HayvanDogumTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz")
-                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
-                .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
+                .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.");
 
             RuleFor(x => x.HayvanAnneId)
                 .Must(FunctionsValidator.BeRegisteredParentAnimal)

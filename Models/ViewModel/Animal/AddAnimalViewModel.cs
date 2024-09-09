@@ -8,9 +8,9 @@ namespace VeterinerApp.Models.ViewModel.Animal
 {
     public class AddAnimalViewModel : Hayvan
     {
-        public string rengi { get; set; }
-        public string cinsi { get; set; }
-        public string turu { get; set; }
+        public string Rengi { get; set; }
+        public string Cinsi { get; set; }
+        public string Turu { get; set; }
         public List<SelectListItem> TurAdlari { get; set; }
         public List<SelectListItem> CinsAdlari { get; set; }
         public List<SelectListItem> RenkAdlari { get; set; }
