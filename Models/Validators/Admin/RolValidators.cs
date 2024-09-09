@@ -19,7 +19,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotNull().WithMessage("Lütfen rol tanımı yapınız.")
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda rol tanımlaması yapılabilir.")
                 .Must(FunctionsValidator.BeUniqueRol).WithMessage("Girilen rol daha önceden sisteme tanımlanmış.")
-                .Must(FunctionsValidator.BeAllowedRol).WithMessage("Sadece ADMİN, VETERİNER, ÇALIŞAN ve MÜŞTERİ tanımlanabilir.");
+                .Must(FunctionsValidator.BeAllowedRol).WithMessage("Sadece ADMIN, VETERINER, ÇALIŞAN ve MÜŞTERI tanımlanabilir.");
         }
 
 

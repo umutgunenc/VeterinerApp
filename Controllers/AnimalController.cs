@@ -1,31 +1,19 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection.Metadata;
-using System.Security.Policy;
-using System.Text.Unicode;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.Animal;
 using VeterinerApp.Models.ViewModel.Animal;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace VeterinerApp.Controllers
 {
@@ -33,9 +21,9 @@ namespace VeterinerApp.Controllers
     public class AnimalController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
         private readonly IEmailSender _emailSender;
-        public AnimalController(UserManager<AppUser> usermanager, VeterinerContext context, IEmailSender emailSender)
+        public AnimalController(UserManager<AppUser> usermanager, VeterinerDBContext context, IEmailSender emailSender)
         {
             _userManager = usermanager;
             _context = context;
@@ -45,44 +33,44 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult AddAnimal()
         {
-            var cinsAdlari = _context.Cins.Select(c => new SelectListItem
+            var cinsAdlari = _context.Cinsler.Select(c => new SelectListItem
             {
-                Text = c.cins,
-                Value = c.Id.ToString()
+                Text = c.CinsAdi,
+                Value = c.CinsId.ToString()
             }).ToList();
 
-            var renkAdlari = _context.Renks.Select(r => new SelectListItem
+            var renkAdlari = _context.Renkler.Select(r => new SelectListItem
             {
-                Text = r.renk,
-                Value = r.Id.ToString()
+                Text = r.RenkAdi,
+                Value = r.RenkId.ToString()
             }).ToList();
 
-            var Anneler = _context.Hayvans
+            var Anneler = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -90,32 +78,32 @@ namespace VeterinerApp.Controllers
                 })
                 .ToList();
 
-            var Babalar = _context.Hayvans
+            var Babalar = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -159,15 +147,15 @@ namespace VeterinerApp.Controllers
 
         public JsonResult TurleriGetir(int cinsId)
         {
-            var turAdlari = _context.TurCins
+            var turAdlari = _context.CinsTur
                 .Where(tc => tc.CinsId == cinsId)
-                .Join(_context.Turs,
+                .Join(_context.Turler,
                       tc => tc.TurId,
-                      t => t.Id,
+                      t => t.TurId,
                       (tc, t) => new SelectListItem
                       {
-                          Text = t.tur,
-                          Value = t.Id.ToString()
+                          Text = t.TurAdi,
+                          Value = t.TurId.ToString()
                       }).ToList();
 
             return Json(turAdlari);
@@ -187,44 +175,44 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                var cinsAdlari = _context.Cins.Select(c => new SelectListItem
+                var cinsAdlari = _context.Cinsler.Select(c => new SelectListItem
                 {
-                    Text = c.cins,
-                    Value = c.Id.ToString()
+                    Text = c.CinsAdi,
+                    Value = c.CinsId.ToString()
                 }).ToList();
 
-                var renkAdlari = _context.Renks.Select(r => new SelectListItem
+                var renkAdlari = _context.Renkler.Select(r => new SelectListItem
                 {
-                    Text = r.renk,
-                    Value = r.Id.ToString()
+                    Text = r.RenkAdi,
+                    Value = r.RenkId.ToString()
                 }).ToList();
 
-                var Anneler = _context.Hayvans
+                var Anneler = _context.Hayvanlar
                     .Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d")
                     .Select(h => new AddAnimalViewModel
                     {
                         HayvanAdi = h.HayvanAdi,
                         HayvanId = h.HayvanId,
-                        rengi = _context.Renks
-                            .Where(r => r.Id == h.RenkId)
-                            .Select(r => r.renk)
+                        rengi = _context.Renkler
+                            .Where(r => r.RenkId == h.RenkId)
+                            .Select(r => r.RenkAdi)
                             .FirstOrDefault(),
-                        cinsi = _context.Cins
-                            .Where(c => c.Id == h.CinsId)
-                            .Select(c => c.cins)
+                        cinsi = _context.Cinsler
+                            .Where(c => c.CinsId == h.CinsId)
+                            .Select(c => c.CinsAdi)
                             .FirstOrDefault(),
-                        turu = _context.Turs
-                            .Where(t => t.Id == h.TurId)
-                            .Select(t => t.tur)
+                        turu = _context.Turler
+                            .Where(t => t.TurId == h.TurId)
+                            .Select(t => t.TurAdi)
                             .FirstOrDefault(),
-                        SahipTckn = _context.SahipHayvans
+                        SahipTckn = _context.SahipHayvanlar
                             .Where(sh => sh.HayvanId == h.HayvanId)
-                            .Select(s => s.SahipTckn)
+                            .Select(s => s.Sahip.InsanTckn)
                             .FirstOrDefault(),
                         SahipAdSoyad = _context.Users
-                            .Where(u => u.InsanTckn == _context.SahipHayvans
+                            .Where(u => u.InsanTckn == _context.SahipHayvanlar
                             .Where(sh => sh.HayvanId == h.HayvanId)
-                            .Select(s => s.SahipTckn)
+                            .Select(s => s.Sahip.InsanTckn)
                             .FirstOrDefault())
                             .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                             .FirstOrDefault(),
@@ -232,32 +220,32 @@ namespace VeterinerApp.Controllers
                     })
                     .ToList();
 
-                var Babalar = _context.Hayvans
+                var Babalar = _context.Hayvanlar
                     .Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e")
                     .Select(h => new AddAnimalViewModel
                     {
                         HayvanAdi = h.HayvanAdi,
                         HayvanId = h.HayvanId,
-                        rengi = _context.Renks
-                            .Where(r => r.Id == h.RenkId)
-                            .Select(r => r.renk)
+                        rengi = _context.Renkler
+                            .Where(r => r.RenkId == h.RenkId)
+                            .Select(r => r.RenkAdi)
                             .FirstOrDefault(),
-                        cinsi = _context.Cins
-                            .Where(c => c.Id == h.CinsId)
-                            .Select(c => c.cins)
+                        cinsi = _context.Cinsler
+                            .Where(c => c.CinsId == h.CinsId)
+                            .Select(c => c.CinsAdi)
                             .FirstOrDefault(),
-                        turu = _context.Turs
-                            .Where(t => t.Id == h.TurId)
-                            .Select(t => t.tur)
+                        turu = _context.Turler
+                            .Where(t => t.TurId == h.TurId)
+                            .Select(t => t.TurAdi)
                             .FirstOrDefault(),
-                        SahipTckn = _context.SahipHayvans
+                        SahipTckn = _context.SahipHayvanlar
                             .Where(sh => sh.HayvanId == h.HayvanId)
-                            .Select(s => s.SahipTckn)
+                            .Select(s => s.Sahip.InsanTckn)
                             .FirstOrDefault(),
                         SahipAdSoyad = _context.Users
-                            .Where(u => u.InsanTckn == _context.SahipHayvans
+                            .Where(u => u.InsanTckn == _context.SahipHayvanlar
                             .Where(sh => sh.HayvanId == h.HayvanId)
-                            .Select(s => s.SahipTckn)
+                            .Select(s => s.Sahip.InsanTckn)
                             .FirstOrDefault())
                             .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                             .FirstOrDefault(),
@@ -310,16 +298,16 @@ namespace VeterinerApp.Controllers
             hayvan.CinsId = model.CinsId;
             hayvan.RenkId = model.RenkId;
             hayvan.TurId = model.TurId;
-            _context.Hayvans.Add(hayvan);
+            _context.Hayvanlar.Add(hayvan);
             _context.SaveChanges();
 
             SahipHayvan sahipHayvan = new SahipHayvan();
             sahipHayvan.SahiplikTarihi = model.SahiplikTarihi;
-            sahipHayvan.SahipTckn = _userManager.GetUserAsync(User).Result.InsanTckn;
+            sahipHayvan.Sahip.InsanTckn = _userManager.GetUserAsync(User).Result.InsanTckn;
             sahipHayvan.HayvanId = hayvan.HayvanId;
 
 
-            if(model.PhotoOption == "changePhoto" && model.filePhoto != null)
+            if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
                 var dosyaAdi = string.Format($"{Guid.NewGuid()}{dosyaUzantısı}");
@@ -341,17 +329,17 @@ namespace VeterinerApp.Controllers
                 var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
 
                 // Veritabanına URL'yi kaydetme
-                hayvan.imgURl = fileUrl;
+                hayvan.ImgUrl = fileUrl;
                 await _context.SaveChangesAsync();
             }
             else
             {
-                hayvan.imgURl = null;
+                hayvan.ImgUrl = null;
                 await _context.SaveChangesAsync();
 
             }
 
-            _context.SahipHayvans.Add(sahipHayvan);
+            _context.SahipHayvanlar.Add(sahipHayvan);
 
             _context.SaveChangesAsync();
 
@@ -364,11 +352,11 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Information(int hayvanId)
         {
-            var hayvan = _context.Hayvans.Find(hayvanId);
+            var hayvan = _context.Hayvanlar.Find(hayvanId);
             var kullanici = _userManager.GetUserAsync(User).Result;
 
-            var userHayvan = _context.SahipHayvans
-                .Where(sh => sh.HayvanId == hayvanId && sh.SahipTckn == kullanici.InsanTckn)
+            var userHayvan = _context.SahipHayvanlar
+                .Where(sh => sh.HayvanId == hayvanId && sh.Sahip.InsanTckn == kullanici.InsanTckn)
                 .FirstOrDefault();
 
             if (userHayvan == null)
@@ -376,15 +364,15 @@ namespace VeterinerApp.Controllers
                 return View("BadRequest");
             }
 
-            var muayeneler = _context.Muayenes
+            var muayeneler = _context.Muayeneler
                     .Where(muayene => muayene.HayvanId == hayvanId)
                     .Select(muayene => new
                     {
                         muayene.MuayeneId,
                         muayene.MuayeneTarihi,
-                        muayene.HekimkTckn,
+                        muayene.HekimId,
                         HekimAdi = _userManager.Users
-                            .Where(hekim => hekim.InsanTckn == muayene.HekimkTckn)
+                            .Where(hekim => hekim.Id == muayene.HekimId)
                             .Select(hekim => hekim.InsanAdi + " " + hekim.InsanSoyadi)
                             .FirstOrDefault()
                     })
@@ -394,18 +382,18 @@ namespace VeterinerApp.Controllers
             {
                 HayvanId = hayvan.HayvanId,
                 HayvanAdi = hayvan.HayvanAdi,
-                imgURL = hayvan.imgURl,
+                imgURL = hayvan.ImgUrl,
                 HayvanCinsiyet = hayvan.HayvanCinsiyet,
                 HayvanKilo = hayvan.HayvanKilo,
                 HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
                 HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
-                HayvanAnneAdi = _context.Hayvans.Where(ha => ha.HayvanId == hayvan.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
-                HayvanBabaAdi = _context.Hayvans.Where(hb => hb.HayvanId == hayvan.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
-                TurAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
-                CinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault(),
-                RenkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault(),
-                SahiplikTarihi = _context.SahipHayvans
-                    .Where(x => x.HayvanId == hayvanId && x.SahipTckn == kullanici.InsanTckn)
+                HayvanAnneAdi = _context.Hayvanlar.Where(ha => ha.HayvanId == hayvan.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
+                HayvanBabaAdi = _context.Hayvanlar.Where(hb => hb.HayvanId == hayvan.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
+                TurAdi = _context.Turler.Where(t => t.TurId == hayvan.TurId).Select(t => t.TurAdi).FirstOrDefault(),
+                CinsAdi = _context.Cinsler.Where(c => c.CinsId == hayvan.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                RenkAdi = _context.Renkler.Where(r => r.RenkId == hayvan.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
+                SahiplikTarihi = _context.SahipHayvanlar
+                    .Where(x => x.HayvanId == hayvanId && x.Sahip.InsanTckn == kullanici.InsanTckn)
                     .Select(x => x.SahiplikTarihi)
                     .FirstOrDefault(),
                 Muayeneler = muayeneler.Select(m => new MuayeneViewModel
@@ -424,11 +412,11 @@ namespace VeterinerApp.Controllers
         public IActionResult EditAnimal(int hayvanId)
         {
 
-            var hayvan = _context.Hayvans.Find(hayvanId);
+            var hayvan = _context.Hayvanlar.Find(hayvanId);
             var kullanici = _userManager.GetUserAsync(User).Result;
 
-            var userHayvan = _context.SahipHayvans
-                .Where(sh => sh.HayvanId == hayvanId && sh.SahipTckn == kullanici.InsanTckn)
+            var userHayvan = _context.SahipHayvanlar
+                .Where(sh => sh.HayvanId == hayvanId && sh.Sahip.InsanTckn == kullanici.InsanTckn)
                 .FirstOrDefault();
 
             if (userHayvan == null)
@@ -437,47 +425,47 @@ namespace VeterinerApp.Controllers
             }
 
             // İmza oluştur
-            var signature = Signature.CreateSignature(hayvanId, kullanici.InsanTckn);
+            var signature = Signature.CreateSignature(hayvanId, kullanici.Id);
 
 
-            var cinsAdlari = _context.Cins.Select(c => new SelectListItem
+            var cinsAdlari = _context.Cinsler.Select(c => new SelectListItem
             {
-                Text = c.cins,
-                Value = c.Id.ToString()
+                Text = c.CinsAdi,
+                Value = c.CinsId.ToString()
             }).ToList();
 
-            var renkAdlari = _context.Renks.Select(r => new SelectListItem
+            var renkAdlari = _context.Renkler.Select(r => new SelectListItem
             {
-                Text = r.renk,
-                Value = r.Id.ToString()
+                Text = r.RenkAdi,
+                Value = r.RenkId.ToString()
             }).ToList();
 
-            var Anneler = _context.Hayvans
+            var Anneler = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -485,32 +473,32 @@ namespace VeterinerApp.Controllers
                 })
                 .ToList();
 
-            var Babalar = _context.Hayvans
+            var Babalar = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -528,31 +516,31 @@ namespace VeterinerApp.Controllers
             EditAnimalViewModel model = new()
             {
                 HayvanId = hayvanId,
-                HayvanAdi = _context.Hayvans.Find(hayvanId).HayvanAdi.ToUpper(),
-                HayvanCinsiyet = _context.Hayvans.Find(hayvanId).HayvanCinsiyet,
-                HayvanKilo = _context.Hayvans.Find(hayvanId).HayvanKilo,
-                HayvanDogumTarihi = _context.Hayvans.Find(hayvanId).HayvanDogumTarihi,
-                HayvanOlumTarihi = _context.Hayvans.Find(hayvanId).HayvanOlumTarihi,
-                CinsId = _context.Hayvans.Find(hayvanId).CinsId,
-                TurId = _context.Hayvans.Find(hayvanId).TurId,
-                RenkId = _context.Hayvans.Find(hayvanId).RenkId,
-                cinsi = _context.Cins
-                    .Where(c => c.Id == _context.Hayvans.Find(hayvanId).CinsId)
-                    .Select(c => c.cins)
+                HayvanAdi = _context.Hayvanlar.Find(hayvanId).HayvanAdi.ToUpper(),
+                HayvanCinsiyet = _context.Hayvanlar.Find(hayvanId).HayvanCinsiyet,
+                HayvanKilo = _context.Hayvanlar.Find(hayvanId).HayvanKilo,
+                HayvanDogumTarihi = _context.Hayvanlar.Find(hayvanId).HayvanDogumTarihi,
+                HayvanOlumTarihi = _context.Hayvanlar.Find(hayvanId).HayvanOlumTarihi,
+                CinsId = _context.Hayvanlar.Find(hayvanId).CinsId,
+                TurId = _context.Hayvanlar.Find(hayvanId).TurId,
+                RenkId = _context.Hayvanlar.Find(hayvanId).RenkId,
+                cinsi = _context.Cinsler
+                    .Where(c => c.CinsId == _context.Hayvanlar.Find(hayvanId).CinsId)
+                    .Select(c => c.CinsAdi)
                     .FirstOrDefault(),
-                turu = _context.Turs
-                    .Where(t => t.Id == _context.Hayvans.Find(hayvanId).TurId)
-                    .Select(t => t.tur)
+                turu = _context.Turler
+                    .Where(t => t.TurId == _context.Hayvanlar.Find(hayvanId).TurId)
+                    .Select(t => t.TurAdi)
                     .FirstOrDefault(),
-                rengi = _context.Renks
-                    .Where(r => r.Id == _context.Hayvans.Find(hayvanId).RenkId)
-                    .Select(r => r.renk)
+                rengi = _context.Renkler
+                    .Where(r => r.RenkId == _context.Hayvanlar.Find(hayvanId).RenkId)
+                    .Select(r => r.RenkAdi)
                     .FirstOrDefault(),
 
-                isDeath = _context.Hayvans.Find(hayvanId).HayvanOlumTarihi == null ? false : true,
+                isDeath = _context.Hayvanlar.Find(hayvanId).HayvanOlumTarihi == null ? false : true,
 
-                HayvanAnneId = _context.Hayvans.Find(hayvanId).HayvanAnneId,
-                HayvanBabaId = _context.Hayvans.Find(hayvanId).HayvanBabaId,
+                HayvanAnneId = _context.Hayvanlar.Find(hayvanId).HayvanAnneId,
+                HayvanBabaId = _context.Hayvanlar.Find(hayvanId).HayvanBabaId,
 
                 CinsAdlari = cinsAdlari,
                 RenkAdlari = renkAdlari,
@@ -574,15 +562,15 @@ namespace VeterinerApp.Controllers
                 }).ToList(),
                 CinsiyetList = cinsiyet,
                 Sahip = _userManager.GetUserAsync(User).Result,
-                SahiplikTarihi = _context.SahipHayvans
-                    .Where(x => x.HayvanId == hayvanId && x.SahipTckn == SahipTCKN)
+                SahiplikTarihi = _context.SahipHayvanlar
+                    .Where(x => x.HayvanId == hayvanId && x.Sahip.InsanTckn == SahipTCKN)
                     .Select(x => x.SahiplikTarihi)
                     .FirstOrDefault(),
-                SahiplikCikisTarihi = _context.SahipHayvans
-                    .Where(x => x.HayvanId == hayvanId && x.SahipTckn == SahipTCKN)
+                SahiplikCikisTarihi = _context.SahipHayvanlar
+                    .Where(x => x.HayvanId == hayvanId && x.Sahip.InsanTckn == SahipTCKN)
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
-                imgURl = _context.Hayvans.Find(hayvanId).imgURl,
+                ImgUrl = _context.Hayvanlar.Find(hayvanId).ImgUrl,
                 SahipTckn = SahipTCKN,
                 Signature = signature
 
@@ -595,49 +583,49 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> EditAnimal(EditAnimalViewModel model)
         {
 
-            if (!Signature.VerifySignature(model.HayvanId, model.SahipTckn, model.Signature))
+            if (!Signature.VerifySignature(model.HayvanId, model.Sahip.Id, model.Signature))
             {
                 //ModelState.AddModelError("Signature", "Veri manipülasyonu tespit edildi.");
                 //return View("EditAnimal", returnModel);
 
                 return View("Badrequest");
             }
-            var cinsAdlari = _context.Cins.Select(c => new SelectListItem
+            var cinsAdlari = _context.Cinsler.Select(c => new SelectListItem
             {
-                Text = c.cins,
-                Value = c.Id.ToString()
+                Text = c.CinsAdi,
+                Value = c.CinsId.ToString()
             }).ToList();
-            var renkAdlari = _context.Renks.Select(r => new SelectListItem
+            var renkAdlari = _context.Renkler.Select(r => new SelectListItem
             {
-                Text = r.renk,
-                Value = r.Id.ToString()
+                Text = r.RenkAdi,
+                Value = r.RenkId.ToString()
             }).ToList();
-            var Anneler = _context.Hayvans
+            var Anneler = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -645,32 +633,32 @@ namespace VeterinerApp.Controllers
 
                 })
                 .ToList();
-            var Babalar = _context.Hayvans
+            var Babalar = _context.Hayvanlar
                 .Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e")
                 .Select(h => new AddAnimalViewModel
                 {
                     HayvanAdi = h.HayvanAdi,
                     HayvanId = h.HayvanId,
-                    rengi = _context.Renks
-                        .Where(r => r.Id == h.RenkId)
-                        .Select(r => r.renk)
+                    rengi = _context.Renkler
+                        .Where(r => r.RenkId == h.RenkId)
+                        .Select(r => r.RenkAdi)
                         .FirstOrDefault(),
-                    cinsi = _context.Cins
-                        .Where(c => c.Id == h.CinsId)
-                        .Select(c => c.cins)
+                    cinsi = _context.Cinsler
+                        .Where(c => c.CinsId == h.CinsId)
+                        .Select(c => c.CinsAdi)
                         .FirstOrDefault(),
-                    turu = _context.Turs
-                        .Where(t => t.Id == h.TurId)
-                        .Select(t => t.tur)
+                    turu = _context.Turler
+                        .Where(t => t.TurId == h.TurId)
+                        .Select(t => t.TurAdi)
                         .FirstOrDefault(),
-                    SahipTckn = _context.SahipHayvans
+                    SahipTckn = _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault(),
                     SahipAdSoyad = _context.Users
-                        .Where(u => u.InsanTckn == _context.SahipHayvans
+                        .Where(u => u.InsanTckn == _context.SahipHayvanlar
                         .Where(sh => sh.HayvanId == h.HayvanId)
-                        .Select(s => s.SahipTckn)
+                        .Select(s => s.Sahip.InsanTckn)
                         .FirstOrDefault())
                         .Select(u => u.InsanAdi + " " + u.InsanSoyadi)
                         .FirstOrDefault(),
@@ -688,31 +676,31 @@ namespace VeterinerApp.Controllers
             EditAnimalViewModel returnModel = new()
             {
                 HayvanId = model.HayvanId,
-                HayvanAdi = _context.Hayvans.Find(model.HayvanId).HayvanAdi.ToUpper(),
-                HayvanCinsiyet = _context.Hayvans.Find(model.HayvanId).HayvanCinsiyet,
-                HayvanKilo = _context.Hayvans.Find(model.HayvanId).HayvanKilo,
-                HayvanDogumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanDogumTarihi,
-                HayvanOlumTarihi = _context.Hayvans.Find(model.HayvanId).HayvanOlumTarihi,
-                CinsId = _context.Hayvans.Find(model.HayvanId).CinsId,
-                TurId = _context.Hayvans.Find(model.HayvanId).TurId,
-                RenkId = _context.Hayvans.Find(model.HayvanId).RenkId,
-                cinsi = _context.Cins
-                    .Where(c => c.Id == _context.Hayvans.Find(model.HayvanId).CinsId)
-                    .Select(c => c.cins)
+                HayvanAdi = _context.Hayvanlar.Find(model.HayvanId).HayvanAdi.ToUpper(),
+                HayvanCinsiyet = _context.Hayvanlar.Find(model.HayvanId).HayvanCinsiyet,
+                HayvanKilo = _context.Hayvanlar.Find(model.HayvanId).HayvanKilo,
+                HayvanDogumTarihi = _context.Hayvanlar.Find(model.HayvanId).HayvanDogumTarihi,
+                HayvanOlumTarihi = _context.Hayvanlar.Find(model.HayvanId).HayvanOlumTarihi,
+                CinsId = _context.Hayvanlar.Find(model.HayvanId).CinsId,
+                TurId = _context.Hayvanlar.Find(model.HayvanId).TurId,
+                RenkId = _context.Hayvanlar.Find(model.HayvanId).RenkId,
+                cinsi = _context.Cinsler
+                    .Where(c => c.CinsId == _context.Hayvanlar.Find(model.HayvanId).CinsId)
+                    .Select(c => c.CinsAdi)
                     .FirstOrDefault(),
-                turu = _context.Turs
-                    .Where(t => t.Id == _context.Hayvans.Find(model.HayvanId).TurId)
-                    .Select(t => t.tur)
+                turu = _context.Turler
+                    .Where(t => t.TurId == _context.Hayvanlar.Find(model.HayvanId).TurId)
+                    .Select(t => t.TurAdi)
                     .FirstOrDefault(),
-                rengi = _context.Renks
-                    .Where(r => r.Id == _context.Hayvans.Find(model.HayvanId).RenkId)
-                    .Select(r => r.renk)
+                rengi = _context.Renkler
+                    .Where(r => r.RenkId == _context.Hayvanlar.Find(model.HayvanId).RenkId)
+                    .Select(r => r.RenkAdi)
                     .FirstOrDefault(),
-                isDeath = _context.Hayvans.Find(model.HayvanId).HayvanOlumTarihi == null ? false : true,
+                isDeath = _context.Hayvanlar.Find(model.HayvanId).HayvanOlumTarihi == null ? false : true,
                 CinsAdlari = cinsAdlari,
                 RenkAdlari = renkAdlari,
-                HayvanAnneId = _context.Hayvans.Find(model.HayvanId).HayvanAnneId,
-                HayvanBabaId = _context.Hayvans.Find(model.HayvanId).HayvanBabaId,
+                HayvanAnneId = _context.Hayvanlar.Find(model.HayvanId).HayvanAnneId,
+                HayvanBabaId = _context.Hayvanlar.Find(model.HayvanId).HayvanBabaId,
                 HayvanAnneList = Anneler.Select(h => new SelectListItem
                 {
                     Text = $"{h.SahipTckn.Substring(0, 3) + new string('*', Math.Max(h.SahipTckn.Length - 6, 0)) + h.SahipTckn.Substring(h.SahipTckn.Length - 3)} " +
@@ -729,21 +717,22 @@ namespace VeterinerApp.Controllers
                 }).ToList(),
                 CinsiyetList = cinsiyet,
                 Sahip = _userManager.GetUserAsync(User).Result,
-                SahiplikTarihi = _context.SahipHayvans
-                    .Where(x => x.HayvanId == model.HayvanId && x.SahipTckn == SahipTCKN)
+                SahiplikTarihi = _context.SahipHayvanlar
+                    .Where(x => x.HayvanId == model.HayvanId && x.Sahip.InsanTckn == SahipTCKN)
                     .Select(x => x.SahiplikTarihi)
                     .FirstOrDefault(),
-                SahiplikCikisTarihi = _context.SahipHayvans
-                    .Where(x => x.HayvanId == model.HayvanId && x.SahipTckn == SahipTCKN)
+                SahiplikCikisTarihi = _context.SahipHayvanlar
+                    .Where(x => x.HayvanId == model.HayvanId && x.Sahip.InsanTckn == SahipTCKN)
                     .Select(x => x.SahiplikCikisTarihi)
                     .FirstOrDefault(),
-                imgURl = _context.Hayvans.Find(model.HayvanId).imgURl,
+                ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl,
                 Signature = model.Signature
 
             };
 
             EditHayvanValidator validator = new EditHayvanValidator();
             ValidationResult result = validator.Validate(model);
+
 
 
 
@@ -757,7 +746,7 @@ namespace VeterinerApp.Controllers
                 return View("EditAnimal", returnModel);
             }
 
-            var hayvan = _context.Hayvans.FindAsync(model.HayvanId).Result;
+            var hayvan = _context.Hayvanlar.FindAsync(model.HayvanId).Result;
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
 
@@ -790,20 +779,20 @@ namespace VeterinerApp.Controllers
                 // Web URL'sini oluşturma
                 var fileUrl = $"/img/animals/{hayvan.HayvanId}/{dosyaAdi}";
 
-                hayvan.imgURl = fileUrl;
+                hayvan.ImgUrl = fileUrl;
 
             }
             else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
             {
-                hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
+                hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
             }
             else if (model.PhotoOption == "deletePhoto")
             {
-                hayvan.imgURl = null;
+                hayvan.ImgUrl = null;
             }
             else if (model.PhotoOption == "keepPhoto")
             {
-                hayvan.imgURl = _context.Hayvans.Find(model.HayvanId).imgURl;
+                hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
             }
 
 
@@ -817,20 +806,20 @@ namespace VeterinerApp.Controllers
             hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
             hayvan.HayvanAnneId = model.HayvanAnneId;
             hayvan.HayvanBabaId = model.HayvanBabaId;
-            _context.Hayvans.Update(hayvan);
+            _context.Hayvanlar.Update(hayvan);
 
-            var SahipHayvan = _context.SahipHayvans
-                .Where(sh => sh.HayvanId == model.HayvanId && sh.SahipTckn == _userManager.GetUserAsync(User).Result.InsanTckn)
+            var SahipHayvan = _context.SahipHayvanlar
+                .Where(sh => sh.HayvanId == model.HayvanId && sh.Sahip.InsanTckn == _userManager.GetUserAsync(User).Result.InsanTckn)
                 .FirstOrDefault();
 
             SahipHayvan.HayvanId = model.HayvanId;
-            SahipHayvan.SahipTckn = _userManager.GetUserAsync(User).Result.InsanTckn;
+            SahipHayvan.Sahip.InsanTckn = _userManager.GetUserAsync(User).Result.InsanTckn;
             SahipHayvan.SahiplikTarihi = model.SahiplikTarihi;
             SahipHayvan.SahiplikCikisTarihi = model.SahiplikCikisTarihi;
 
-            _context.SahipHayvans.Update(SahipHayvan);
+            _context.SahipHayvanlar.Update(SahipHayvan);
             _context.SaveChanges();
-            returnModel.imgURl = hayvan.imgURl;
+            returnModel.ImgUrl = hayvan.ImgUrl;
             TempData["Edit"] = "Hayvan bilgileri başarıyla güncellendi.";
 
             return View("EditAnimal", returnModel);
@@ -840,28 +829,28 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult AddSahip(int hayvanId)
         {
-            var hayvan = _context.Hayvans.Find(hayvanId);
+            var hayvan = _context.Hayvanlar.Find(hayvanId);
             var user = _userManager.GetUserAsync(User).Result;
 
-            var userHayvan = _context.SahipHayvans
-                .Where(sh => sh.HayvanId == hayvanId && sh.SahipTckn == user.InsanTckn)
+            var userHayvan = _context.SahipHayvanlar
+                .Where(sh => sh.HayvanId == hayvanId && sh.Sahip.InsanTckn == user.InsanTckn)
                 .FirstOrDefault();
 
             if (userHayvan == null)
             {
                 return View("BadRequest");
             }
-            var signature = Signature.CreateSignature(hayvanId, user.InsanTckn);
+            var signature = Signature.CreateSignature(hayvanId, user.Id);
             var model = new AddNewSahipViewModel()
             {
                 HayvanId = hayvanId,
                 HayvanAdi = hayvan.HayvanAdi,
-                imgURl = hayvan.imgURl,
+                ImgUrl = hayvan.ImgUrl,
                 HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
                 HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
-                renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault(),
-                cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault(),
-                turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
+                renkAdi = _context.Renkler.Where(r => r.RenkId == hayvan.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
+                cinsAdi = _context.Cinsler.Where(c => c.CinsId == hayvan.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                turAdi = _context.Turler.Where(t => t.TurId == hayvan.TurId).Select(t => t.TurAdi).FirstOrDefault(),
                 HayvanCinsiyet = hayvan.HayvanCinsiyet,
                 HayvanKilo = hayvan.HayvanKilo,
                 userTCKN = user.InsanTckn,
@@ -875,7 +864,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> AddSahip(AddNewSahipViewModel model)
         {
 
-            if (!Signature.VerifySignature(model.HayvanId, model.userTCKN, model.Signature))
+            if (!Signature.VerifySignature(model.HayvanId, model.Sahip.Id, model.Signature))
             {
                 return View("Badrequest");
             }
@@ -883,18 +872,18 @@ namespace VeterinerApp.Controllers
             AddYeniSahipValidator validator = new AddYeniSahipValidator();
             ValidationResult result = validator.Validate(model);
 
-            var hayvan = _context.Hayvans.Find(model.HayvanId);
+            var hayvan = _context.Hayvanlar.Find(model.HayvanId);
 
             var returnModel = new AddNewSahipViewModel()
             {
                 HayvanId = model.HayvanId,
                 HayvanAdi = hayvan.HayvanAdi,
-                imgURl = hayvan.imgURl,
+                ImgUrl = hayvan.ImgUrl,
                 HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
                 HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
-                renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault(),
-                cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault(),
-                turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault(),
+                renkAdi = _context.Renkler.Where(r => r.RenkId == hayvan.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
+                cinsAdi = _context.Cinsler.Where(c => c.CinsId == hayvan.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                turAdi = _context.Turler.Where(t => t.TurId == hayvan.TurId).Select(t => t.TurAdi).FirstOrDefault(),
                 HayvanCinsiyet = hayvan.HayvanCinsiyet,
                 HayvanKilo = hayvan.HayvanKilo,
                 userTCKN = model.userTCKN,
@@ -910,21 +899,21 @@ namespace VeterinerApp.Controllers
                 }
                 return View(returnModel);
             }
-            
+
             var yeniSahip = _context.Users.Where(u => u.InsanTckn == model.yeniSahipTCKN).FirstOrDefault();
-            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza=Signature.CreateSignature(model.HayvanId,model.yeniSahipTCKN)}, Request.Scheme, Request.Host.Value);
-            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.yeniSahipTCKN) }, Request.Scheme, Request.Host.Value);
+            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.Sahip.Id) }, Request.Scheme, Request.Host.Value);
+            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.yeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.Sahip.Id) }, Request.Scheme, Request.Host.Value);
             var cinsiyet = hayvan.HayvanCinsiyet == "D" ? "Dişi" : "Erkek";
             var dogumTarihi = hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy");
             var olumTarihi = hayvan.HayvanOlumTarihi != null ? hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy") : "Hayatta";
             var sahipAdSoyad = _userManager.GetUserAsync(User).Result.InsanAdi + " " + _userManager.GetUserAsync(User).Result.InsanSoyadi;
-            var turAdi = _context.Turs.Where(t => t.Id == hayvan.TurId).Select(t => t.tur).FirstOrDefault();
-            var cinsAdi = _context.Cins.Where(c => c.Id == hayvan.CinsId).Select(c => c.cins).FirstOrDefault();
-            var renkAdi = _context.Renks.Where(r => r.Id == hayvan.RenkId).Select(r => r.renk).FirstOrDefault();
-            var hayvanAdi= hayvan.HayvanAdi;
+            var turAdi = _context.Turler.Where(t => t.TurId == hayvan.TurId).Select(t => t.TurAdi).FirstOrDefault();
+            var cinsAdi = _context.Cinsler.Where(c => c.CinsId == hayvan.CinsId).Select(c => c.CinsAdi).FirstOrDefault();
+            var renkAdi = _context.Renkler.Where(r => r.RenkId == hayvan.RenkId).Select(r => r.RenkAdi).FirstOrDefault();
+            var hayvanAdi = hayvan.HayvanAdi;
             // Uygulamanızın geçerli URL'sini almak için
             string baseUrl = $"{Request.Scheme}://{Request.Host}";
-            string resimYolu = hayvan.imgURl != null ? hayvan.imgURl : Url.Content("/img/animal.png");
+            string resimYolu = hayvan.ImgUrl != null ? hayvan.ImgUrl : Url.Content("/img/animal.png");
             string imgUrl = $"{baseUrl}{resimYolu}";
 
 
@@ -1066,28 +1055,28 @@ namespace VeterinerApp.Controllers
             return View(returnModel);
         }
 
-        public async Task<IActionResult> EmailConfirmYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
-        {   
-            var user=_userManager.GetUserAsync(User).Result;
-            if (user.InsanTckn != yeniSahipTCKN)
+        public async Task<IActionResult> EmailConfirmYeniSahip(int hayvanId, int yeniSahipId, string imza)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            if (user.Id != yeniSahipId)
             {
                 return View("BadRequest");
             }
             else
             {
-                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                if (!Signature.VerifySignature(hayvanId, yeniSahipId, imza))
                 {
                     return View("BadRequest");
                 }
 
-                var hayvan = _context.Hayvans.Find(hayvanId);
-                var yeniSahip = _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefault();
-                if (!_context.SahipHayvans.Any(x => x.HayvanId == hayvanId && x.SahipTckn == yeniSahipTCKN))
+                var hayvan = _context.Hayvanlar.Find(hayvanId);
+                var yeniSahip = _context.Users.Where(u => u.Id == yeniSahipId).FirstOrDefault();
+                if (!_context.SahipHayvanlar.Any(x => x.HayvanId == hayvanId && x.SahipId == yeniSahipId))
                 {
-                    _context.SahipHayvans.Add(new SahipHayvan
+                    _context.SahipHayvanlar.Add(new SahipHayvan
                     {
                         HayvanId = hayvanId,
-                        SahipTckn = yeniSahipTCKN,
+                        SahipId = yeniSahipId,
                         SahiplikTarihi = DateTime.Now
                     });
                     if (_context.SaveChanges() > 0)
@@ -1099,7 +1088,8 @@ namespace VeterinerApp.Controllers
                         TempData["YeniHayvanEklendiHata"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvan hesabınıza eklenirken bir hata oluştu.";
                     }
                 }
-                else {
+                else
+                {
                     TempData["HayvanSahibisiniz"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanın zaten sahibisiniz.";
                 }
 
@@ -1108,20 +1098,20 @@ namespace VeterinerApp.Controllers
 
         }
 
-        public async Task<IActionResult> EmailRejectYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
+        public async Task<IActionResult> EmailRejectYeniSahip(int hayvanId, int yeniSahipId, string imza)
         {
             var user = _userManager.GetUserAsync(User).Result;
-            if (user.InsanTckn != yeniSahipTCKN)
+            if (user.Id != yeniSahipId)
             {
                 return View("BadRequest");
             }
             else
             {
-                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                if (!Signature.VerifySignature(hayvanId, yeniSahipId, imza))
                 {
                     return View("BadRequest");
                 }
-                var hayvan = _context.Hayvans.Find(hayvanId);
+                var hayvan = _context.Hayvanlar.Find(hayvanId);
 
                 TempData["EvcilHayvanRed"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanı hesabınıza eklemek istemediniz.";
                 return RedirectToAction("Information", "User");

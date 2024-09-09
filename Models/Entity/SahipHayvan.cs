@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-
-#nullable disable
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class SahipHayvan
+    public class SahipHayvan
     {
-        public string SahipTckn { get; set; }
+        public int Id { get; set; }
         public int HayvanId { get; set; }
+        public int SahipId { get; set; }
         public DateTime SahiplikTarihi { get; set; }
         public DateTime? SahiplikCikisTarihi { get; set; }
 
-        public virtual Hayvan Hayvan { get; set; }
-        public virtual AppUser SahipTcknNavigation { get; set; }
+        public virtual Hayvan Hayvan{ get; set; }
+        public virtual AppUser Sahip { get; set; }
     }
 }

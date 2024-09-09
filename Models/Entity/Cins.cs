@@ -7,14 +7,9 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class Cins
     {
-        public Cins()
-        {
-            TurCins = new HashSet<TurCins>();
-        }
+        public int CinsId { get; set; }
+        public string CinsAdi { get; set; }
 
-        public int Id { get; set; }
-        public string cins { get; set; }
-
-        public virtual ICollection<TurCins> TurCins { get; set; }
+        public virtual ICollection<CinsTur> CinsTur { get; set; }
     }
 }

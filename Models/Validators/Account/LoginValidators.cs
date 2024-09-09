@@ -26,7 +26,7 @@ namespace VeterinerApp.Models.Validators.Account
                 .Must((user, sifre) => FunctionsValidator.BeValidPasswordDate(user.UserName, sifre))
                 .When((user) => FunctionsValidator.LoginSucceed(user))
                 .WithMessage("Şifre geçerlilik süresi dolmuş. Lütfen şifrenizi değiştiriniz.");
-            
+
 
         }
 

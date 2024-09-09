@@ -22,12 +22,12 @@ namespace VeterinerApp.Controllers
     [Authorize]
     public class UserController : Controller
     {
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(VeterinerContext context, UserManager<AppUser> userManager, IEmailSender emailSender, SignInManager<AppUser> signInManager)
+        public UserController(VeterinerDBContext context, UserManager<AppUser> userManager, IEmailSender emailSender, SignInManager<AppUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
@@ -40,13 +40,13 @@ namespace VeterinerApp.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             // Kullanıcının sahip olduğu hayvanların ID'lerini al
-            var hayvanIdler = _context.SahipHayvans
-                .Where(s => s.SahipTckn == user.InsanTckn)
+            var hayvanIdler = _context.SahipHayvanlar
+                .Where(s => s.Sahip.InsanTckn == user.InsanTckn)
                 .Select(h => h.HayvanId)
                 .ToList();
 
             // Hayvanların detaylarını al
-            List<HayvanlarViewModel> hayvanlar = await _context.Hayvans
+            List<HayvanlarViewModel> hayvanlar = await _context.Hayvanlar
                 .Where(h => hayvanIdler.Contains(h.HayvanId))
                 .Select(h => new HayvanlarViewModel
                 {
@@ -56,11 +56,11 @@ namespace VeterinerApp.Controllers
                     HayvanKilo = h.HayvanKilo,
                     HayvanDogumTarihi = h.HayvanDogumTarihi,
                     HayvanOlumTarihi = h.HayvanOlumTarihi,
-                    HayvanAnneAdi = _context.Hayvans.Where(ha => ha.HayvanId == h.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
-                    HayvanBabaAdi = _context.Hayvans.Where(hb => hb.HayvanId == h.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
-                    TurAdi = _context.Turs.Where(t => t.Id == h.TurId).Select(t => t.tur).FirstOrDefault(),
-                    CinsAdi = _context.Cins.Where(c => c.Id == h.CinsId).Select(c => c.cins).FirstOrDefault(),
-                    RenkAdi = _context.Renks.Where(r => r.Id == h.RenkId).Select(r => r.renk).FirstOrDefault(),
+                    HayvanAnneAdi = _context.Hayvanlar.Where(ha => ha.HayvanId == h.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
+                    HayvanBabaAdi = _context.Hayvanlar.Where(hb => hb.HayvanId == h.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
+                    TurAdi = _context.Turler.Where(t => t.TurId == h.TurId).Select(t => t.TurAdi).FirstOrDefault(),
+                    CinsAdi = _context.Cinsler.Where(c => c.CinsId == h.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                    RenkAdi = _context.Renkler.Where(r => r.RenkId == h.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
 
                 })
                 .ToListAsync();
@@ -301,11 +301,11 @@ namespace VeterinerApp.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderilemedi. Lütfen sistem yöneticisi ile iletişime geçiniz." + " "+ ex.Message;
+                TempData["ErrorMessage"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderilemedi. Lütfen sistem yöneticisi ile iletişime geçiniz." + " " + ex.Message;
 
                 return RedirectToAction("Information");
             }
-         
+
 
         }
 
@@ -330,8 +330,8 @@ namespace VeterinerApp.Controllers
 
 
             // Kullanıcının sahip olduğu hayvan kayıtlarını al
-            var kullaniciHayvanKayitlari = _context.SahipHayvans
-                .Where(s => s.SahipTckn == user.InsanTckn)
+            var kullaniciHayvanKayitlari = _context.SahipHayvanlar
+                .Where(s => s.Sahip.InsanTckn == user.InsanTckn)
                 .ToList();
 
             // Kullanıcının sahip olduğu hayvanlara ait ID'leri listele
@@ -340,19 +340,19 @@ namespace VeterinerApp.Controllers
                 .ToList();
 
             // SahipHayvans tablosundan sadece bu kullanıcının kayıtlarını sil
-            _context.SahipHayvans.RemoveRange(kullaniciHayvanKayitlari);
+            _context.SahipHayvanlar.RemoveRange(kullaniciHayvanKayitlari);
             _context.SaveChanges();
 
             // Sahipsiz kalan hayvanları belirle
-            var sahipsizHayvanlar = _context.Hayvans
-                .Where(h => !(_context.SahipHayvans
+            var sahipsizHayvanlar = _context.Hayvanlar
+                .Where(h => !(_context.SahipHayvanlar
                     .Any(sh => sh.HayvanId == h.HayvanId)))
                 .ToList();
 
             // Hayvans tablosundan sahipsiz hayvanları sil
-            _context.Hayvans.RemoveRange(sahipsizHayvanlar);
+            _context.Hayvanlar.RemoveRange(sahipsizHayvanlar);
             _context.SaveChanges();
-            
+
 
             await _signInManager.SignOutAsync();
             await _userManager.DeleteAsync(user);

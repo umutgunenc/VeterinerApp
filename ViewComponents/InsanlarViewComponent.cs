@@ -11,9 +11,9 @@ namespace VeterinerApp.ViewComponents
 {
     public class InsanlarViewComponent : ViewComponent
     {
-        private readonly VeterinerContext _veterinerDbContext;
+        private readonly VeterinerDBContext _veterinerDbContext;
 
-        public InsanlarViewComponent(VeterinerContext veterinerDbContext)
+        public InsanlarViewComponent(VeterinerDBContext veterinerDbContext)
         {
             _veterinerDbContext = veterinerDbContext;
         }

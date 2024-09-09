@@ -9,21 +9,18 @@ namespace VeterinerApp.Controllers
     [Authorize(Roles = "VETERİNER")]
     public class VeterinerController : Controller
     {
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public VeterinerController(VeterinerContext context, UserManager<AppUser> userManager)
+        public VeterinerController(VeterinerDBContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+
 
         [HttpGet]
-        public IActionResult Muayene()
+        public IActionResult MuayeneEt()
         {
             return View();
         }

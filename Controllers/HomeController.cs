@@ -16,8 +16,8 @@ namespace VeterinerApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly VeterinerContext _context;
-        public HomeController(VeterinerContext context)
+        private readonly VeterinerDBContext _context;
+        public HomeController(VeterinerDBContext context)
         {
             _context = context;
         }

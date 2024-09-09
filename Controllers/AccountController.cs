@@ -21,10 +21,10 @@ namespace VeterinerApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
         private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<AppUser> userManager, VeterinerContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IEmailSender emailSender)
+        public AccountController(UserManager<AppUser> userManager, VeterinerDBContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _context = context;
@@ -217,7 +217,7 @@ namespace VeterinerApp.Controllers
                 </html>";
 
 
-               
+
 
                 try
                 {
@@ -499,7 +499,7 @@ namespace VeterinerApp.Controllers
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Şifre gönderme işlemi tamamlanamadı." + " " + ex.Message;
                     return View(model);
                 }
-             
+
 
             }
         }

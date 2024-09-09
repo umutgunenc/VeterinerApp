@@ -16,7 +16,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Matches("^[0-9]*$").WithMessage("TCKN numarası sadece rakamlardan oluşmalıdır.")
                 .Must(FunctionsValidator.BeUsedTCKN).WithMessage("Girilen TCKN sistemde bulunamadı.")
                 .Must(FunctionsValidator.BeValidTCKN).WithMessage("Geçerli bir TCKN giriniz.")
-                .Must((model,yeniSahipTCKN)=>FunctionsValidator.BeNotOwnedAnimal(model.HayvanId,yeniSahipTCKN)).WithMessage("Yeni sahip zaten bu hayvanının sahibi.");
+                .Must((model, yeniSahipTCKN) => FunctionsValidator.BeNotOwnedAnimal(model.HayvanId, yeniSahipTCKN)).WithMessage("Yeni sahip zaten bu hayvanının sahibi.");
 
         }
     }

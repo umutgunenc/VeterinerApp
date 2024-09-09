@@ -5,7 +5,7 @@ using VeterinerApp.Models.ViewModel.User;
 
 namespace VeterinerApp.Models.Validators.User
 {
-    public class UserEditValidator :AbstractValidator<EditUserViewModel>
+    public class UserEditValidator : AbstractValidator<EditUserViewModel>
     {
         public UserEditValidator()
         {
@@ -15,7 +15,7 @@ namespace VeterinerApp.Models.Validators.User
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must((model,email)=> FunctionsValidator.BeUniqueEmail(model.Id, email))
+                .Must((model, email) => FunctionsValidator.BeUniqueEmail(model.Id, email))
                 .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.PhoneNumber)
@@ -23,7 +23,7 @@ namespace VeterinerApp.Models.Validators.User
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must((model,phoneNumber)=>FunctionsValidator.BeUniqueTel(model.Id,phoneNumber)).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
+                .Must((model, phoneNumber) => FunctionsValidator.BeUniqueTel(model.Id, phoneNumber)).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı");
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -65,6 +65,6 @@ namespace VeterinerApp.Models.Validators.User
 
         }
 
-        
+
     }
 }

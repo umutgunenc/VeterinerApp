@@ -5,7 +5,7 @@
     <div class="collapse navbar-collapse" id="topbarToggler">
         <a href="/home/index" class="navbar-brand">Ana Sayfa</a>
         <ul class="navbar-nav mr-auto">
-            @if (User.IsInRole("ADMİN"))
+            @if (User.IsInRole("ADMIN"))
             {
                 <li class="nav-item active">
                     <a href="/admin/AdminIndex" class="nav-link">Admin İşlemleri</a>
@@ -17,7 +17,7 @@
                     <a href="#" class="nav-link">Çalışan İşlemleri</a>
                 </li>
             }
-            @if (User.IsInRole("VETERİNER"))
+            @if (User.IsInRole("VETERINER"))
             {
                 <li class="nav-item active">
                     <a href="#" class="nav-link">Veteriner İşlemleri</a>

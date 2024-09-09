@@ -34,7 +34,7 @@ namespace VeterinerApp.Models.Validators.Account
 
 
         }
- 
+
 
     }
 }

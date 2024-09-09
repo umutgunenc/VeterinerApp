@@ -22,9 +22,9 @@ namespace VeterinerApp.Models.Validators.Account
             RuleFor(x => x.OldPassword)
                 .NotEmpty().WithMessage("Eski şifre alanı boş geçilemez")
                 .NotNull().WithMessage("Eski şifre alanı boş geçilemez");
-                //.MustAsync(async (model, oldPassword, cancellationToken) =>
-                //await FunctionsValidator.BeCorrectOldPasswordAsync(oldPassword, model.UserName, _userManager, cancellationToken))
-                //.WithMessage("Lütfen şifrenizi doğru giriniz.");
+            //.MustAsync(async (model, oldPassword, cancellationToken) =>
+            //await FunctionsValidator.BeCorrectOldPasswordAsync(oldPassword, model.UserName, _userManager, cancellationToken))
+            //.WithMessage("Lütfen şifrenizi doğru giriniz.");
 
             RuleFor(x => x.NewPassword)
                 .NotEmpty().WithMessage("Yeni şifre alanı boş geçilemez")

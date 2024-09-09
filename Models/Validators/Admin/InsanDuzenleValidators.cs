@@ -46,7 +46,7 @@ namespace VeterinerApp.Models.Validators.Admin
 
             RuleFor(x => x.DiplomaNo)
                 .NotNull().WithMessage("Diploma numarası giriniz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "VETERİNER" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "VETERINER" }));
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -69,24 +69,24 @@ namespace VeterinerApp.Models.Validators.Admin
                 .Must(x => x == true || x == false).WithMessage("Çalışan için çalışma durumu seçiniz.");
 
             RuleFor(x => x.CalisiyorMu)
-                   .Must((model, CalisiyorMu) => !(FunctionsValidator.IsRoleMatching(model.rolId, new List<string> { "MÜŞTERİ" }) && CalisiyorMu))
+                   .Must((model, CalisiyorMu) => !(FunctionsValidator.IsRoleMatching(model.rolId, new List<string> { "MÜŞTERI" }) && CalisiyorMu))
                    .WithMessage("Müşteriler çalışmıyor olarak işaretlenmelidir.");
 
             RuleFor(x => x.Maas)
                 .NotNull().WithMessage("Maaş bilgisi boş olamaz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu);
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && x.CalisiyorMu);
 
             RuleFor(x => x.Maas)
                 .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && x.CalisiyorMu && x.Maas.HasValue);
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && x.CalisiyorMu && x.Maas.HasValue);
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Müşteriler için maaş bilgisi girilemez")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERİ" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERI" }));
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Çalışmayan kişiler için maaş bilgisi girilemez.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMİN", "ÇALIŞAN", "VETERİNER" }) && !x.CalisiyorMu);
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && !x.CalisiyorMu);
 
             RuleFor(x => x.rolId)
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
@@ -96,7 +96,7 @@ namespace VeterinerApp.Models.Validators.Admin
             RuleFor(x => x.rolId)
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERİ" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERI" }));
 
             RuleFor(x => x.rolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")

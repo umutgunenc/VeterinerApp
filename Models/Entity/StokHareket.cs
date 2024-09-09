@@ -9,12 +9,16 @@ namespace VeterinerApp.Models.Entity
     {
         public int StokHareketId { get; set; }
         public DateTime? StokHareketTarihi { get; set; }
-        public string StokBarkod { get; set; }
+        public int StokId { get; set; }
         public DateTime? SatisTarihi { get; set; }
         public double? SatisFiyati { get; set; }
         public DateTime? AlisTarihi { get; set; }
         public double? AlisFiyati { get; set; }
+        public int CalisanId{ get; set; }
+        public int? StokGirisAdet { get; set; }
+        public int? StokCikisAdet { get; set; }
 
-        public virtual Stok StokBarkodNavigation { get; set; }
+        public virtual AppUser Calisan { get; set; }
+        public virtual Stok Stok { get; set; }
     }
 }

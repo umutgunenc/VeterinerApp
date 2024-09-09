@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
@@ -16,38 +17,38 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
     public static class FunctionsValidator
     {
 
-        private static readonly VeterinerContext _context = new();
+        private static readonly VeterinerDBContext _context = new();
 
         public static bool BeRenk(int Id)
         {
-            return _context.Renks.Any(x => x.Id == Id);
+            return _context.Renkler.Any(x => x.RenkId == Id);
         }
         public static bool BeCins(int id)
         {
-            return _context.Cins.Any(x => x.Id == id);
+            return _context.Cinsler.Any(x => x.CinsId == id);
         }
         public static bool BeTur(int TurId)
         {
-            return _context.Turs.Any(x => x.Id == TurId);
+            return _context.Turler.Any(x => x.TurId == TurId);
         }
         public static bool BeTurCins(int id)
         {
-            return _context.TurCins.Any(x => x.Id == id);
+            return _context.CinsTur.Any(x => x.Id == id);
         }
         public static bool BeSameCins(Hayvan model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
 
-            var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
-            return parent != null && parent.CinsId == model.CinsId;
+            var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
+            return parent != null && parent.CinsId == model.TurId;
         }
         public static bool BeOlder(Hayvan model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
 
-            var parent = _context.Hayvans.FirstOrDefault(a => a.HayvanId == parentID.Value);
+            var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
             return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
         }
         public static bool BeGirl(int? anneId)
@@ -55,7 +56,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             if (!anneId.HasValue)
                 return true;
 
-            var anne = _context.Hayvans.FirstOrDefault(a => a.HayvanId == anneId.Value);
+            var anne = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == anneId.Value);
             return anne != null && anne.HayvanCinsiyet == "D";
         }
         public static bool BeBoy(int? babaId)
@@ -63,7 +64,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             if (!babaId.HasValue)
                 return true;
 
-            var baba = _context.Hayvans.FirstOrDefault(a => a.HayvanId == babaId.Value);
+            var baba = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == babaId.Value);
             return baba != null && baba.HayvanCinsiyet == "E";
         }
         public static bool BeRol(int rolId)
@@ -125,21 +126,21 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeRegisteredParentAnimal(int? animalId)
         {
-            return !animalId.HasValue || _context.Hayvans.Any(a => a.HayvanId == animalId.Value);
+            return !animalId.HasValue || _context.Hayvanlar.Any(a => a.HayvanId == animalId.Value);
         }
         public static bool BeValidHayvan(int hayvanId)
         {
-            return _context.Hayvans.Any(h => h.HayvanId == hayvanId);
+            return _context.Hayvanlar.Any(h => h.HayvanId == hayvanId);
         }
         public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
         {
-            return _context.SahipHayvans.Any(x => x.HayvanId == hayvanId && x.SahipTckn == model.SahipTckn);
+            return _context.SahipHayvanlar.Any(x => x.HayvanId == hayvanId && x.Sahip.InsanTckn == model.SahipTckn);
         }
 
         public static bool LoginSucceed(AppUser user)
         {
-            return _context.Users.Any(x => x.UserName == user.UserName && x.PasswordHash == user.PasswordHash); 
-        
+            return _context.Users.Any(x => x.UserName == user.UserName && x.PasswordHash == user.PasswordHash);
+
         }
         //public static async Task<bool> BeCorrectOldPasswordAsync(string oldPassword, string userName, UserManager<AppUser> userManager, CancellationToken cancellationToken)
         //{
@@ -151,17 +152,21 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
         //    return await userManager.CheckPasswordAsync(user, oldPassword);
         //}
+        public static bool BeUniqueKategori(string kategoriAdi)
+        {
+            return !_context.Kategoriler.Any(x => x.KategoriAdi.ToUpper() == kategoriAdi.ToUpper());
+        }
         public static bool BeUniqueTCKN(string girilenTCKN)
         {
             return !_context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
         }
         public static bool BeUniqueCins(string girilenDeger)
         {
-            return !_context.Cins.Any(x => x.cins.ToUpper() == girilenDeger.ToUpper());
+            return !_context.Cinsler.Any(x => x.CinsAdi.ToUpper() == girilenDeger.ToUpper());
         }
         public static bool BeUniqueTur(string girilenTur)
         {
-            return !_context.Turs.Any(t => t.tur.ToUpper() == girilenTur.ToUpper());
+            return !_context.Turler.Any(t => t.TurAdi.ToUpper() == girilenTur.ToUpper());
         }
         public static bool BeUniqueRol(string rol)
         {
@@ -169,7 +174,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeUniqueRenk(string girilenDeger)
         {
-            return !_context.Renks.Any(x => x.renk.ToUpper() == girilenDeger.ToUpper());
+            return !_context.Renkler.Any(x => x.RenkAdi.ToUpper() == girilenDeger.ToUpper());
         }
         public static bool BeUniqueTel(string TelNo)
         {
@@ -257,13 +262,13 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeNotUsedRenk(int Id)
         {
-            return !_context.Hayvans.Any(x => x.RenkId == Id);
+            return !_context.Hayvanlar.Any(x => x.RenkId == Id);
         }
         public static bool BeNotUsedTurCins(int id)
         {
-            var cinsId = _context.TurCins.Where(x => x.Id == id).Select(x => x.CinsId).FirstOrDefault();
-            var turId = _context.TurCins.Where(x => x.Id == id).Select(x => x.TurId).FirstOrDefault();
-            return !_context.Hayvans.Where(x => x.CinsId == cinsId && x.TurId == turId).Any();
+            var cinsId = _context.CinsTur.Where(x => x.CinsId == id).Select(x => x.CinsId).FirstOrDefault();
+            var turId = _context.CinsTur.Where(x => x.TurId == id).Select(x => x.TurId).FirstOrDefault();
+            return !_context.Hayvanlar.Where(x => x.CinsId == cinsId && x.TurId == turId).Any();
         }
         public static bool BeNotMatchedRol(int rolId)
         {
@@ -271,19 +276,19 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeNotMatchedCins(int cinsId)
         {
-            return !_context.TurCins.Any(x => x.CinsId == cinsId);
+            return !_context.CinsTur.Any(x => x.CinsId == cinsId);
         }
-        public static bool BeNotMatchTurCins(int turId)
+        public static bool BeNotMatchTurCins(int cinsId)
         {
-            return !_context.TurCins.Where(x => x.TurId == turId).Any();
+            return !_context.CinsTur.Where(x => x.CinsId == cinsId).Any();
         }
         public static bool BeNotMatchedTur(int id)
         {
-            return !_context.TurCins.Any(x => x.TurId == id);
+            return !_context.CinsTur.Any(x => x.TurId == id);
         }
         public static bool BeNotOwnedAnimal(int hayvanId, string yeniSahipTCKN)
         {
-            return !_context.SahipHayvans.Where(x=>x.SahipTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
+            return !_context.SahipHayvanlar.Where(x => x.Sahip.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
         }
 
 

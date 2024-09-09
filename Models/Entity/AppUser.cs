@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -8,12 +10,6 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class AppUser : IdentityUser<int>
     {
-        public AppUser()
-        {
-            MaasOdemeleris = new HashSet<MaasOdemeleri>();
-            Muayenes = new HashSet<Muayene>();
-            SahipHayvans = new HashSet<SahipHayvan>();
-        }
 
         public string InsanTckn { get; set; }
         public string InsanAdi { get; set; }
@@ -25,8 +21,8 @@ namespace VeterinerApp.Models.Entity
         public bool CalisiyorMu { get; set; }
         public double? Maas { get; set; }
         public bool TermOfUse { get; set; }
-        public virtual ICollection<MaasOdemeleri> MaasOdemeleris { get; set; }
-        public virtual ICollection<Muayene> Muayenes { get; set; }
-        public virtual ICollection<SahipHayvan> SahipHayvans { get; set; }
+        public virtual ICollection<MaasOdemeleri> MaasOdemeleri { get; set; }
+        public virtual ICollection<Muayene> Muayeneler { get; set; }
+        public virtual ICollection<SahipHayvan> SahipHayvanlar { get; set; }
     }
 }

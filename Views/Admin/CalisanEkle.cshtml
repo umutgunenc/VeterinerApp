@@ -10,49 +10,49 @@
         <div class="col mb-2">
             <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanAdi">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="InsanAdi">
         </span>
         <div class="col mb-2">
             <input type="text" asp-for="InsanSoyadi" class="form-control" placeholder="Soyadı">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanSoyadi">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="InsanSoyadi">
         </span>
         <div class="col mb-2">
             <input type="text" asp-for="InsanTckn" class="form-control" placeholder="TCKN">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="InsanTckn">
         </span>
         <div class="col mb-2">
             <input type="email" asp-for="Email" class="form-control" placeholder="Mail Adresi">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="Email">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="Email">
         </span>
         <div class="col mb-2">
             <input type="tel" asp-for="PhoneNumber" class="form-control form-control-sm" placeholder="Telefon Numarası">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="PhoneNumber">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="PhoneNumber">
         </span>
         <div class="col mb-2">
             <input type="text" asp-for="DiplomaNo" class="form-control" placeholder="Diploma Seri No">
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="DiplomaNo">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="DiplomaNo">
         </span>
         <div class="col mb-2">
             <select class="custom-select form-control" asp-for="rolId" asp-items="Model.Roller">
                 <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
             </select>
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="rolId">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="rolId">
         </span>
         @if (!string.IsNullOrEmpty(ViewBag.Hata))
         {
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2">
                 @ViewBag.Hata
             </span>
         }
         <div class="col mb-2">
             <button type="submit" class="col btn btn-dark rounded mb-2">Ekle</button>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="error">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="error">
             </span>
         </div>
     </div>

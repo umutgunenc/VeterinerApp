@@ -1,9 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Linq;
-using VeterinerApp.Data;
 
 namespace VeterinerApp
 {

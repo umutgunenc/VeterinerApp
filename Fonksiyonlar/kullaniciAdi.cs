@@ -8,9 +8,9 @@ namespace VeterinerApp.Fonksiyonlar
 {
     public class kullaniciAdi
     {
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
 
-        public kullaniciAdi(VeterinerContext context)
+        public kullaniciAdi(VeterinerDBContext context)
         {
             _context = context;
         }

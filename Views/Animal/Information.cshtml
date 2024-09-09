@@ -83,14 +83,14 @@
                             @foreach (var muayene in Model.Muayeneler)
                             {
 
-                                <form method="post" id="form-@muayene.MuayeneNo">
-                                    <input type="hidden" name="hayvanId" value="@muayene.MuayeneNo" />
+                                <form method="post" id="form-@muayene.MuayeneId">
+                                    <input type="hidden" name="hayvanId" value="@muayene.MuayeneId" />
                                 </form>
 
                                 <tbody>
                                     <tr role="button" class="clickable-row" data-form-id="form-@muayene.HayvanId">
                                         <td class="text-center">@muayene.MuayeneTarihi</td>
-                                        <td class="text-center">@muayene.HekimkTckn</td>
+                                        @*<td class="text-center">@muayene.HekimkTckn</td>*@
                                     </tr>
                                 </tbody>
 

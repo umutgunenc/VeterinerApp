@@ -11,5 +11,8 @@ namespace VeterinerApp.Models.ViewModel.Animal
         public string renkAdi { get; set; }
         public string Signature { get; set; }
 
+        public AppUser Sahip { get; set; }
+
+
     }
 }

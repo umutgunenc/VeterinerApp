@@ -32,15 +32,15 @@ public class Startup
         services.AddControllersWithViews()
             .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
 
-        // DB bağlantısı için servis eklendi
-        services.AddDbContext<VeterinerContext>(options =>
+        //DB bağlantısı için servis eklendi
+        services.AddDbContext<VeterinerDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
         // Email gönderme servisi eklendi
         services.AddTransient<IEmailSender, EmailSender>();
 
 
-        // Identity servisi eklendi
+        //Identity servisi eklendi
         services.AddIdentity<AppUser, AppRole>(options =>
         {
             options.Lockout.MaxFailedAccessAttempts = 3;
@@ -52,7 +52,7 @@ public class Startup
             options.Password.RequireLowercase = false;
             options.User.AllowedUserNameCharacters = string.Empty;
         })
-        .AddEntityFrameworkStores<VeterinerContext>()
+        .AddEntityFrameworkStores<VeterinerDBContext>()
         .AddDefaultTokenProviders();
 
         services.AddMvc(config =>
@@ -82,7 +82,7 @@ public class Startup
         app.UseStaticFiles();
         app.UseRouting();
 
-        // Kültür ayarlarını yapılandır
+        // Kültür ayarlarını yapıldı
         var supportedCultures = new[] { new CultureInfo("en-US") };
         app.UseRequestLocalization(new RequestLocalizationOptions
         {

@@ -7,7 +7,8 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class TedaviMuayene
     {
-        public int TedaviTedaviId { get; set; }
+        public int Id { get; set; }
+        public int TedaviId { get; set; }
         public int MuayeneId { get; set; }
 
         public virtual Muayene Muayene { get; set; }

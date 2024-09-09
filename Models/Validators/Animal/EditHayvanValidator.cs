@@ -56,7 +56,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
                 .Must((model, x) => FunctionsValidator.BeOlder(model, x))
                 .WithMessage("Hayvan annesi, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");            
+                .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
 
             RuleFor(x => x.HayvanBabaId)
                 .Must(FunctionsValidator.BeRegisteredParentAnimal)
@@ -116,7 +116,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .When(x => x.PhotoOption == "keepPhoto" || x.PhotoOption == "deletePhoto")
                 .WithMessage("Fotoğraf yüklemek doğru seçeneği seçiniz.");
 
-            RuleFor(x=>x.filePhoto)
+            RuleFor(x => x.filePhoto)
                 .Must(x => x.Length < 10485760)
                 .When(x => x.filePhoto != null)
                 .WithMessage("Fotoğraf boyutu 10MB'dan küçük olmalıdır.");

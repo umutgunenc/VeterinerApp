@@ -8,9 +8,9 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 public class CalisanlarListeleViewComponent : ViewComponent
 {
-    private readonly VeterinerContext _veterinerDbContext;
+    private readonly VeterinerDBContext _veterinerDbContext;
 
-    public CalisanlarListeleViewComponent(VeterinerContext veterinerDbContext)
+    public CalisanlarListeleViewComponent(VeterinerDBContext veterinerDbContext)
     {
         _veterinerDbContext = veterinerDbContext;
     }

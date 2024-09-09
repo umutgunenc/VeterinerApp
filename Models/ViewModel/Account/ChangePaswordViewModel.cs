@@ -5,13 +5,13 @@ namespace VeterinerApp.Models.ViewModel.Account
 {
     public class ChangePaswordViewModel : AppUser
     {
-        private readonly VeterinerContext _context;
+        private readonly VeterinerDBContext _context;
 
         public ChangePaswordViewModel()
         {
-            
+
         }
-        public ChangePaswordViewModel(VeterinerContext context)
+        public ChangePaswordViewModel(VeterinerDBContext context)
         {
             _context = context;
         }
