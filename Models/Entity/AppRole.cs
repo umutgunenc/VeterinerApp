@@ -4,5 +4,9 @@ namespace VeterinerApp.Models.Entity
 {
     public class AppRole :IdentityRole<int>
     {
+        public AppRole()
+        {
+            
+        }
     }
 }

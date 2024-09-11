@@ -40,15 +40,15 @@ namespace VeterinerApp.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             // Kullanıcının sahip olduğu hayvanların ID'lerini al
-            var hayvanIdler = _context.SahipHayvanlar
-                .Where(s => s.Sahip.InsanTckn == user.InsanTckn)
+            var hayvanIdler = _context.SahipHayvan
+                .Where(s => s.AppUser.InsanTckn == user.InsanTckn)
                 .Select(h => h.HayvanId)
                 .ToList();
 
             // Hayvanların detaylarını al
-            List<HayvanlarViewModel> hayvanlar = await _context.Hayvanlar
+            List<HayvanlarBilgiViewModel> hayvanlar = await _context.Hayvanlar
                 .Where(h => hayvanIdler.Contains(h.HayvanId))
-                .Select(h => new HayvanlarViewModel
+                .Select(h => new HayvanlarBilgiViewModel()
                 {
                     HayvanId = h.HayvanId,
                     HayvanAdi = h.HayvanAdi,
@@ -58,8 +58,8 @@ namespace VeterinerApp.Controllers
                     HayvanOlumTarihi = h.HayvanOlumTarihi,
                     HayvanAnneAdi = _context.Hayvanlar.Where(ha => ha.HayvanId == h.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
                     HayvanBabaAdi = _context.Hayvanlar.Where(hb => hb.HayvanId == h.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
-                    TurAdi = _context.Turler.Where(t => t.TurId == h.TurId).Select(t => t.TurAdi).FirstOrDefault(),
-                    CinsAdi = _context.Cinsler.Where(c => c.CinsId == h.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                    TurAdi = h.CinsTur.Tur.TurAdi,
+                    CinsAdi = h.CinsTur.Cins.CinsAdi,
                     RenkAdi = _context.Renkler.Where(r => r.RenkId == h.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
 
                 })
@@ -330,8 +330,8 @@ namespace VeterinerApp.Controllers
 
 
             // Kullanıcının sahip olduğu hayvan kayıtlarını al
-            var kullaniciHayvanKayitlari = _context.SahipHayvanlar
-                .Where(s => s.Sahip.InsanTckn == user.InsanTckn)
+            var kullaniciHayvanKayitlari = _context.SahipHayvan
+                .Where(s => s.AppUser.InsanTckn == user.InsanTckn)
                 .ToList();
 
             // Kullanıcının sahip olduğu hayvanlara ait ID'leri listele
@@ -340,12 +340,12 @@ namespace VeterinerApp.Controllers
                 .ToList();
 
             // SahipHayvans tablosundan sadece bu kullanıcının kayıtlarını sil
-            _context.SahipHayvanlar.RemoveRange(kullaniciHayvanKayitlari);
+            _context.SahipHayvan.RemoveRange(kullaniciHayvanKayitlari);
             _context.SaveChanges();
 
             // Sahipsiz kalan hayvanları belirle
             var sahipsizHayvanlar = _context.Hayvanlar
-                .Where(h => !(_context.SahipHayvanlar
+                .Where(h => !(_context.SahipHayvan
                     .Any(sh => sh.HayvanId == h.HayvanId)))
                 .ToList();
 

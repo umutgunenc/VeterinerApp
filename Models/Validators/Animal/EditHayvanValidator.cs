@@ -85,11 +85,11 @@ namespace VeterinerApp.Models.Validators.Animal
 
             RuleFor(x => x.HayvanOlumTarihi)
                 .NotEmpty()
-                .When(x => x.isDeath)
+                .When(x => x.IsDeath)
                 .WithMessage("Lütfen ölüm tarihini giriniz.");
             RuleFor(x => x.HayvanOlumTarihi)
                 .Must((model, x) => !x.HasValue)
-                .When(x => !x.isDeath)
+                .When(x => !x.IsDeath)
                 .WithMessage("Lütfen hayvanı ölü olarak işaretleyin.");
             RuleFor(x => x.HayvanOlumTarihi)
                 .Must((model, x) => model.HayvanDogumTarihi <= x.Value)

@@ -18,7 +18,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotNull().WithMessage("Cins boş olamaz.")
                 .NotEmpty().WithMessage("Cins boş olamaz.")
                 .Must(FunctionsValidator.BeCins).WithMessage("Seçilen cins sistemde tanımlı olmalı.")
-                .Must(FunctionsValidator.BeNotMatchTurCins).WithMessage("Seçilen tür daha önceden eşleştirilmiş.");
+                .Must(FunctionsValidator.BeNotMatchTurCins).WithMessage("Seçilen cins daha önceden eşleştirilmiş.");
 
             RuleFor(x => x.TurId)
                 .NotNull().WithMessage("Tür boş olamaz.")

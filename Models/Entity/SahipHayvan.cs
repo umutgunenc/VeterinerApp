@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VeterinerApp.Models.Entity
 {
     public class SahipHayvan
     {
-        public int Id { get; set; }
+        [ForeignKey(nameof(HayvanId))]
         public int HayvanId { get; set; }
+        public virtual Hayvan Hayvan { get; set; }
+
+        [ForeignKey(nameof(SahipId))]
         public int SahipId { get; set; }
-        public string SahipTckn { get; set; }
-        public DateTime SahiplikTarihi { get; set; }
-        public DateTime? SahiplikCikisTarihi { get; set; }
-        public virtual Hayvan Hayvan{ get; set; }
-        public virtual AppUser Sahip { get; set; }
+        public virtual AppUser AppUser { get; set; }
+
+        public DateTime SahiplenmeTarihi { get; set; }
+        public DateTime? SahiplenmeCikisTarihi { get; set; }
     }
 }

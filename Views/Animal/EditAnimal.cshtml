@@ -66,7 +66,7 @@
                 <div class="form-group row mb-3">
                     <label class="col-md-3 col-form-label pr-0 font-weight-bold text-white">
                         Ölüm Tarihi
-                        <input class="ml-2" asp-for="isDeath" type="checkbox" id="flexCheckDefault">
+                        <input class="ml-2" asp-for="IsDeath" type="checkbox" id="flexCheckDefault">
                     </label>
                     <div class="col-md-9 pl-md-0">
                         <input type="date" asp-for="HayvanOlumTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
@@ -134,8 +134,8 @@
 
         <div class="col d-flex flex-column px-4 pr-md-0">
             <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
-            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                <option value="@Model.TurId" contextmenu="@Model.turu" disabled selected>Tür Seçin</option>
+            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.Turler">
+                <option value="@Model.TurId" disabled selected>Tür Seçin</option>
             </select>
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
@@ -144,8 +144,8 @@
         </div>
         <div class="col d-flex flex-column px-4 pr-md-0">
             <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
-            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                <option value="@Model.CinsId" contextmenu="@Model.cinsi" disabled selected>Cins Seçin</option>
+            <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.Cinsler">
+                <option value="@Model.CinsId" disabled selected>Cins Seçin</option>
             </select>
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
@@ -154,8 +154,8 @@
         </div>
         <div class="col d-flex flex-column px-4 pr-md-0">
             <label asp-for="RenkId" class="col-form-label font-weight-bold text-white px-0">Rengi</label>
-            <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                <option value="@Model.RenkId" contextmenu="@Model.rengi" disabled selected>Renk Seçin</option>
+            <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.Renkler">
+                <option value="@Model.RenkId" disabled selected>Renk Seçin</option>
             </select>
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="RenkId"></span>
@@ -164,7 +164,7 @@
         </div>
         <div class="col d-flex flex-column px-4 pr-md-3">
             <label asp-for="HayvanCinsiyet" class="col-form-label font-weight-bold text-white px-0">Cinsiyeti</label>
-            <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+            <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetListesi">
                 <option value="" disabled selected>Cinsiyet Seçin</option>
             </select>
             <div class="mt-2">
@@ -179,13 +179,13 @@
 
     <input type="hidden" asp-for="HayvanId" />
     <input type="hidden" asp-for="SahipTckn" />
-    <input type="hidden" asp-for="Signature" />
+    <input type="hidden" asp-for="Imza" />
     <div class="px-2 pr-md-0">
         <button type="submit" class="col btn btn-dark rounded mb-2" id="button" onclick="Onayla(event)">Kaydet</button>
         <div class="mb-2">
             <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="filePhoto"></span>
             <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="PhotoOption"></span>
-            <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="Signature"></span>
+            <span class="font-weight-bold text-danger bg-light text-danger rounded d-block mb-2" asp-validation-for="Imza"></span>
         </div>
     </div>
 </form>

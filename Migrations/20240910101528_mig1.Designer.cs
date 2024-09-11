@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VeterinerApp.Data;
 
 namespace VeterinerApp.Migrations
 {
     [DbContext(typeof(VeterinerDBContext))]
-    partial class VeterinerDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240910101528_mig1")]
+    partial class mig1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("AppUserHayvan", b =>
+                {
+                    b.Property<int>("HayvanlarHayvanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SahiplerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HayvanlarHayvanId", "SahiplerId");
+
+                    b.HasIndex("SahiplerId");
+
+                    b.ToTable("AppUserHayvan");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -189,7 +206,7 @@ namespace VeterinerApp.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "f39bbf6f-7dd9-4b5a-89ea-7bfef6fd4b58",
+                            ConcurrencyStamp = "c05809fa-65a7-4e9e-8e2d-a70a502bc3dc",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -297,7 +314,7 @@ namespace VeterinerApp.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "7b9c4974-e2fc-404c-821f-a4771c1a6557",
+                            ConcurrencyStamp = "38abaa00-22ff-45b0-9bbf-3e067357ee12",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -306,12 +323,12 @@ namespace VeterinerApp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAİL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIi1XpaXXrHMrmwTT7W7Skwnxh3I2zT4AXnbRTV+bpzWxpKYa+U00/IFsvY8aU1UhQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBOxF4d39NgXRv822KJbQInBGtEY9X3XQIaNAwmOBhXA/Q5cYFy92nQfJel89mgVkQ==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cbd1951d-9bba-4c76-9c87-de3b0613b30b",
-                            SifreGecerlilikTarihi = new DateTime(3023, 9, 10, 14, 23, 18, 118, DateTimeKind.Local).AddTicks(2639),
-                            SifreOlusturmaTarihi = new DateTime(2024, 9, 10, 14, 23, 18, 117, DateTimeKind.Local).AddTicks(2346),
+                            SecurityStamp = "ca5ba3a4-60af-4c92-a762-4225cca2a944",
+                            SifreGecerlilikTarihi = new DateTime(3023, 9, 10, 13, 15, 27, 490, DateTimeKind.Local).AddTicks(4335),
+                            SifreOlusturmaTarihi = new DateTime(2024, 9, 10, 13, 15, 27, 489, DateTimeKind.Local).AddTicks(5128),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -539,29 +556,6 @@ namespace VeterinerApp.Migrations
                     b.ToTable("Renkler");
                 });
 
-            modelBuilder.Entity("VeterinerApp.Models.Entity.SahipHayvan", b =>
-                {
-                    b.Property<int>("SahipId")
-                        .HasColumnType("int")
-                        .HasColumnName("SahiplerId");
-
-                    b.Property<int>("HayvanId")
-                        .HasColumnType("int")
-                        .HasColumnName("HayvanId");
-
-                    b.Property<DateTime?>("SahiplenmeCikisTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("SahiplenmeTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SahipId", "HayvanId");
-
-                    b.HasIndex("HayvanId");
-
-                    b.ToTable("SahipHayvan");
-                });
-
             modelBuilder.Entity("VeterinerApp.Models.Entity.Stok", b =>
                 {
                     b.Property<int>("Id")
@@ -673,6 +667,21 @@ namespace VeterinerApp.Migrations
                     b.HasKey("TurId");
 
                     b.ToTable("Turler");
+                });
+
+            modelBuilder.Entity("AppUserHayvan", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.Hayvan", null)
+                        .WithMany()
+                        .HasForeignKey("HayvanlarHayvanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerApp.Models.Entity.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("SahiplerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -849,25 +858,6 @@ namespace VeterinerApp.Migrations
                     b.Navigation("Hekim");
                 });
 
-            modelBuilder.Entity("VeterinerApp.Models.Entity.SahipHayvan", b =>
-                {
-                    b.HasOne("VeterinerApp.Models.Entity.Hayvan", "Hayvan")
-                        .WithMany("Sahipler")
-                        .HasForeignKey("HayvanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VeterinerApp.Models.Entity.AppUser", "AppUser")
-                        .WithMany("Hayvanlar")
-                        .HasForeignKey("SahipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Hayvan");
-                });
-
             modelBuilder.Entity("VeterinerApp.Models.Entity.Stok", b =>
                 {
                     b.HasOne("VeterinerApp.Models.Entity.Birim", "Birim")
@@ -908,8 +898,6 @@ namespace VeterinerApp.Migrations
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.AppUser", b =>
                 {
-                    b.Navigation("Hayvanlar");
-
                     b.Navigation("MaasOdemeleri");
 
                     b.Navigation("Muayeneler");
@@ -937,8 +925,6 @@ namespace VeterinerApp.Migrations
                     b.Navigation("BabaninCocuklari");
 
                     b.Navigation("Muayeneler");
-
-                    b.Navigation("Sahipler");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Kategori", b =>

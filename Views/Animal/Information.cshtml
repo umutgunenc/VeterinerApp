@@ -1,4 +1,4 @@
-﻿@model HayvanlarViewModel
+﻿@model HayvanlarBilgiViewModel
 
 <h3 class="font-weight-bold text-white">
     Hayvan Bilgileri   @if (Model.CinsAdi.ToUpper() == "KÖPEK")
@@ -13,7 +13,7 @@
     <div class="row no-gutters">
         <div class="col-md-4">
             <div class="m-3 text-center">
-                <img src="@if (Model.imgURL != null) { @Model.imgURL } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
+                <img src="@if (Model.ImgUrl != null) { @Model.ImgUrl } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
             </div>
         </div>
         <div class="col-md-8 align-self-start">
@@ -36,7 +36,7 @@
                         }
                     </h6>
                     <h6 class="card-title ml-2 ml-lg-0">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
-                    <h6 class="card-title ml-2 ml-lg-0">Sahiplik Tarihi : @Model.SahiplikTarihi.ToString("dd-MM-yyyy")</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Sahiplik Tarihi : @Model.SahiplenmeTarihi.ToString("dd-MM-yyyy")</h6>
                                           
                     <h6 class="card-title ml-2 ml-lg-0">
                         Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)

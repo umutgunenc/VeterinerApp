@@ -35,13 +35,17 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.CinsTur.Any(x => x.Id == id);
         }
+        public static bool BeMatchedCinsTur(int cinsId, int turId)
+        {
+            return _context.CinsTur.Any(x => x.CinsId == cinsId && x.TurId == turId);
+        }
         public static bool BeSameCins(Hayvan model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
 
             var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
-            return parent != null && parent.CinsId == model.TurId;
+            return parent != null && parent.CinsTur.CinsId == model.CinsTur.CinsId;
         }
         public static bool BeOlder(Hayvan model, int? parentID)
         {
@@ -134,7 +138,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
         {
-            return _context.SahipHayvanlar.Any(x => x.HayvanId == hayvanId && x.Sahip.InsanTckn == model.SahipTckn);
+            return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
         }
 
         public static bool LoginSucceed(AppUser user)
@@ -268,7 +272,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             var cinsId = _context.CinsTur.Where(x => x.CinsId == id).Select(x => x.CinsId).FirstOrDefault();
             var turId = _context.CinsTur.Where(x => x.TurId == id).Select(x => x.TurId).FirstOrDefault();
-            return !_context.Hayvanlar.Where(x => x.CinsId == cinsId && x.TurId == turId).Any();
+            return !_context.Hayvanlar.Where(x => x.CinsTur.CinsId == cinsId && x.CinsTur.Tur.TurId == turId).Any();
         }
         public static bool BeNotMatchedRol(int rolId)
         {
@@ -288,7 +292,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeNotOwnedAnimal(int hayvanId, string yeniSahipTCKN)
         {
-            return !_context.SahipHayvanlar.Where(x => x.Sahip.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
+            return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
         }
 
 

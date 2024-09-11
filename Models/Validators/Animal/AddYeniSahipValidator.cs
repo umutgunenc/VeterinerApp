@@ -9,7 +9,7 @@ namespace VeterinerApp.Models.Validators.Animal
 
         public AddYeniSahipValidator()
         {
-            RuleFor(x => x.yeniSahipTCKN)
+            RuleFor(x => x.YeniSahipTCKN)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
                 .NotNull().WithMessage("Lütfen TCKN giriniz.")
                 .Length(11).WithMessage("TCKN 11 karakter uzunluğunda olmalıdır.")

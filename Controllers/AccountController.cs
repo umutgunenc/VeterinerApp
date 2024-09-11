@@ -69,11 +69,11 @@ namespace VeterinerApp.Controllers
             }
 
 
-            var createResult = await _userManager.CreateAsync(model, model.PasswordHash);
+            var createPasswordResult = await _userManager.CreateAsync(model, model.PasswordHash);
 
-            if (!createResult.Succeeded)
+            if (!createPasswordResult.Succeeded)
             {
-                foreach (var error in createResult.Errors)
+                foreach (var error in createPasswordResult.Errors)
                 {
                     ModelState.AddModelError("PasswordHash", error.Description);
                 }

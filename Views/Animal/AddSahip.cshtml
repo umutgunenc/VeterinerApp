@@ -20,10 +20,10 @@
                         <h3>@Model.HayvanAdi.ToUpper()</h3>
                     </div>
                     <div>
-                        <h6 class="card-title mt-2">Türü : @Model.turAdi</h6>
-                        <h6 class="card-title mt-2">Cinsi : @Model.cinsAdi</h6>
+                        <h6 class="card-title mt-2">Türü : @Model.TurAdi</h6>
+                        <h6 class="card-title mt-2">Cinsi : @Model.CinsAdi</h6>
                         <h6 class="card-title mt-2">Kilosu : @Model.HayvanKilo</h6>
-                        <h6 class="card-title mt-2">Rengi : @Model.renkAdi</h6>
+                        <h6 class="card-title mt-2">Rengi : @Model.RenkAdi</h6>
                         <h6 class="card-title mt-2">
                             Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
                             {
@@ -47,15 +47,15 @@
                         </h6>
                         <div class="d-flex flex-column">
                             <div class="col-sm-9 mb-2 px-0">
-                                <input type="text" asp-for="yeniSahipTCKN" class="form-control" placeholder="Yeni Sahibin TCKN numarasını giriniz.">
+                                <input type="text" asp-for="YeniSahipTCKN" class="form-control" placeholder="Yeni Sahibin TCKN numarasını giriniz.">
                                 <input type="hidden" asp-for="HayvanId" value="@Model.HayvanId" />
-                                <input type="hidden" asp-for="userTCKN" value="@Model.userTCKN" />
+                                <input type="hidden" asp-for="UserTCKN" value="@Model.UserTCKN" />
                                 <input type="hidden" asp-for="Signature" value="@Model.Signature" />
 
                             </div>
                             <button type="submit" class="col-sm-9 pl-0 btn btn-secondary mb-3">Yeni Sahip Ekle</button>
                             <div>
-                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="yeniSahipTCKN"></span>
+                                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="YeniSahipTCKN"></span>
                             </div>
                         </div>
                         @if (ViewBag.Mail != null)
@@ -84,11 +84,11 @@
         setTimeout(function () {
             var message = document.getElementById("MailHata");
             message.remove();
-        }, 3500);
+        }, 5000);
 
         setTimeout(function () {
             var message = document.getElementById("Mail");
             message.remove();
-        }, 3500);
+        }, 5000);
     </script>
 }

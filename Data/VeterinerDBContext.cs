@@ -1,19 +1,41 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
+using VeterinerApp.Models.Entity;
+
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Globalization;
+using VeterinerApp.Data;
+using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Data
 {
     public class VeterinerDBContext : IdentityDbContext<AppUser, AppRole, int>
     {
+        private readonly IConfiguration _configuration;
         public VeterinerDBContext()
         {
-
+            
         }
+
         public VeterinerDBContext(DbContextOptions<VeterinerDBContext> options) : base(options)
         {
+
         }
 
         public virtual DbSet<AppUser> AppUsers { get; set; }
@@ -32,17 +54,15 @@ namespace VeterinerApp.Data
 
         //Ara tablolar
         public virtual DbSet<CinsTur> CinsTur { get; set; }
-        public virtual DbSet<MuayeneStok> MuayeneStoklar { get; set; }
-        public virtual DbSet<SahipHayvan> SahipHayvanlar { get; set; }
-        public virtual DbSet<TedaviMuayene> TedaviMuayeneler { get; set; }
-        public virtual DbSet<StokMuayene> StokMuayeneler { get; set; }
+        public virtual DbSet<SahipHayvan> SahipHayvan { get; set; }
+
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-5OQQMU6\\SQLEXPRESS;Database=Veteriner2;Trusted_Connection=True;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-5OQQMU6\\SQLEXPRESS;Database=Veteriner3;Trusted_Connection=True;TrustServerCertificate=True");
             }
         }
 
@@ -51,16 +71,41 @@ namespace VeterinerApp.Data
             modelBuilder.Entity<Hayvan>(entity =>
             {
                 entity.HasOne(e => e.HayvanAnne)
-                .WithMany(p => p.AnneCocuklari)
+                .WithMany(p => p.AnneninCocuklari)
                 .HasForeignKey(d => d.HayvanAnneId)
                 .HasConstraintName("FK__Hayvan__Anne");
 
                 entity.HasOne(e => e.HayvanBaba)
-                .WithMany(p => p.BabaCocuklari)
+                .WithMany(p => p.BabaninCocuklari)
                 .HasForeignKey(d => d.HayvanBabaId)
                 .HasConstraintName("FK__Hayvan__Baba");
 
             });
+
+            modelBuilder.Entity<SahipHayvan>()
+                .HasKey(sh => new { sh.SahipId, sh.HayvanId });
+
+            modelBuilder.Entity<SahipHayvan>()
+                .HasOne(sh => sh.Hayvan)
+                .WithMany(h => h.Sahipler)
+                .HasForeignKey(sh => sh.HayvanId);
+
+            modelBuilder.Entity<SahipHayvan>()
+                .HasOne(sh => sh.AppUser)
+                .WithMany(u => u.Hayvanlar)
+                .HasForeignKey(sh => sh.SahipId); 
+
+            modelBuilder.Entity<SahipHayvan>()
+                .Property(sh => sh.HayvanId)
+                .HasColumnName("HayvanId");
+
+            modelBuilder.Entity<SahipHayvan>()
+                .Property(sh => sh.SahipId)
+                .HasColumnName("SahiplerId"); 
+
+            modelBuilder.Entity<SahipHayvan>()
+                .Property(sh=>sh.SahiplenmeTarihi)
+                .IsRequired();
 
 
             modelBuilder.Entity<AppRole>()

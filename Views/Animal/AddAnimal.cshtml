@@ -61,27 +61,27 @@
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
-                        <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
-                        <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.TurAdlari">
-                            <option value="@Model.TurId" contextmenu="@Model.Turu" disabled selected>Tür Seçin</option>
+                        <label asp-for="SecilenTurId" class="col-form-label font-weight-bold text-white px-0">Tür</label>
+                        <select id="tur" asp-for="SecilenTurId" class="form-control" asp-items="Model.TurlerListesi">
+                            <option value="" disabled selected>Tür Seçin</option> 
                         </select>
                         <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="SecilenTurId"></span>
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
-                        <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
-                        <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.CinsAdlari">
-                            <option value="@Model.CinsId" contextmenu="@Model.Cinsi" disabled selected>Cins Seçin</option>
+                        <label asp-for="SecilenCinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
+                        <select id="cins" asp-for="SecilenCinsId" class="form-control" asp-items="Model.CinslerListesi">
+                            <option value="" disabled selected>Cins Seçin</option>
                         </select>
                         <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="SecilenCinsId"></span>
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
                         <label asp-for="RenkId" class="col-form-label font-weight-bold text-white px-0">Rengi</label>
-                        <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenkAdlari">
-                            <option value="@Model.RenkId" contextmenu="@Model.Rengi" disabled selected>Renk Seçin</option>
+                        <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenklerListesi">
+                            <option value="@Model.RenkId"  disabled selected>Renk Seçin</option>
                         </select>
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="RenkId"></span>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-3">
                         <label asp-for="HayvanCinsiyet" class="col-form-label font-weight-bold text-white px-0">Cinsiyeti</label>
-                        <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetList">
+                        <select id="cinsiyet" asp-for="HayvanCinsiyet" class="form-control" asp-items="Model.CinsiyetListesi">
                             <option value="" disabled selected>Cinsiyet Seçin</option>
                         </select>
                         <div class="mt-2">
@@ -108,11 +108,11 @@
                     </div>
                 </div>
                 <div class="form-group row mb-3">
-                    <label asp-for="SahiplikTarihi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Sahiplik Tarihi</label>
+                    <label asp-for="SahiplenmeTarihi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Sahiplik Tarihi</label>
                     <div class="col-md-9 pl-md-0">
-                        <input type="date" asp-for="SahiplikTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
+                        <input type="date" asp-for="SahiplenmeTarihi" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="">
                         <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplikTarihi">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SahiplenmeTarihi">
                             </span>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                 <div class="form-group row mb-3">
                     <label asp-for="HayvanAnneId" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Annesi</label>
                     <div class="col-md-9 pl-md-0">
-                        <select asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneList">
+                        <select asp-for="HayvanAnneId" class="form-control" asp-items="Model.HayvanAnneListesi">
                             <option value="">Anne Seçin</option>
                         </select>
                         <div class="mt-2">
@@ -132,7 +132,7 @@
                 <div class="form-group row mb-1">
                     <label asp-for="HayvanBabaId" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Babası</label>
                     <div class="col-md-9 pl-md-0">
-                        <select asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaList">
+                        <select asp-for="HayvanBabaId" class="form-control" asp-items="Model.HayvanBabaListesi">
                             <option value="">Baba Seçin</option>
                         </select>
                         <div class="mt-2">

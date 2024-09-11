@@ -9,16 +9,17 @@ using VeterinerApp.Models.ViewModel.Animal;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using VeterinerApp.Models.Validators.ValidateFunctions;
+using Microsoft.EntityFrameworkCore;
 
 
 #nullable disable
 
 namespace VeterinerApp.Models.Validators.Animal
 {
-    public partial class HayvanValidator : AbstractValidator<AddAnimalViewModel>
+    public partial class HayvanEkleValidator : AbstractValidator<AddAnimalViewModel>
     {
 
-        public HayvanValidator()
+        public HayvanEkleValidator()
         {
 
             RuleFor(x => x.HayvanAdi)
@@ -31,15 +32,19 @@ namespace VeterinerApp.Models.Validators.Animal
                 .NotNull().WithMessage("Lütfen bir renk seçiniz.")
                 .Must(FunctionsValidator.BeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
 
-            RuleFor(x => x.CinsId)
+            RuleFor(x => x.SecilenCinsId)
                 .NotEmpty().WithMessage("Lütfen bir cins seçiniz")
                 .NotNull().WithMessage("Lütfen bir cins seçiniz")
                 .Must(FunctionsValidator.BeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
 
-            RuleFor(x => x.TurId)
+            RuleFor(x => x.SecilenTurId)
                 .NotEmpty().WithMessage("Lütfen bir tür seçiniz")
                 .NotNull().WithMessage("Lütfen bir tür seçiniz")
                 .Must(FunctionsValidator.BeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
+
+            RuleFor(x => new { x.SecilenCinsId, x.SecilenTurId })
+                .Must(static x => FunctionsValidator.BeMatchedCinsTur(x.SecilenCinsId, x.SecilenTurId))
+                .WithMessage("Seçilen cins ve tür eşleşmesi sistemde bulunmamaktadır.");
 
             RuleFor(x => x.HayvanCinsiyet)
                 .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
@@ -74,7 +79,7 @@ namespace VeterinerApp.Models.Validators.Animal
                 .NotEmpty().WithMessage("Lütfen hayvanın kilosunu giriniz.")
                 .GreaterThanOrEqualTo(0).WithMessage("Lütfen geçerli kilo değeri giriniz.");
 
-            RuleFor(x => x.SahiplikTarihi)
+            RuleFor(x => x.SahiplenmeTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz.")
                 .NotNull().WithMessage("Lütfen bir tarih giriniz.")
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")

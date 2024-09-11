@@ -7,6 +7,13 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class Hayvan
     {
+        public Hayvan()
+        {
+            AnneninCocuklari = new HashSet<Hayvan>();
+            BabaninCocuklari = new HashSet<Hayvan>();
+            Muayeneler = new HashSet<Muayene>();
+            Sahipler = new HashSet<SahipHayvan>();
+        }
         public int HayvanId { get; set; }
         public string HayvanAdi { get; set; }
         public string HayvanCinsiyet { get; set; }
@@ -15,18 +22,19 @@ namespace VeterinerApp.Models.Entity
         public DateTime HayvanDogumTarihi { get; set; }
         public DateTime? HayvanOlumTarihi { get; set; }
         public int RenkId { get; set; }
-        public int TurId { get; set; }
-        public int CinsId { get; set; }
+        public int CinsTurId { get; set; }
+
         public int? HayvanAnneId { get; set; }
         public int? HayvanBabaId { get; set; }
 
         public virtual Hayvan HayvanAnne { get; set; }
         public virtual Hayvan HayvanBaba { get; set; }
         public virtual Renk Renk { get; set; }
+
         public virtual CinsTur CinsTur { get; set; }
-        public virtual ICollection<Hayvan> AnneCocuklari { get; set; }
-        public virtual ICollection<Hayvan> BabaCocuklari { get; set; }
+        public virtual ICollection<Hayvan> AnneninCocuklari { get; set; }
+        public virtual ICollection<Hayvan> BabaninCocuklari { get; set; }
         public virtual ICollection<Muayene> Muayeneler { get; set; }
-        public virtual ICollection<AppUser> Sahipler { get; set; }
+        public virtual ICollection<SahipHayvan> Sahipler { get; set; }
     }
 }

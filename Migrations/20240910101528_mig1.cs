@@ -13,13 +13,49 @@ namespace VeterinerApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: false),
-                    NormalizedName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InsanTckn = table.Column<string>(type: "char(11)", nullable: false),
+                    InsanAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    InsanSoyadi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SifreOlusturmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SifreGecerlilikTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DiplomaNo = table.Column<string>(type: "char(11)", nullable: true),
+                    CalisiyorMu = table.Column<bool>(type: "bit", nullable: false),
+                    Maas = table.Column<double>(type: "float", nullable: true),
+                    TermOfUse = table.Column<bool>(type: "bit", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 256, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "char(11)", nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,176 +156,6 @@ namespace VeterinerApp.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stoklar",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StokBarkod = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    StokAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    StokSayisi = table.Column<int>(type: "int", nullable: false),
-                    BirimId = table.Column<int>(type: "int", nullable: false),
-                    Aciklama = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AktifMi = table.Column<bool>(type: "bit", nullable: false),
-                    KategoriId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stoklar", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Stoklar_Birimler_BirimId",
-                        column: x => x.BirimId,
-                        principalTable: "Birimler",
-                        principalColumn: "BirimId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Stoklar_Kategoriler_KategoriId",
-                        column: x => x.KategoriId,
-                        principalTable: "Kategoriler",
-                        principalColumn: "KategoriId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CinsTur",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CinsId = table.Column<int>(type: "int", nullable: false),
-                    TurId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CinsTur", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CinsTur_Cinsler_CinsId",
-                        column: x => x.CinsId,
-                        principalTable: "Cinsler",
-                        principalColumn: "CinsId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CinsTur_Turler_TurId",
-                        column: x => x.TurId,
-                        principalTable: "Turler",
-                        principalColumn: "TurId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FiyatListeleri",
-                columns: table => new
-                {
-                    FiyatListesiId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StokId = table.Column<int>(type: "int", nullable: false),
-                    FiyatSatisGecerlilikBaslangicTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FiyatSatisGecerlilikBitisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SatisFiyati = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FiyatListeleri", x => x.FiyatListesiId);
-                    table.ForeignKey(
-                        name: "FK_FiyatListeleri_Stoklar_StokId",
-                        column: x => x.StokId,
-                        principalTable: "Stoklar",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hayvanlar",
-                columns: table => new
-                {
-                    HayvanId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HayvanAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    HayvanCinsiyet = table.Column<string>(type: "char(1)", nullable: false),
-                    HayvanKilo = table.Column<double>(type: "float", nullable: false),
-                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HayvanDogumTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HayvanOlumTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RenkId = table.Column<int>(type: "int", nullable: false),
-                    TurId = table.Column<int>(type: "int", nullable: false),
-                    CinsId = table.Column<int>(type: "int", nullable: false),
-                    HayvanAnneId = table.Column<int>(type: "int", nullable: true),
-                    HayvanBabaId = table.Column<int>(type: "int", nullable: true),
-                    CinsTurId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hayvanlar", x => x.HayvanId);
-                    table.ForeignKey(
-                        name: "FK__Hayvan__Anne",
-                        column: x => x.HayvanAnneId,
-                        principalTable: "Hayvanlar",
-                        principalColumn: "HayvanId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__Hayvan__Baba",
-                        column: x => x.HayvanBabaId,
-                        principalTable: "Hayvanlar",
-                        principalColumn: "HayvanId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Hayvanlar_CinsTur_CinsTurId",
-                        column: x => x.CinsTurId,
-                        principalTable: "CinsTur",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Hayvanlar_Renkler_RenkId",
-                        column: x => x.RenkId,
-                        principalTable: "Renkler",
-                        principalColumn: "RenkId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InsanTckn = table.Column<string>(type: "char(11)", nullable: false),
-                    InsanAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    InsanSoyadi = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SifreOlusturmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SifreGecerlilikTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DiplomaNo = table.Column<string>(type: "char(11)", nullable: true),
-                    CalisiyorMu = table.Column<bool>(type: "bit", nullable: false),
-                    Maas = table.Column<double>(type: "float", nullable: true),
-                    TermOfUse = table.Column<bool>(type: "bit", nullable: false),
-                    HayvanId = table.Column<int>(type: "int", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "char(11)", nullable: false),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: true),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Hayvanlar_HayvanId",
-                        column: x => x.HayvanId,
-                        principalTable: "Hayvanlar",
-                        principalColumn: "HayvanId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -399,6 +265,188 @@ namespace VeterinerApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Stoklar",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StokBarkod = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    StokAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    StokSayisi = table.Column<int>(type: "int", nullable: false),
+                    BirimId = table.Column<int>(type: "int", nullable: false),
+                    Aciklama = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: false),
+                    KategoriId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stoklar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stoklar_Birimler_BirimId",
+                        column: x => x.BirimId,
+                        principalTable: "Birimler",
+                        principalColumn: "BirimId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Stoklar_Kategoriler_KategoriId",
+                        column: x => x.KategoriId,
+                        principalTable: "Kategoriler",
+                        principalColumn: "KategoriId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CinsTur",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CinsId = table.Column<int>(type: "int", nullable: false),
+                    TurId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CinsTur", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CinsTur_Cinsler_CinsId",
+                        column: x => x.CinsId,
+                        principalTable: "Cinsler",
+                        principalColumn: "CinsId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CinsTur_Turler_TurId",
+                        column: x => x.TurId,
+                        principalTable: "Turler",
+                        principalColumn: "TurId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FiyatListeleri",
+                columns: table => new
+                {
+                    FiyatListesiId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StokId = table.Column<int>(type: "int", nullable: false),
+                    FiyatSatisGecerlilikBaslangicTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FiyatSatisGecerlilikBitisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SatisFiyati = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FiyatListeleri", x => x.FiyatListesiId);
+                    table.ForeignKey(
+                        name: "FK_FiyatListeleri_Stoklar_StokId",
+                        column: x => x.StokId,
+                        principalTable: "Stoklar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StokHareketler",
+                columns: table => new
+                {
+                    StokHareketId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StokHareketTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StokId = table.Column<int>(type: "int", nullable: false),
+                    SatisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SatisFiyati = table.Column<double>(type: "float", nullable: true),
+                    AlisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AlisFiyati = table.Column<double>(type: "float", nullable: true),
+                    CalisanId = table.Column<int>(type: "int", nullable: false),
+                    StokGirisAdet = table.Column<int>(type: "int", nullable: true),
+                    StokCikisAdet = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StokHareketler", x => x.StokHareketId);
+                    table.ForeignKey(
+                        name: "FK_StokHareketler_AspNetUsers_CalisanId",
+                        column: x => x.CalisanId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StokHareketler_Stoklar_StokId",
+                        column: x => x.StokId,
+                        principalTable: "Stoklar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hayvanlar",
+                columns: table => new
+                {
+                    HayvanId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HayvanAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    HayvanCinsiyet = table.Column<string>(type: "char(1)", nullable: false),
+                    HayvanKilo = table.Column<double>(type: "float", nullable: false),
+                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HayvanDogumTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HayvanOlumTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RenkId = table.Column<int>(type: "int", nullable: false),
+                    CinsTurId = table.Column<int>(type: "int", nullable: false),
+                    HayvanAnneId = table.Column<int>(type: "int", nullable: true),
+                    HayvanBabaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hayvanlar", x => x.HayvanId);
+                    table.ForeignKey(
+                        name: "FK__Hayvan__Anne",
+                        column: x => x.HayvanAnneId,
+                        principalTable: "Hayvanlar",
+                        principalColumn: "HayvanId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__Hayvan__Baba",
+                        column: x => x.HayvanBabaId,
+                        principalTable: "Hayvanlar",
+                        principalColumn: "HayvanId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Hayvanlar_CinsTur_CinsTurId",
+                        column: x => x.CinsTurId,
+                        principalTable: "CinsTur",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Hayvanlar_Renkler_RenkId",
+                        column: x => x.RenkId,
+                        principalTable: "Renkler",
+                        principalColumn: "RenkId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppUserHayvan",
+                columns: table => new
+                {
+                    HayvanlarHayvanId = table.Column<int>(type: "int", nullable: false),
+                    SahiplerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUserHayvan", x => new { x.HayvanlarHayvanId, x.SahiplerId });
+                    table.ForeignKey(
+                        name: "FK_AppUserHayvan_AspNetUsers_SahiplerId",
+                        column: x => x.SahiplerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppUserHayvan_Hayvanlar_HayvanlarHayvanId",
+                        column: x => x.HayvanlarHayvanId,
+                        principalTable: "Hayvanlar",
+                        principalColumn: "HayvanId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Muayeneler",
                 columns: table => new
                 {
@@ -431,141 +479,48 @@ namespace VeterinerApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SahipHayvanlar",
+                name: "MuayeneStok",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HayvanId = table.Column<int>(type: "int", nullable: false),
-                    SahipTckn = table.Column<string>(type: "char(11)", nullable: false),
-                    SahiplikTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SahiplikCikisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SahipId = table.Column<int>(type: "int", nullable: false)
+                    MuayenelerMuayeneId = table.Column<int>(type: "int", nullable: false),
+                    StoklarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SahipHayvanlar", x => x.Id);
+                    table.PrimaryKey("PK_MuayeneStok", x => new { x.MuayenelerMuayeneId, x.StoklarId });
                     table.ForeignKey(
-                        name: "FK_SahipHayvanlar_AspNetUsers_SahipId",
-                        column: x => x.SahipId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SahipHayvanlar_Hayvanlar_HayvanId",
-                        column: x => x.HayvanId,
-                        principalTable: "Hayvanlar",
-                        principalColumn: "HayvanId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StokHareketler",
-                columns: table => new
-                {
-                    StokHareketId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StokHareketTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    StokId = table.Column<int>(type: "int", nullable: false),
-                    SatisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SatisFiyati = table.Column<double>(type: "float", nullable: true),
-                    AlisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AlisFiyati = table.Column<double>(type: "float", nullable: true),
-                    CalisanId = table.Column<int>(type: "int", nullable: false),
-                    StokGirisAdet = table.Column<int>(type: "int", nullable: true),
-                    StokCikisAdet = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StokHareketler", x => x.StokHareketId);
-                    table.ForeignKey(
-                        name: "FK_StokHareketler_AspNetUsers_CalisanId",
-                        column: x => x.CalisanId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_MuayeneStok_Muayeneler_MuayenelerMuayeneId",
+                        column: x => x.MuayenelerMuayeneId,
+                        principalTable: "Muayeneler",
+                        principalColumn: "MuayeneId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StokHareketler_Stoklar_StokId",
-                        column: x => x.StokId,
+                        name: "FK_MuayeneStok_Stoklar_StoklarId",
+                        column: x => x.StoklarId,
                         principalTable: "Stoklar",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MuayeneStoklar",
+                name: "MuayeneTedavi",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MuayeneId = table.Column<int>(type: "int", nullable: false),
-                    StokId = table.Column<int>(type: "int", nullable: false)
+                    MuayenelerMuayeneId = table.Column<int>(type: "int", nullable: false),
+                    TedavilerTedaviId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MuayeneStoklar", x => x.Id);
+                    table.PrimaryKey("PK_MuayeneTedavi", x => new { x.MuayenelerMuayeneId, x.TedavilerTedaviId });
                     table.ForeignKey(
-                        name: "FK_MuayeneStoklar_Muayeneler_MuayeneId",
-                        column: x => x.MuayeneId,
+                        name: "FK_MuayeneTedavi_Muayeneler_MuayenelerMuayeneId",
+                        column: x => x.MuayenelerMuayeneId,
                         principalTable: "Muayeneler",
                         principalColumn: "MuayeneId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MuayeneStoklar_Stoklar_StokId",
-                        column: x => x.StokId,
-                        principalTable: "Stoklar",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StokMuayeneler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IlacBarkod = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MuayeneId = table.Column<int>(type: "int", nullable: false),
-                    StokId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StokMuayeneler", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StokMuayeneler_Muayeneler_MuayeneId",
-                        column: x => x.MuayeneId,
-                        principalTable: "Muayeneler",
-                        principalColumn: "MuayeneId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StokMuayeneler_Stoklar_StokId",
-                        column: x => x.StokId,
-                        principalTable: "Stoklar",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TedaviMuayeneler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TedaviId = table.Column<int>(type: "int", nullable: false),
-                    MuayeneId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TedaviMuayeneler", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TedaviMuayeneler_Muayeneler_MuayeneId",
-                        column: x => x.MuayeneId,
-                        principalTable: "Muayeneler",
-                        principalColumn: "MuayeneId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TedaviMuayeneler_Tedaviler_TedaviId",
-                        column: x => x.TedaviId,
+                        name: "FK_MuayeneTedavi_Tedaviler_TedavilerTedaviId",
+                        column: x => x.TedavilerTedaviId,
                         principalTable: "Tedaviler",
                         principalColumn: "TedaviId",
                         onDelete: ReferentialAction.Cascade);
@@ -574,17 +529,22 @@ namespace VeterinerApp.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "24ceea9f-5800-4893-b38e-9dccb4413525", "ADMIN", "ADMIN" });
+                values: new object[] { 1, "c05809fa-65a7-4e9e-8e2d-a70a502bc3dc", "ADMIN", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "CalisiyorMu", "ConcurrencyStamp", "DiplomaNo", "Email", "EmailConfirmed", "HayvanId", "ImgURL", "InsanAdi", "InsanSoyadi", "InsanTckn", "LockoutEnabled", "LockoutEnd", "Maas", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SifreGecerlilikTarihi", "SifreOlusturmaTarihi", "TermOfUse", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, true, "93592a65-3aa2-4f57-a26c-3b08f7abd296", null, "umutgunenc@gmail.com", false, null, null, "Umut", "Günenç", "33080423902", false, null, null, "UMUTGUNENC@GMAİL.COM", "ADMIN", "AQAAAAEAACcQAAAAEGdFBhhR2NV2QP0YN64jk5msYjVxQTShKTDFMiuOYxugM+zpfP+3bOfKzkttw97CxA==", "05300000000", false, "6317c9c4-45e7-4c68-8a53-1c50bd8d601e", new DateTime(3023, 9, 9, 17, 40, 37, 460, DateTimeKind.Local).AddTicks(746), new DateTime(2024, 9, 9, 17, 40, 37, 458, DateTimeKind.Local).AddTicks(5096), true, false, "ADMIN" });
+                columns: new[] { "Id", "AccessFailedCount", "CalisiyorMu", "ConcurrencyStamp", "DiplomaNo", "Email", "EmailConfirmed", "ImgURL", "InsanAdi", "InsanSoyadi", "InsanTckn", "LockoutEnabled", "LockoutEnd", "Maas", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SifreGecerlilikTarihi", "SifreOlusturmaTarihi", "TermOfUse", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1, 0, true, "38abaa00-22ff-45b0-9bbf-3e067357ee12", null, "umutgunenc@gmail.com", false, null, "Umut", "Günenç", "33080423902", false, null, null, "UMUTGUNENC@GMAİL.COM", "ADMIN", "AQAAAAEAACcQAAAAEBOxF4d39NgXRv822KJbQInBGtEY9X3XQIaNAwmOBhXA/Q5cYFy92nQfJel89mgVkQ==", "05300000000", false, "ca5ba3a4-60af-4c92-a762-4225cca2a944", new DateTime(3023, 9, 10, 13, 15, 27, 490, DateTimeKind.Local).AddTicks(4335), new DateTime(2024, 9, 10, 13, 15, 27, 489, DateTimeKind.Local).AddTicks(5128), true, false, "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { 1, 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUserHayvan_SahiplerId",
+                table: "AppUserHayvan",
+                column: "SahiplerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -617,11 +577,6 @@ namespace VeterinerApp.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_HayvanId",
-                table: "AspNetUsers",
-                column: "HayvanId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -681,24 +636,14 @@ namespace VeterinerApp.Migrations
                 column: "HekimId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MuayeneStoklar_MuayeneId",
-                table: "MuayeneStoklar",
-                column: "MuayeneId");
+                name: "IX_MuayeneStok_StoklarId",
+                table: "MuayeneStok",
+                column: "StoklarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MuayeneStoklar_StokId",
-                table: "MuayeneStoklar",
-                column: "StokId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SahipHayvanlar_HayvanId",
-                table: "SahipHayvanlar",
-                column: "HayvanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SahipHayvanlar_SahipId",
-                table: "SahipHayvanlar",
-                column: "SahipId");
+                name: "IX_MuayeneTedavi_TedavilerTedaviId",
+                table: "MuayeneTedavi",
+                column: "TedavilerTedaviId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StokHareketler_CalisanId",
@@ -719,30 +664,13 @@ namespace VeterinerApp.Migrations
                 name: "IX_Stoklar_KategoriId",
                 table: "Stoklar",
                 column: "KategoriId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StokMuayeneler_MuayeneId",
-                table: "StokMuayeneler",
-                column: "MuayeneId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StokMuayeneler_StokId",
-                table: "StokMuayeneler",
-                column: "StokId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TedaviMuayeneler_MuayeneId",
-                table: "TedaviMuayeneler",
-                column: "MuayeneId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TedaviMuayeneler_TedaviId",
-                table: "TedaviMuayeneler",
-                column: "TedaviId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppUserHayvan");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -765,25 +693,16 @@ namespace VeterinerApp.Migrations
                 name: "MaasOdemeleri");
 
             migrationBuilder.DropTable(
-                name: "MuayeneStoklar");
+                name: "MuayeneStok");
 
             migrationBuilder.DropTable(
-                name: "SahipHayvanlar");
+                name: "MuayeneTedavi");
 
             migrationBuilder.DropTable(
                 name: "StokHareketler");
 
             migrationBuilder.DropTable(
-                name: "StokMuayeneler");
-
-            migrationBuilder.DropTable(
-                name: "TedaviMuayeneler");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Stoklar");
 
             migrationBuilder.DropTable(
                 name: "Muayeneler");
@@ -792,16 +711,19 @@ namespace VeterinerApp.Migrations
                 name: "Tedaviler");
 
             migrationBuilder.DropTable(
-                name: "Birimler");
-
-            migrationBuilder.DropTable(
-                name: "Kategoriler");
+                name: "Stoklar");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Hayvanlar");
+
+            migrationBuilder.DropTable(
+                name: "Birimler");
+
+            migrationBuilder.DropTable(
+                name: "Kategoriler");
 
             migrationBuilder.DropTable(
                 name: "CinsTur");

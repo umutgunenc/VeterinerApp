@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.X509Certificates;
 
 #nullable disable
 
@@ -10,7 +11,12 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class AppUser : IdentityUser<int>
     {
-
+        public AppUser()
+        {
+            MaasOdemeleri = new HashSet<MaasOdemeleri>();
+            Muayeneler = new HashSet<Muayene>();
+            Hayvanlar = new HashSet<SahipHayvan>();
+        }
         public string InsanTckn { get; set; }
         public string InsanAdi { get; set; }
         public string InsanSoyadi { get; set; }
@@ -23,6 +29,6 @@ namespace VeterinerApp.Models.Entity
         public bool TermOfUse { get; set; }
         public virtual ICollection<MaasOdemeleri> MaasOdemeleri { get; set; }
         public virtual ICollection<Muayene> Muayeneler { get; set; }
-        public virtual ICollection<SahipHayvan> SahipHayvanlar { get; set; }
+        public virtual ICollection<SahipHayvan> Hayvanlar { get; set; }
     }
 }

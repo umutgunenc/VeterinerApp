@@ -7,6 +7,12 @@ namespace VeterinerApp.Models.Entity
 {
     public partial class Stok
     {
+        public Stok()
+        {
+            FiyatListeleri = new HashSet<FiyatListesi>();
+            StokHareketleri = new HashSet<StokHareket>();
+            Muayeneler = new HashSet<Muayene>();
+        }
         public int Id { get; set; }
         public string StokBarkod { get; set; }
         public string StokAdi { get; set; }
@@ -20,6 +26,6 @@ namespace VeterinerApp.Models.Entity
 
         public virtual ICollection<FiyatListesi> FiyatListeleri { get; set; }
         public virtual ICollection<StokHareket> StokHareketleri { get; set; }
-        public virtual ICollection<MuayeneStok> MuayeneStoklar { get; set; }
+        public virtual ICollection<Muayene> Muayeneler { get; set; }
     }
 }
