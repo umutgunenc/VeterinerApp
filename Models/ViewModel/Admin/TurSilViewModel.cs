@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 
@@ -16,14 +18,16 @@ namespace VeterinerApp.Models.ViewModel.Admin
         public TurSilViewModel(VeterinerDBContext context)
         {
             _context = context;
-            TurListesiniGetir();
+            TurListesiniGetir().Wait();
         }
         public List<SelectListItem> Turler { get; set; }
 
-        private List<SelectListItem> TurListesiniGetir()
+        private async Task<List<SelectListItem>> TurListesiniGetir()
         {
+            var turler =await _context.Turler.ToListAsync();
+
             Turler = new List<SelectListItem>();
-            var turler = _context.Turler;
+
             foreach (var tur in turler)
             {
                 Turler.Add(new SelectListItem

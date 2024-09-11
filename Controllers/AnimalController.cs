@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -157,9 +158,9 @@ namespace VeterinerApp.Controllers
             var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
             var kullanici = await _userManager.GetUserAsync(User);
 
-            var kullaniciHayvani = _context.SahipHayvan
+            var kullaniciHayvani = await _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.SahipId == kullanici.Id)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (kullaniciHayvani == null)
             {

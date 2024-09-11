@@ -1,4 +1,4 @@
-﻿@model TurCinsSilViewModel
+﻿@model CinsTurSilViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -9,7 +9,7 @@
         <div class="col">
             <select asp-for="Id" class="form-control">
                 <option selected disabled>Kaldırılacak eşlemeyi Seçiniz</option>
-                @foreach (var item in Model.TurlerCinsler)
+                @foreach (var item in Model.CinslerTurlerListesi)
                 {
                     <option value="@item.Value">@item.Text</option>
                 }

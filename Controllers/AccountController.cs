@@ -222,7 +222,7 @@ namespace VeterinerApp.Controllers
 
                 try
                 {
-                    _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
+                    await _emailSender.SendEmailAsync(model.Email, "Veteriner Bilgi Sistemi'ne Hoş Geldiniz!", mailMessage);
                     TempData["KisiEklendi"] = $"{model.InsanAdi.ToUpper()} {model.InsanSoyadi.ToUpper()} isimli kişi sisteme kaydedildi. Kullanıcı adı ve şifresi {model.Email.ToUpper()} adresine gönderildi.";
                 }
                 catch (Exception ex)
@@ -485,7 +485,7 @@ namespace VeterinerApp.Controllers
 
                 try
                 {
-                    _emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage);
+                    await _emailSender.SendEmailAsync(user.Email, "Şifre Yenileme Talebi", mailMessage);
                     TempData["SifreGonderildi"] = $"{kullaniciAdSoyad} isimli kişinin şifresi {user.Email.ToUpper()} adresine gönderildi.";
                     return View();
 
