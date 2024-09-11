@@ -8,12 +8,12 @@
     <form asp-action="TurEkle" asp-controller="Admin" method="post">
         <div class="form-row">
             <div class="col">
-                <input asp-for="tur" class="form-control" placeholder="Tür Adı">
+                <input asp-for="TurAdi" class="form-control" placeholder="Tür Adı">
             </div>
             <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
         </div>
         <div class="col">
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="tur">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurAdi">
             </span>
         </div>
     </form>

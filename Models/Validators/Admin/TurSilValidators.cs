@@ -14,7 +14,7 @@ namespace VeterinerApp.Models.Validators.Admin
         public TurSilValidator()
         {
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.TurId)
                 .NotNull().WithMessage("Lütfen bir tür seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir tür seçiniz.")
                 .Must(FunctionsValidator.BeTur).WithMessage("Listede olmayan bir türü silemezsiniz.")

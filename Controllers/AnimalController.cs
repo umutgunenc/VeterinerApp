@@ -97,19 +97,13 @@ namespace VeterinerApp.Controllers
             hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
             hayvan.HayvanAnneId = model.HayvanAnneId;
             hayvan.HayvanBabaId = model.HayvanBabaId;
-            hayvan.CinsTur.Id = _context.CinsTur
-                                    .Where(ct=>ct.CinsId==model.SecilenCinsId && ct.TurId == model.SecilenTurId)
-                                    .Select(ct => ct.Id)
+            var cinsTur = _context.CinsTur
+                                    .Where(ct => ct.CinsId == model.SecilenCinsId && ct.TurId == model.SecilenTurId)
                                     .FirstOrDefault();
+            hayvan.CinsTur = cinsTur;
             hayvan.RenkId = model.RenkId;
 
-            _context.Hayvanlar.Add(hayvan);
-            _context.SaveChanges();
 
-            SahipHayvan sahipHayvan = new SahipHayvan();
-            sahipHayvan.SahiplenmeTarihi = model.SahiplenmeTarihi;
-            sahipHayvan.SahipId = _userManager.GetUserAsync(User).Result.Id;
-            sahipHayvan.HayvanId = hayvan.HayvanId;
 
 
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
@@ -135,18 +129,21 @@ namespace VeterinerApp.Controllers
 
                 // Veritabanına URL'yi kaydetme
                 hayvan.ImgUrl = fileUrl;
-                await _context.SaveChangesAsync();
             }
             else
             {
                 hayvan.ImgUrl = null;
-                await _context.SaveChangesAsync();
 
             }
 
-            _context.SahipHayvan.Add(sahipHayvan);
+            SahipHayvan sahipHayvan = new SahipHayvan();
+            sahipHayvan.SahiplenmeTarihi = model.SahiplenmeTarihi;
+            sahipHayvan.SahipId = _userManager.GetUserAsync(User).Result.Id;
+            sahipHayvan.HayvanId = hayvan.HayvanId;
 
-            _context.SaveChangesAsync();
+            await _context.Hayvanlar.AddAsync(hayvan);
+            await _context.SahipHayvan.AddAsync(sahipHayvan);
+            await _context.SaveChangesAsync();
 
             TempData["AddAnimal"] = $"{model.HayvanAdi} isimli hayvan başarıyla eklendi.";
 
@@ -157,8 +154,8 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Information(int hayvanId)
         {
-            var hayvan = _context.Hayvanlar.Find(hayvanId);
-            var kullanici = _userManager.GetUserAsync(User).Result;
+            var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+            var kullanici = await _userManager.GetUserAsync(User);
 
             var kullaniciHayvani = _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.SahipId == kullanici.Id)
@@ -177,11 +174,11 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditAnimal(int hayvanId)
+        public async Task<IActionResult> EditAnimal(int hayvanId)
         {
 
-            var hayvan = _context.Hayvanlar.Find(hayvanId);
-            var user = _userManager.GetUserAsync(User).Result;
+            var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+            var user = await _userManager.GetUserAsync(User);
 
             var userHayvan = _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
@@ -200,7 +197,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAnimal(EditAnimalViewModel model)
         {
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
             if (!Signature.VerifySignature(model.HayvanId, model.SahipTckn, model.Imza))
             {
                 return View("Badrequest");
@@ -221,7 +218,7 @@ namespace VeterinerApp.Controllers
             }
 
 
-            var hayvan = _context.Hayvanlar.FindAsync(model.HayvanId).Result;
+            var hayvan = await _context.Hayvanlar.FindAsync(model.HayvanId);
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);

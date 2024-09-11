@@ -46,12 +46,11 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult RenkEkle(RenkEkleViewModel model)
+        public async Task<IActionResult> RenkEkle(RenkEkleViewModel model)
         {
-            string renk = model.renk.ToUpper();
-            var renkEntity = new Renk { RenkAdi = renk };
+            model.RenkAdi = model.RenkAdi.ToUpper();
 
-            RenkEkleValidators renkvalidator = new RenkEkleValidators();
+            RenkEkleValidators renkvalidator = new();
             ValidationResult result = renkvalidator.Validate(model);
 
 
@@ -64,9 +63,9 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
-            _veterinerDbContext.Renkler.Add(renkEntity);
-            _veterinerDbContext.SaveChanges();
-            TempData["Success"] = $"{renk} rengi eklendi";
+            await _veterinerDbContext.Renkler.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["Success"] = $"{model.RenkAdi} rengi eklendi";
 
             return View();
         }
@@ -74,26 +73,13 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult RenkSil()
         {
-            RenkSilViewModel model = new RenkSilViewModel()
-            {
-                Renkler = _veterinerDbContext.Renkler.Select(r => new SelectListItem
-                {
-                    Value = r.RenkId.ToString(),
-                    Text = r.RenkAdi,
-                }).ToList()
-            };
+            RenkSilViewModel model = new(_veterinerDbContext);
+
             return View(model);
         }
         [HttpPost]
-        public IActionResult RenkSil(RenkSilViewModel model)
+        public async Task<IActionResult> RenkSil(RenkSilViewModel model)
         {
-
-            var silinecekRenkAdı = _veterinerDbContext.Renkler
-                .Where(x => x.RenkId == model.Id)
-                .Select(x => x.RenkAdi).FirstOrDefault();
-
-            var renkEntity = new Renk { RenkId = model.Id, RenkAdi = silinecekRenkAdı };
-
             RenkSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
@@ -104,20 +90,19 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new RenkSilViewModel
-                {
-                    Renkler = _veterinerDbContext.Renkler.Select(r => new SelectListItem
-                    {
-                        Value = r.RenkId.ToString(),
-                        Text = r.RenkAdi,
-                    }).ToList()
-                };
+                model = new RenkSilViewModel(_veterinerDbContext);
+
                 return View(model);
             }
-            _veterinerDbContext.Renkler.Remove(renkEntity);
-            _veterinerDbContext.SaveChanges();
 
-            TempData["RenkSilindi"] = $"{renkEntity.RenkAdi} başarı ile silindi.";
+            var silinecekRenk = await _veterinerDbContext.Renkler
+                .Where(r => r.RenkId == model.RenkId)
+                .FirstOrDefaultAsync();
+
+            _veterinerDbContext.Renkler.Remove(silinecekRenk);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["RenkSilindi"] = $"{silinecekRenk.RenkAdi} başarı ile silindi.";
 
             return RedirectToAction();
         }
@@ -128,16 +113,14 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CinsEkle(CinsEkleViewModel model)
+        public async Task<IActionResult> CinsEkle(CinsEkleViewModel model)
         {
 
-            string cinsAdi = model.cins.ToUpper();
-            var cinsEntity = new Cins { CinsAdi = cinsAdi };
+            model.CinsAdi = model.CinsAdi.ToUpper();
 
-            CinsEkleValidators validator = new CinsEkleValidators();
+            CinsEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
-            _veterinerDbContext.Cinsler.Add(cinsEntity);
 
             if (!result.IsValid)
             {
@@ -147,9 +130,11 @@ namespace VeterinerApp.Controllers
                 }
                 return View();
             }
-            _veterinerDbContext.SaveChanges();
 
-            TempData["CinsEklendi"] = $"{cinsAdi} cinsi eklendi";
+            await _veterinerDbContext.Cinsler.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["CinsEklendi"] = $"{model.CinsAdi} cinsi eklendi";
 
             return RedirectToAction();
         }
@@ -157,24 +142,13 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult CinsSil()
         {
-            CinsSilViewModel model = new CinsSilViewModel()
-            {
-                Cinsler = _veterinerDbContext.Cinsler.Select(x => new SelectListItem
-                {
-                    Value = x.CinsId.ToString(),
-                    Text = x.CinsAdi,
-                }).ToList()
-            };
+            CinsSilViewModel model = new(_veterinerDbContext);
+
             return View(model);
         }
         [HttpPost]
-        public IActionResult CinsSil(CinsSilViewModel model)
+        public async Task<IActionResult> CinsSil(CinsSilViewModel model)
         {
-            var silinecekCinsAdı = _veterinerDbContext.Cinsler
-                    .Where(x => x.CinsId == model.Id)
-                    .Select(x => x.CinsAdi).FirstOrDefault();
-
-            var cinsEntity = new Cins { CinsId = model.Id, CinsAdi = silinecekCinsAdı };
 
             CinsSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
@@ -186,20 +160,18 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new CinsSilViewModel
-                {
-                    Cinsler = _veterinerDbContext.Cinsler.Select(r => new SelectListItem
-                    {
-                        Value = r.CinsId.ToString(),
-                        Text = r.CinsAdi,
-                    }).ToList()
-                };
+                model = new CinsSilViewModel(_veterinerDbContext);
+
                 return View(model);
             }
-            _veterinerDbContext.Cinsler.Remove(cinsEntity);
-            _veterinerDbContext.SaveChanges();
+            var silinecekCins = await _veterinerDbContext.Cinsler
+                .Where(x => x.CinsId == model.CinsId)
+                .FirstOrDefaultAsync();
 
-            TempData["CinsSilindi"] = $"{cinsEntity.CinsAdi} başarı ile silindi.";
+            _veterinerDbContext.Cinsler.Remove(silinecekCins);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["CinsSilindi"] = $"{silinecekCins.CinsAdi} başarı ile silindi.";
 
             return RedirectToAction();
         }
@@ -210,15 +182,12 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult TurEkle(TurEKleViewModel model)
+        public async Task<IActionResult> TurEkle(TurEKleViewModel model)
         {
-            string turAdi = model.tur.ToUpper();
-            var turEntity = new Tur { TurAdi = turAdi };
+            model.TurAdi = model.TurAdi.ToUpper();
 
             TurEkleValidators validator = new TurEkleValidators();
             ValidationResult result = validator.Validate(model);
-
-            _veterinerDbContext.Turler.Add(turEntity);
 
             if (!result.IsValid)
             {
@@ -229,9 +198,10 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
-            _veterinerDbContext.SaveChanges();
+            await _veterinerDbContext.Turler.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
 
-            TempData["TurEklendi"] = $"{turAdi} türü eklendi";
+            TempData["TurEklendi"] = $"{model.TurAdi} türü eklendi";
 
             return RedirectToAction();
         }
@@ -240,25 +210,16 @@ namespace VeterinerApp.Controllers
         public IActionResult TurSil()
         {
 
-            var model = new TurSilViewModel
-            {
-                Turler = _veterinerDbContext.Turler.Select(r => new SelectListItem
-                {
-                    Value = r.TurId.ToString(),
-                    Text = r.TurAdi,
-                }).ToList()
-            };
+            TurSilViewModel model = new(_veterinerDbContext);
+
             return View(model);
 
         }
         [HttpPost]
-        public IActionResult TurSil(TurSilViewModel model)
+        public async Task<IActionResult> TurSil(TurSilViewModel model)
         {
-            var silinecekTurAdi = _veterinerDbContext.Turler
-                    .Where(x => x.TurId == model.Id)
-                    .Select(x => x.TurAdi).FirstOrDefault();
 
-            var turEntity = new Tur { TurId = model.Id, TurAdi = silinecekTurAdi };
+
 
             TurSilValidator validator = new();
             ValidationResult result = validator.Validate(model);
@@ -270,21 +231,19 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                model = new TurSilViewModel
-                {
-                    Turler = _veterinerDbContext.Turler.Select(r => new SelectListItem
-                    {
-                        Value = r.TurId.ToString(),
-                        Text = r.TurAdi,
-                    }).ToList()
-                };
+                model = new TurSilViewModel(_veterinerDbContext);
+
                 return View(model);
 
             }
-            _veterinerDbContext.Turler.Remove(turEntity);
-            _veterinerDbContext.SaveChanges();
+            var silinecekTur = await _veterinerDbContext.Turler
+                .Where(x => x.TurId == model.TurId)
+                .FirstOrDefaultAsync();
 
-            TempData["TurSilindi"] = $"{turEntity.TurAdi} başarı ile silindi.";
+            _veterinerDbContext.Turler.Remove(silinecekTur);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["TurSilindi"] = $"{silinecekTur.TurAdi} başarı ile silindi.";
 
             return RedirectToAction();
         }

@@ -16,7 +16,7 @@ namespace VeterinerApp.Models.Validators.Admin
         public RenkEkleValidators()
         {
 
-            RuleFor(x => x.renk)
+            RuleFor(x => x.RenkAdi)
                 .NotNull().WithMessage("Lütfen bir renk giriniz.")
                 .NotEmpty().WithMessage("Lütfen bir renk giriniz.")
                 .MaximumLength(50).WithMessage("En fazla 50 karakter uzunluğunda değer girilebilir.")

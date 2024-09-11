@@ -16,7 +16,7 @@ namespace VeterinerApp.Models.Validators.Admin
         public CinsSilValidator()
         {
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.CinsId)
                 .NotNull().WithMessage("Lütfen bir cins seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir cins seçiniz.")
                 .Must(FunctionsValidator.BeCins).WithMessage("Listede olmayan bir cinsi silemezsiniz.")

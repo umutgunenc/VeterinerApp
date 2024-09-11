@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 
@@ -20,7 +21,9 @@ namespace VeterinerApp.Models.ViewModel.Animal
             _context = context;
         }
 
-
+        public string CinsAdi { get; set; }
+        public string TurAdi { get; set; }
+        public string RenkAdi { get; set; }
         public int SecilenTurId { get; set; }
         public int SecilenCinsId { get; set; }
         public List<SelectListItem> TurlerListesi { get; set; }
@@ -43,9 +46,9 @@ namespace VeterinerApp.Models.ViewModel.Animal
                 h.HayvanAdi,
                 h.HayvanId,
                 h.HayvanCinsiyet,
-                h.CinsTur.Cins.CinsAdi,
-                h.CinsTur.Tur.TurAdi,
-                h.Renk.RenkAdi,
+                CinsAdi = _context.Cinsler.Where(c => c.CinsId == h.CinsTur.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                TurAdi = _context.Turler.Where(t => t.TurId == h.CinsTur.TurId).Select(t => t.TurAdi).FirstOrDefault(),
+                RenkAdi=_context.Renkler.Where(r=>r.RenkId==h.RenkId).Select(r=>r.RenkAdi).FirstOrDefault(),
                 hayvanDogumTarihi = h.HayvanDogumTarihi.ToString("dd-MM-yyyy")
             }).ToList();
 
@@ -66,9 +69,9 @@ namespace VeterinerApp.Models.ViewModel.Animal
                 h.HayvanAdi,
                 h.HayvanId,
                 h.HayvanCinsiyet,
-                h.CinsTur.Cins.CinsAdi,
-                h.CinsTur.Tur.TurAdi,
-                h.Renk.RenkAdi,
+                CinsAdi = _context.Cinsler.Where(c => c.CinsId == h.CinsTur.CinsId).Select(c => c.CinsAdi).FirstOrDefault(),
+                TurAdi = _context.Turler.Where(t => t.TurId == h.CinsTur.TurId).Select(t => t.TurAdi).FirstOrDefault(),
+                RenkAdi = _context.Renkler.Where(r => r.RenkId == h.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
                 hayvanDogumTarihi = h.HayvanDogumTarihi.ToString("dd-MM-yyyy")
             }).ToList();
 

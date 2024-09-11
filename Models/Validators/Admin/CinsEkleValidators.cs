@@ -12,7 +12,7 @@ namespace VeterinerApp.Models.Validators.Admin
     {
         public CinsEkleValidators()
         {
-            RuleFor(x => x.cins)
+            RuleFor(x => x.CinsAdi)
                 .NotNull().WithMessage("Lütfen bir cins giriniz.")
                 .NotEmpty().WithMessage("Lütfen bir cins giriniz.")
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter kullanabilirsiniz.")

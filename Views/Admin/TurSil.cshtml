@@ -7,7 +7,7 @@
 <form asp-action="TurSil" asp-controller="Admin" method="post">
     <div class="form-row">
         <div class="col">
-            <select asp-for="Id" class="form-control" id="mySelect">
+            <select asp-for="TurId" class="form-control" id="mySelect">
                 <option selected disabled>Silinecek Türü Seçiniz</option>
                 @foreach (var turler in Model.Turler)
                 {
@@ -18,7 +18,7 @@
         <button type="submit" class="btn btn-dark rounded mb-2">Sil</button>
     </div>
     <div class="col">
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TurId">
         </span>
     </div>
 </form>

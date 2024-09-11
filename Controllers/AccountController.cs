@@ -12,6 +12,7 @@ using System;
 using VeterinerApp.Fonksiyonlar;
 using System.IO;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace VeterinerApp.Controllers
 {
@@ -69,17 +70,17 @@ namespace VeterinerApp.Controllers
             }
 
 
-            var createPasswordResult = await _userManager.CreateAsync(model, model.PasswordHash);
+            var createUser = await _userManager.CreateAsync(model, model.PasswordHash);
 
-            if (!createPasswordResult.Succeeded)
+            if (!createUser.Succeeded)
             {
-                foreach (var error in createPasswordResult.Errors)
+                foreach (var error in createUser.Errors)
                 {
                     ModelState.AddModelError("PasswordHash", error.Description);
                 }
                 return View(model);
             }
-            var user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == model.UserName);
             if (model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
@@ -112,10 +113,10 @@ namespace VeterinerApp.Controllers
                 UserId = model.Id
             };
 
-            _context.UserRoles.Add(userRole);
+            await _context.UserRoles.AddAsync(userRole);
 
 
-            if (_context.SaveChanges() > 0)
+            if (await _context.SaveChangesAsync() > 0)
             {
                 var loginUrl = Url.Action("Login", "Account", null, Request.Scheme);
                 var kullaniciAdSoyad = model.InsanAdi.ToUpper() + " " + model.InsanSoyadi.ToUpper();
@@ -229,7 +230,7 @@ namespace VeterinerApp.Controllers
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı." + " " + ex.Message;
                     _context.Users.Remove(model);
                     _context.UserRoles.Remove(userRole);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return View(model);
                 }
 
@@ -274,7 +275,7 @@ namespace VeterinerApp.Controllers
 
                 var roles = await _userManager.GetRolesAsync(user);
 
-                if (user.CalisiyorMu == false && (roles.Contains("ÇALIŞAN") || roles.Contains("VETERİNER") || roles.Contains("ADMİN")))
+                if (user.CalisiyorMu == false && (roles.Contains("ÇALIŞAN") || roles.Contains("VETERİNER") || roles.Contains("ADMIN")))
                 {
                     ModelState.AddModelError("PasswordHash", "Kullanıcı aktif değil. Lütfen yöneticinizle iletişime geçiniz.");
                     return View(model);
@@ -345,7 +346,7 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
-            var user = _context.Users.FirstOrDefault(x => x.InsanTckn == model.InsanTckn && x.Email == model.Email && x.PhoneNumber == model.PhoneNumber);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.InsanTckn == model.InsanTckn && x.Email == model.Email && x.PhoneNumber == model.PhoneNumber);
             if (user == null)
             {
                 ModelState.AddModelError("Email", "Girdiğiniz bilgiler birbirleri ile uyuşmuyor. Girdiğiniz TCKN, email adresi veya telefon numarası sistemde kayıtlı değil.");

@@ -7,9 +7,9 @@
 <form asp-action="CinsSil" asp-controller="Admin" method="post">
     <div class="form-row">
         <div class="col">
-            <select asp-for="Id" class="form-control" id="mySelect">
+            <select asp-for="CinsId" class="form-control" id="mySelect">
                 <option selected disabled>Silinecek Cinsi Seçiniz</option>
-                @foreach (var cins in Model.Cinsler)
+                @foreach (var cins in Model.CinslerListesi)
                 {
                     <option value="@cins.Value">@cins.Text</option>
                 }
@@ -19,7 +19,7 @@
 
     </div>
     <div class="col">
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="CinsId">
         </span>
     </div>
 

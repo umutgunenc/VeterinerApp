@@ -7,9 +7,9 @@
 <form asp-action="RenkSil" asp-controller="Admin" method="post">
     <div class="form-row">
         <div class="col">
-            <select asp-for="Id" class="form-control" id="mySelect">
+            <select asp-for="RenkId" class="form-control" id="mySelect">
                 <option selected disabled>Silinecek Rengi Seçiniz</option>
-                @foreach (var item in Model.Renkler)
+                @foreach (var item in Model.RenklerListesi)
                 {
                     <option value="@item.Value">@item.Text</option>
                 }
@@ -18,7 +18,7 @@
         <button type="submit" class="btn btn-dark rounded mb-2">Sil</button>
     </div>
     <div class="col">
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Id">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RenkId">
         </span>
     </div>
 </form>

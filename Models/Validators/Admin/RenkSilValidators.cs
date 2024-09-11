@@ -15,7 +15,7 @@ namespace VeterinerApp.Models.Validators.Admin
         public RenkSilValidator()
         {
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.RenkId)
                 .NotNull().WithMessage("Lütfen bir renk seçiniz.")
                 .NotEmpty().WithMessage("Lütfen bir renk seçiniz.")
                 .Must(FunctionsValidator.BeRenk).WithMessage("Listede olmayan bir rengi silemezsiniz.")

@@ -14,7 +14,7 @@ namespace VeterinerApp.Models.Validators.Admin
         public TurEkleValidators()
         {
 
-            RuleFor(x => x.tur)
+            RuleFor(x => x.TurAdi)
                 .NotEmpty().WithMessage("Lütfen bir tür giriniz")
                 .NotNull().WithMessage("Lütfen bir tür giriniz")
                 .MaximumLength(50).WithMessage("En fazla 50 karakter uzunluğunda değer girilebilir.")
