@@ -1,10 +1,10 @@
-﻿@model InsanSecViewModel
+﻿@model KisiSecViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
-<form asp-action="CalisanSec" asp-controller="Admin" method="post">
+<form asp-action="KisiSec" asp-controller="Admin" method="post">
     <div class="form-row mb-2">
         <div class="col">
             <input asp-for="InsanTckn" class="form-control" placeholder="Seçilecek Kişinin TCKN numarasını giriniz">
@@ -18,10 +18,12 @@
         </span>
     </div>
 </form>
+
+
 @if (ViewBag.SecilenKisi != null)
-{
-    @await Component.InvokeAsync("Insanlar", ViewBag.SecilenKisi)
-}
+    {
+        @await Component.InvokeAsync("KisiDuzenle", ViewBag.SecilenKisi)
+    }
 
 @if (TempData["KisiGuncellendi"] != null)
 {

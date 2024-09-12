@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VeterinerApp.Models.Enum;
 
 #nullable disable
 
@@ -16,7 +17,7 @@ namespace VeterinerApp.Models.Entity
         }
         public int HayvanId { get; set; }
         public string HayvanAdi { get; set; }
-        public string HayvanCinsiyet { get; set; }
+        public Cinsiyet HayvanCinsiyet { get; set; }
         public double HayvanKilo { get; set; }
         public string ImgUrl { get; set; }
         public DateTime HayvanDogumTarihi { get; set; }

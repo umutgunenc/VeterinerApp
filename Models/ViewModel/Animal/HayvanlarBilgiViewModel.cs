@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.Enum;
 
 namespace VeterinerApp.Models.ViewModel.Animal
 {
@@ -21,7 +22,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
             _context = context;
         }
 
-        public string HayvanCinsiyet { get; set; }
+        public Cinsiyet HayvanCinsiyet { get; set; }
         public double HayvanKilo { get; set; }
         public string TurAdi { get; set; }
         public string CinsAdi { get; set; }

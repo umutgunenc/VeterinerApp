@@ -10,7 +10,7 @@
         <div class="col">
             <select asp-for="Id" class="form-control">
                 <option selected disabled>Silinecek Rolü Seçiniz</option>
-                @foreach (var rol in Model.Roller)
+                @foreach (var rol in Model.RollerListesi)
                 {
                     <option value="@rol.Value">@rol.Text</option>
                 }

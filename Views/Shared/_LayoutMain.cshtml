@@ -17,17 +17,19 @@
 </head>
 <body class="bg-secondary">
 
-    @await Html.PartialAsync("_navbar")
+    @await Html.PartialAsync("_navbarPartialView")
+    @*<partial name="_navbarPartialView" />*@
 
     @if (User.Identity.IsAuthenticated)
     {
-        @await Html.PartialAsync("_topBar")
+        @await Html.PartialAsync("_topBarPartialView")
+        @*<partial name="_topBarPartialView" />*@
     }
     <div class="container-md mt-3">
         @if (IsSectionDefined("AdminMenu"))
         {<div class="d-flex flex-column flex-md-row">
                 <div class="col-md-3 p-0">
-                    @RenderSection("AdminMenu")
+                    @await RenderSectionAsync("AdminMenu")
                 </div>
                 <div class="col-md-9 p-1">
                     @RenderBody()
@@ -39,7 +41,7 @@
         { <div class="col-md-12 p-0">
 
                 @RenderBody()
-                @RenderSection("badRequest", required: false)
+                @await RenderSectionAsync("badRequest", required: false)
 
             </div>
         }

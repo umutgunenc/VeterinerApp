@@ -1,6 +1,6 @@
-﻿@model InsanDuzenleViewModel
+﻿@model KisiDuzenleViewModel
 
-<form asp-action="CalisanDuzenle" asp-controller="Admin" method="post">
+<form asp-action="KisiDuzenle" asp-controller="Admin" method="post">
     <div>
         <div class="form-group row mb-3">
             <label asp-for="InsanAdi" class="col-md-3 col-form-label">Adı</label>
@@ -53,13 +53,13 @@
             </div>
         </div>
         <div class="form-group row mb-3">
-            <label asp-for="rolId" class="col-md-3 col-form-label">Çalışan Kişinin Görevi</label>
+            <label asp-for="RolId" class="col-md-3 col-form-label">Çalışan Kişinin Görevi</label>
             <div class="col-md-9">
-                <select class="custom-select" asp-for="rolId" asp-items="Model.Roller">
+                <select class="custom-select" asp-for="RolId" asp-items="Model.RollerListesi">
                     <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
                 </select>
                 <div class="my-1">
-                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="rolId">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="RolId">
                     </span>
                 </div>
             </div>

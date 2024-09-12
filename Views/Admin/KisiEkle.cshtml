@@ -1,11 +1,11 @@
-﻿@model InsanEkleViewModel
+﻿@model KisiEkleViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
 
-<form asp-action="calisanEkle" asp-controller="Admin" method="post">
+<form asp-action="KisiEkle" asp-controller="Admin" method="post">
     <div class="form-col">
         <div class="col mb-2">
             <input type="text" asp-for="InsanAdi" class="form-control" placeholder="Adı">
@@ -38,11 +38,11 @@
         <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="DiplomaNo">
         </span>
         <div class="col mb-2">
-            <select class="custom-select form-control" asp-for="rolId" asp-items="Model.Roller">
+            <select class="custom-select form-control" asp-for="RolId" asp-items="Model.RollerListesi">
                 <option selected disabled>Çalışan Kişinin Görevini Seçin</option>
             </select>
         </div>
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="rolId">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="RolId">
         </span>
         @if (!string.IsNullOrEmpty(ViewBag.Hata))
         {
@@ -52,7 +52,7 @@
         }
         <div class="col mb-2">
             <button type="submit" class="col btn btn-dark rounded mb-2">Ekle</button>
-            <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="error">
+            <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="Error">
             </span>
         </div>
     </div>

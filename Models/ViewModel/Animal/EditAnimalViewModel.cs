@@ -7,6 +7,7 @@ using System.Linq;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.Enum;
 
 namespace VeterinerApp.Models.ViewModel.Animal
 {
@@ -88,7 +89,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
                 hayvanDogumTarihi = h.HayvanDogumTarihi.ToString("dd-MM-yyyy")
             }).ToList();
 
-            return hayvanlar.Where(h => h.HayvanCinsiyet == "D" || h.HayvanCinsiyet == "d").Select(h => new SelectListItem
+            return hayvanlar.Where(h => h.HayvanCinsiyet == Cinsiyet.Dişi).Select(h => new SelectListItem
             {
                 Text = $"{h.sahipTckn.Substring(0, 3) + new string('*', Math.Max(h.sahipTckn.Length - 6, 0)) + h.sahipTckn.Substring(h.sahipTckn.Length - 3)} " +
                                     $"{h.sahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.sahipAdSoyad.Length - 4, 0)) + h.sahipAdSoyad.Substring(h.sahipAdSoyad.Length - 2)} - " +
@@ -111,7 +112,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
                 hayvanDogumTarihi = h.HayvanDogumTarihi.ToString("dd-MM-yyyy")
             }).ToList();
 
-            return hayvanlar.Where(h => h.HayvanCinsiyet == "E" || h.HayvanCinsiyet == "e").Select(h => new SelectListItem
+            return hayvanlar.Where(h => h.HayvanCinsiyet == Cinsiyet.Erkek).Select(h => new SelectListItem
             {
                 Text = $"{h.sahipTckn.Substring(0, 3) + new string('*', Math.Max(h.sahipTckn.Length - 6, 0)) + h.sahipTckn.Substring(h.sahipTckn.Length - 3)} " +
                                     $"{h.sahipAdSoyad.Substring(0, 2) + new string('*', Math.Max(h.sahipAdSoyad.Length - 4, 0)) + h.sahipAdSoyad.Substring(h.sahipAdSoyad.Length - 2)} - " +

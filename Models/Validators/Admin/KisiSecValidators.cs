@@ -11,9 +11,9 @@ using VeterinerApp.Models.Validators.ValidateFunctions;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class InsanSecValidators : AbstractValidator<InsanSecViewModel>
+    public partial class KisiSecValidators : AbstractValidator<KisiSecViewModel>
     {
-        public InsanSecValidators()
+        public KisiSecValidators()
         {
 
             RuleFor(x => x.InsanTckn)

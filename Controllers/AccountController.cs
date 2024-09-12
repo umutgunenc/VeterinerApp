@@ -354,7 +354,7 @@ namespace VeterinerApp.Controllers
             }
             else
             {
-                sifre sifre = new sifre();
+                SifreOlustur sifre = new SifreOlustur();
                 var yeniSifre = sifre.GeneratePassword(8);
 
                 // Yeni şifreyi hashle

@@ -48,8 +48,7 @@ namespace VeterinerApp.Models.Validators.Animal
 
             RuleFor(x => x.HayvanCinsiyet)
                 .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
-                .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.")
-                .Must(x => x == "e" || x == "E" || x == "d" || x == "D").WithMessage("Erkek için E, dişi için D yazınız.");
+                .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.");
 
             RuleFor(x => x.HayvanDogumTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz")

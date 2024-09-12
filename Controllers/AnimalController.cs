@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.Enum;
 using VeterinerApp.Models.Validators.Animal;
 using VeterinerApp.Models.ViewModel.Animal;
 
@@ -364,7 +365,7 @@ namespace VeterinerApp.Controllers
             var yeniSahip = _context.Users.Where(u => u.InsanTckn == model.YeniSahipTCKN).FirstOrDefault();
             var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.UserTCKN) }, Request.Scheme, Request.Host.Value);
             var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.UserTCKN) }, Request.Scheme, Request.Host.Value);
-            var cinsiyet = hayvan.HayvanCinsiyet == "D" ? "Dişi" : "Erkek";
+            var cinsiyet = hayvan.HayvanCinsiyet == Cinsiyet.Erkek ? "Erkek" : "Dişi";
             var dogumTarihi = hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy");
             var olumTarihi = hayvan.HayvanOlumTarihi != null ? hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy") : "Hayatta";
             var sahipAdSoyad = _userManager.GetUserAsync(User).Result.InsanAdi + " " + _userManager.GetUserAsync(User).Result.InsanSoyadi;
@@ -502,7 +503,7 @@ namespace VeterinerApp.Controllers
 
             try
             {
-                _emailSender.SendEmailAsync(yeniSahip.Email, "Hayvan Sahiplenme", mailBody);
+                await _emailSender.SendEmailAsync(yeniSahip.Email, "Hayvan Sahiplenme", mailBody);
                 ViewBag.Mail = "Yeni sahip ekleme talebi, kişinin mail adresine başarıyla gönderildi.";
 
             }

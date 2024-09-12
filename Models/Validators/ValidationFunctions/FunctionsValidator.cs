@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
+using VeterinerApp.Models.Enum;
 using VeterinerApp.Models.ViewModel.Animal;
 
 namespace VeterinerApp.Models.Validators.ValidateFunctions
@@ -61,7 +62,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
                 return true;
 
             var anne = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == anneId.Value);
-            return anne != null && anne.HayvanCinsiyet == "D";
+            return anne != null && anne.HayvanCinsiyet == Cinsiyet.Dişi;
         }
         public static bool BeBoy(int? babaId)
         {
@@ -69,7 +70,7 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
                 return true;
 
             var baba = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == babaId.Value);
-            return baba != null && baba.HayvanCinsiyet == "E";
+            return baba != null && baba.HayvanCinsiyet == Cinsiyet.Erkek;
         }
         public static bool BeRol(int rolId)
         {
@@ -258,11 +259,16 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return !_context.Users.Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rolId">int rol Id </param>
+        /// <param name="validRoles">istenen rollerin isim listesi, küçük harf ve varsa türkçe karakter kullanilmali</param>
+        /// <returns></returns>
         public static bool IsRoleMatching(int rolId, List<string> validRoles)
         {
             var role = _context.Roles.Find(rolId);
-            return role != null && validRoles.Contains(role.Name.ToUpper());
+            return role != null && validRoles.Contains(role.Name.ToLower());
         }
         public static bool BeNotUsedRenk(int Id)
         {

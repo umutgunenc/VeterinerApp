@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class RolEkleViewModel : IdentityRole
+    public class RolEkleViewModel : AppRole
     {
-        public List<SelectListItem> Roller { get; set; }
+
     }
 }

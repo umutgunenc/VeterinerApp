@@ -59,13 +59,13 @@
                                             <td class="text-center">@hayvan.RenkAdi</td>
                                             <td class="text-center">@hayvan.HayvanKilo</td>
                                             <td class="text-center">
-                                                @if (hayvan.HayvanCinsiyet == "d" || hayvan.HayvanCinsiyet == "D")
+                                                @if (hayvan.HayvanCinsiyet==Cinsiyet.Erkek)
                                                 {
-                                                    @:Dişi
+                                                    @:Erkek
                                                 }
                                                 else
                                                 {
-                                                    @:Erkek
+                                                    @:Dişi
                                                 }
                                             </td>
                                             <td class="text-center">@hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</td>

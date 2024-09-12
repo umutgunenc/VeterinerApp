@@ -12,9 +12,9 @@ using VeterinerApp.Models.Validators.ValidateFunctions;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class InsanDuzenleValidators : AbstractValidator<InsanDuzenleViewModel>
+    public partial class KisiDuzenleValidators : AbstractValidator<KisiDuzenleViewModel>
     {
-        public InsanDuzenleValidators()
+        public KisiDuzenleValidators()
         {
             RuleFor(x => x.InsanTckn)
                 .NotEmpty().WithMessage("Lütfen TCKN giriniz.")
@@ -46,7 +46,7 @@ namespace VeterinerApp.Models.Validators.Admin
 
             RuleFor(x => x.DiplomaNo)
                 .NotNull().WithMessage("Diploma numarası giriniz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "VETERINER" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "veteriner" }));
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -69,36 +69,36 @@ namespace VeterinerApp.Models.Validators.Admin
                 .Must(x => x == true || x == false).WithMessage("Çalışan için çalışma durumu seçiniz.");
 
             RuleFor(x => x.CalisiyorMu)
-                   .Must((model, CalisiyorMu) => !(FunctionsValidator.IsRoleMatching(model.rolId, new List<string> { "MÜŞTERI" }) && CalisiyorMu))
+                   .Must((model, CalisiyorMu) => !(FunctionsValidator.IsRoleMatching(model.RolId, new List<string> { "müşteri" }) && CalisiyorMu))
                    .WithMessage("Müşteriler çalışmıyor olarak işaretlenmelidir.");
 
             RuleFor(x => x.Maas)
                 .NotNull().WithMessage("Maaş bilgisi boş olamaz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && x.CalisiyorMu);
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "çalışan", "veteriner" }) && x.CalisiyorMu);
 
             RuleFor(x => x.Maas)
                 .Must(x => x.HasValue && x.Value >= 0).WithMessage("Maaş bilgisi pozitif bir sayı olmalıdır.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && x.CalisiyorMu && x.Maas.HasValue);
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "çalışan", "veteriner" }) && x.CalisiyorMu && x.Maas.HasValue);
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Müşteriler için maaş bilgisi girilemez")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERI" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "müşteri" }));
 
             RuleFor(x => x.Maas)
                 .Null().WithMessage("Çalışmayan kişiler için maaş bilgisi girilemez.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }) && !x.CalisiyorMu);
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "çalışan", "veteriner" }) && !x.CalisiyorMu);
 
-            RuleFor(x => x.rolId)
+            RuleFor(x => x.RolId)
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "ADMIN", "ÇALIŞAN", "VETERINER" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "çalışan", "veteriner" }));
 
-            RuleFor(x => x.rolId)
+            RuleFor(x => x.RolId)
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "MÜŞTERI" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "müşteri" }));
 
-            RuleFor(x => x.rolId)
+            RuleFor(x => x.RolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .Must(FunctionsValidator.BeRol).WithMessage("Seçilen rol geçerli değil.");

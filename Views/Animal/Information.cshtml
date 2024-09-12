@@ -26,13 +26,13 @@
                     <h6 class="card-title ml-2 ml-lg-0">Cinsi : @Model.CinsAdi</h6>
                     <h6 class="card-title ml-2 ml-lg-0">Kilosu : @Model.HayvanKilo</h6>
                     <h6 class="card-title ml-2 ml-lg-0">
-                        Cinsiyeti :@if (Model.HayvanCinsiyet?.ToUpper() == "D")
+                        Cinsiyeti :@if (Model.HayvanCinsiyet==Cinsiyet.Erkek)
                         {
-                            @:Dişi
+                            @:Erkek
                         }
                         else
                         {
-                            @:Erkek
+                            @:Dişi
                         }
                     </h6>
                     <h6 class="card-title ml-2 ml-lg-0">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>

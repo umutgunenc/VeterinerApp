@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VeterinerApp.Fonksiyonlar
 {
-    public class sifre
+    public class SifreOlustur
     {
         private static readonly Random random = new Random();
 

@@ -11,9 +11,9 @@ using VeterinerApp.Models.Validators.ValidateFunctions;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class InsanEkleValidators : AbstractValidator<InsanEkleViewModel>
+    public partial class KisiEkleValidators : AbstractValidator<KisiEkleViewModel>
     {
-        public InsanEkleValidators()
+        public KisiEkleValidators()
         {
 
             RuleFor(x => x.InsanTckn)
@@ -44,7 +44,7 @@ namespace VeterinerApp.Models.Validators.Admin
 
             RuleFor(x => x.DiplomaNo)
                 .NotNull().WithMessage("Diploma numarası giriniz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.rolId, new List<string> { "VETERİNER" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "veteriner" }));
 
             RuleFor(x => x.InsanAdi)
                 .MaximumLength(50).WithMessage("Maksimum 50 karakter uzunluğunda isim girilebilir.")
@@ -63,7 +63,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .Must(FunctionsValidator.BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
 
-            RuleFor(x => x.rolId)
+            RuleFor(x => x.RolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.");
 
