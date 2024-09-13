@@ -4,12 +4,12 @@ using System.Text;
 
 namespace VeterinerApp.Fonksiyonlar
 {
-    public class SifreOlustur
+    public static class SifreOlustur
     {
-        private static readonly Random random = new Random();
 
-        public string GeneratePassword(int length)
+        public static string GeneratePassword(int length)
         {
+            Random random = new Random();
             const string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const string lowerCase = "abcdefghijklmnopqrstuvwxyz";
             const string digits = "0123456789";

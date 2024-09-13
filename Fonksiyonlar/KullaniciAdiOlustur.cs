@@ -8,24 +8,13 @@ using System.Threading.Tasks;
 
 namespace VeterinerApp.Fonksiyonlar
 {
-    public class KullaniciAdiOlustur
+    public static class KullaniciAdiOlustur
     {
-        private readonly VeterinerDBContext _context;
-
-        public KullaniciAdiOlustur(VeterinerDBContext context)
-        {
-            _context = context;
-        }
-
-        private async Task<List<string>> KullaniciAdlariListesi()
-        {
-            return await _context.Users.Select(x => x.UserName).ToListAsync();
-        }
-
-        public  async Task<string> GenerateUsernameAsync(string firstName, string lastName, string mail)
+       
+        public static async Task<string> GenerateUserNameAsync(string firstName, string lastName, string mail, VeterinerDBContext _context)
         {
             string username = $"{firstName.ToUpper()}.{lastName.ToUpper()}";
-            var kullaniciAdlari = await KullaniciAdlariListesi();
+            var kullaniciAdlari = await _context.Users.Select(x => x.UserName).ToListAsync();
 
             // Kullanıcı adı zaten var mı kontrol et
             if (!kullaniciAdlari.Contains(username))

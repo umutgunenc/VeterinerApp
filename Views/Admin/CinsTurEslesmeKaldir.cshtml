@@ -1,10 +1,10 @@
-﻿@model CinsTurSilViewModel
+﻿@model CinsTurEslesmeKaldirViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
-<form asp-action="CinsTurSil" asp-controller="Admin" method="post">
+<form asp-action="CinsTurEslesmeKaldir" asp-controller="Admin" method="post">
     <div class="form-row">
         <div class="col">
             <select asp-for="Id" class="form-control">

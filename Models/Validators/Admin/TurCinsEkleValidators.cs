@@ -8,7 +8,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class TurCinsEkleValidators : AbstractValidator<CinsTurEkleViewModel>
+    public partial class TurCinsEkleValidators : AbstractValidator<CinsTurEslestirViewModel>
     {
         public TurCinsEkleValidators()
         {

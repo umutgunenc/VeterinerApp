@@ -10,20 +10,10 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class RolSilViewModel :AppRole
     {
-        private readonly VeterinerDBContext _context;
-        public RolSilViewModel()
-        {
-            
-        }
-        public RolSilViewModel(VeterinerDBContext context)
-        {
-            _context = context;
-            RollerListesiniGetir().Wait();
-        }
-
+ 
         public List<SelectListItem> RollerListesi { get; set; }
 
-        private async Task<List<SelectListItem>> RollerListesiniGetir()
+        public async Task<RolSilViewModel> RollerListesiniGetir(VeterinerDBContext _context)
         {
             var roller = await _context.Roles.ToListAsync();
             RollerListesi = new List<SelectListItem>();
@@ -36,7 +26,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 });
             }
 
-            return RollerListesi;
+            return this;
+        }
+
+        public async Task<AppRole> SilinecekRoluGetir(VeterinerDBContext _context, RolSilViewModel model)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(x => x.Id == model.Id);
         }
     }
 }

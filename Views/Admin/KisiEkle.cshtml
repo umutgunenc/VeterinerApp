@@ -28,7 +28,7 @@
         <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="Email">
         </span>
         <div class="col mb-2">
-            <input type="tel" asp-for="PhoneNumber" class="form-control form-control-sm" placeholder="Telefon Numarası">
+            <input type="tel" asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası">
         </div>
         <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="PhoneNumber">
         </span>
@@ -59,8 +59,6 @@
 
 
 </form>
-
-
 
 
 @if (TempData["CalısanEklendi"] != null)

@@ -1,125 +1,133 @@
-﻿@model SayfalamaListesi<CalisanListeleViewModel>
+﻿@model SayfalamaListesi<KisileriListeleViewModel>
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
-    <form asp-action="KisiListele" asp-controller="Admin" method="post" id="calisanListeleForm">
-        <input type="hidden" name="sayfaNumarasi" value="@Model.SayfaNumarasi" />
+<form asp-action="KisileriListele" asp-controller="Admin" method="post" id="kisileriListeleForm">
+    <input type="hidden" name="sayfaNumarasi" value="@Model.SayfaNumarasi" />
+    <div class="">
         <div class="">
-            <div class="">
-                <table class="table table-responsive table-hover table-dark text-center mb-0 rounded-top-md">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="text-center">TCKN</th>
-                            <th scope="col" class="text-center">Adı</th>
-                            <th scope="col" class="text-center">Soyadı</th>
-                            <th scope="col" class="text-center">Çalışma Durumu</th>
-                            <th scope="col" class="text-center">Görevi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Elemanlar)
-                        {
-                            <tr class="clickable-row" role="button" data-tckn="@item.InsanTckn">
-                                <td class="text-center">@item.InsanTckn</td>
-                                <td class="text-center">@item.InsanAdi</td>
-                                <td class="text-center">@item.InsanSoyadi</td>
-                                <td class="text-center">
-                                    @if (item.CalisiyorMu)
-                                    {
-                                        @:Çalışıyor
-                                    }
-                                    else
-                                    {
-                                        @:Çalışmıyor
-                                    }
-                                </td>
-                                <td class="text-center">@item.RolAdi</td>
-                            </tr>
-                        }
+            <table class="table table-responsive table-hover table-dark text-center mb-0 rounded-top-md">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">TCKN</th>
+                        <th scope="col" class="text-center">Adı</th>
+                        <th scope="col" class="text-center">Soyadı</th>
+                        <th scope="col" class="text-center">Telefonu</th>
+                        <th scope="col" class="text-center">Mail Adresi</th>
+                        <th scope="col" class="text-center">Çalışma Durumu</th>
+                        <th scope="col" class="text-center">Görevi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Veriler)
+                    {
+                        <tr class="clickable-row" role="button" data-tckn="@item.InsanTckn">
+                            <td class="text-center">@item.InsanTckn</td>
+                            <td class="text-center">@item.InsanAdi</td>
+                            <td class="text-center">@item.InsanSoyadi</td>
+                            <td class="text-center">@item.PhoneNumber</td>
+                            <td class="text-center">@item.Email</td>
 
-                        @for (int i = 0; i < 4 - Model.Elemanlar.Count(); i++)
-                        {
-                            <tr>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center table-dark mb-3 p-2">
-                <div class="text-center">
-                    Toplam @ViewBag.ToplamKayit kayıt var, @Model.Elemanlar.Count() tanesi gösteriliyor.
-                </div>
-                <div>
-                    <nav aria-label="Sayfalama">
-                        <ul class="pagination mb-0">
-                            @if (Model.OncekiSayfaVar)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="1">İlk</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi - 1)">Önceki</a>
-                                </li>
-                            }
-
-                            @for (int i = Model.SayfaNumarasi - 2; i <= Model.SayfaNumarasi + 2; i++)
-                            {
-                                @if (i > 0 && i <= Model.ToplamSayfa)
+                            <td class="text-center">
+                                @if (item.CalisiyorMu)
                                 {
-                                    <li class="page-item @(i == Model.SayfaNumarasi ? "active" : "")">
-                                        <a class="page-link text-light bg-dark border-dark @(i == Model.SayfaNumarasi ? "bg-primary text-white" : "")" asp-action="CalisanListele" asp-route-sayfaNumarasi="@i">@i</a>
-                                    </li>
+                                    @:Çalışıyor
                                 }
-                            }
+                                else
+                                {
+                                    @:Çalışmıyor
+                                }
+                            </td>
+                            <td class="text-center">@item.RolAdi</td>
+                        </tr>
+                    }
 
-                            @if (Model.SonrakiSayfaVar)
+                    @for (int i = 0; i < 4 - Model.Veriler.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center table-dark mb-3 p-2">
+            <div class="text-center">
+                Toplam @ViewBag.ToplamKayit kayıt var, @Model.Veriler.Count() tanesi gösteriliyor.
+            </div>
+            <div>
+                <nav aria-label="Sayfalama">
+                    <ul class="pagination mb-0">
+                        @if (Model.OncekiSayfaVar)
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="1">İlk</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi - 1)">Önceki</a>
+                            </li>
+                        }
+
+                        @for (int i = Model.SayfaNumarasi - 2; i <= Model.SayfaNumarasi + 2; i++)
+                        {
+                            @if (i > 0 && i <= Model.ToplamSayfa)
                             {
-                                <li class="page-item">
-                                    <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi + 1)">Sonraki</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.ToplamSayfa)">Son</a>
+                                <li class="page-item @(i == Model.SayfaNumarasi ? "active" : "")">
+                                    <a class="page-link text-light bg-dark border-dark @(i == Model.SayfaNumarasi ? "bg-primary text-white" : "")" asp-action="CalisanListele" asp-route-sayfaNumarasi="@i">@i</a>
                                 </li>
                             }
-                        </ul>
-                    </nav>
-                </div>
+                        }
+
+                        @if (Model.SonrakiSayfaVar)
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi + 1)">Sonraki</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.ToplamSayfa)">Son</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 
 
 
+@if (ViewBag.SecilenKisi != null)
+{
+    @await Component.InvokeAsync("KisiBilgileriniGetir", ViewBag.SecilenKisi)
+}
 
-    @if (ViewBag.SecilenKisi != null)
-    {
-        @await Component.InvokeAsync("CalisanlarListele", ViewBag.SecilenKisi)
-    }
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('.clickable-row');
+            const form = document.getElementById('kisileriListeleForm');
 
-@section scripts{<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const rows = document.querySelectorAll('.clickable-row');
-        const form = document.getElementById('calisanListeleForm');
-
-        rows.forEach(row => {
-            row.addEventListener('click', () => {
-                const tckn = row.getAttribute('data-tckn');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'secilenKisiTCKN';
-                input.value = tckn;
-                form.appendChild(input);
-                form.submit();
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    const tckn = row.getAttribute('data-tckn');
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'secilenKisiTCKN';
+                    input.value = tckn;
+                    form.appendChild(input);
+                    form.submit();
+                });
             });
         });
-    });
-</script> }
+    </script> }

@@ -13,7 +13,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class TurCinsSilValidators : AbstractValidator<CinsTurSilViewModel>
+    public partial class TurCinsSilValidators : AbstractValidator<CinsTurEslesmeKaldirViewModel>
     {
         public TurCinsSilValidators()
         {

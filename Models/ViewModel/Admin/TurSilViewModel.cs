@@ -9,24 +9,13 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class TurSilViewModel :Tur
     {
-        private readonly VeterinerDBContext _context;
-        public TurSilViewModel()
-        {
 
-        }
 
-        public TurSilViewModel(VeterinerDBContext context)
-        {
-            _context = context;
-            TurListesiniGetir().Wait();
-        }
         public List<SelectListItem> Turler { get; set; }
 
-        private async Task<List<SelectListItem>> TurListesiniGetir()
+        public async Task<List<SelectListItem>> TurListesiniGetirASync(VeterinerDBContext _context)
         {
             var turler =await _context.Turler.ToListAsync();
-
-            Turler = new List<SelectListItem>();
 
             foreach (var tur in turler)
             {
@@ -37,6 +26,11 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 });
             }
             return Turler;
+        }
+
+        public async Task<Tur> SilinecekTuruGetirAsync(TurSilViewModel model, VeterinerDBContext _context)
+        {
+            return await _context.Turler.FindAsync(model.TurId);
         }
 
 

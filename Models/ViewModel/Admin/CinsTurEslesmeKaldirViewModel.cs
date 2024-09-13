@@ -9,22 +9,12 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class CinsTurSilViewModel : CinsTur
+    public class CinsTurEslesmeKaldirViewModel : CinsTur
     {
-        private readonly VeterinerDBContext _context;
-        public CinsTurSilViewModel()
-        {
-
-        }
-        public CinsTurSilViewModel(VeterinerDBContext context)
-        {
-            _context = context;
-            CinslerTurlerListesiniGetir().Wait();
-        }
 
         public List<SelectListItem> CinslerTurlerListesi { get; set; }
 
-        private async Task<List<SelectListItem>> CinslerTurlerListesiniGetir()
+        public async Task<CinsTurEslesmeKaldirViewModel> CinslerTurlerListesiniGetirAsync(VeterinerDBContext _context)
         {
             var cinsTurler = await _context.CinsTur.ToListAsync();
             var turler = await _context.Turler.ToListAsync();
@@ -47,8 +37,15 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 }
             }
 
-            return CinslerTurlerListesi;
+            return this;
         }
+
+        public async Task<CinsTur> EslesmesiKaldirilacakCinsTuruGetirAsync(CinsTurEslesmeKaldirViewModel model, VeterinerDBContext _context)
+        {
+            return await _context.CinsTur.FirstOrDefaultAsync(c => c.Id == model.Id);
+        }
+
+
 
     }
 }

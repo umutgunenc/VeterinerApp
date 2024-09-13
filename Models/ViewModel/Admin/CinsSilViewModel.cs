@@ -10,25 +10,13 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class CinsSilViewModel : Cins
     {
-        private readonly VeterinerDBContext _context;
-        public CinsSilViewModel()
-        {
 
-        }
-
-        public CinsSilViewModel(VeterinerDBContext context)
-        {
-            _context = context;
-            CinslerListesiGetir().Wait();
-        }
         public List<SelectListItem> CinslerListesi { get; set; }
 
-        private async Task<List<SelectListItem>> CinslerListesiGetir()
+        public async Task<CinsSilViewModel> CinslerListesiGetirAsync(VeterinerDBContext _context)
         {
             var cinsler = await _context.Cinsler.ToListAsync();
-
-            CinslerListesi = new List<SelectListItem>();
-
+            CinslerListesi = new();
             foreach (var cins in cinsler)
             {
                 CinslerListesi.Add(new SelectListItem
@@ -37,7 +25,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     Value = cins.CinsId.ToString()
                 });
             }
-            return CinslerListesi;
+            return this;
+        }
+
+        public async Task<Cins> SilinecekCinsiGetir(CinsSilViewModel model, VeterinerDBContext _context)
+        {
+            return await _context.Cinsler.FindAsync(model.CinsId);
         }
     }
 }
