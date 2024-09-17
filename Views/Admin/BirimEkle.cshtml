@@ -1,0 +1,36 @@
+﻿@model BirimEkleViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="BirimEkle" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <div class="col">
+            <input asp-for="BirimAdi" class="form-control" placeholder="Birim">
+        </div>
+        <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="BirimAdi">
+        </span>
+    </div>
+</form>
+
+@if (TempData["BirimEklendi"] != null)
+{
+    <div class="alert alert-success" id="BirimEklendi">@TempData["BirimEklendi"]</div>
+
+}
+
+@section scripts {
+    <script>setTimeout(function () {
+    var successMessage = document.getElementById("BirimEklendi");
+            successMessage.remove();
+        }, 2500);</script>
+}
+
+
+

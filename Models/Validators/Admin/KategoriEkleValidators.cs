@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Validators.ValidateFunctions;
+using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public class KategoriEkleValidators : AbstractValidator<Kategori>
+    public class KategoriEkleValidators : AbstractValidator<KategoriViewModel>
     {
         public KategoriEkleValidators()
         {

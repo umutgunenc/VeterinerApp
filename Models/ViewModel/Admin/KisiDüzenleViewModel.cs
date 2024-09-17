@@ -13,37 +13,39 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class KisiDuzenleViewModel : AppUser
     {
-        private readonly VeterinerDBContext _context;
 
-
-        private readonly KisiSecViewModel _model;
-
-        public KisiDuzenleViewModel()
-        {
-
-        }
-
-
-        public KisiDuzenleViewModel(VeterinerDBContext context, KisiSecViewModel model)
-        {
-            _context = context;
-            _model = model;
-            SecilenKisiyiGetirAsync().Wait();
-        }
-        private IdentityUserRole<int> UserRole { get; set; }
         private AppRole Rol { get; set; }
         public int RolId { get; set; }
         public string RolAdi { get; set; }
         public List<SelectListItem> RollerListesi { get; set; }
-        public async Task<IdentityUserRole<int>> UserRoleGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model) 
+        public string Signature { get; set; }
+        public KisiDuzenleViewModel SecilenKisi { get; set; }
+
+        public IdentityUserRole<int> EskiRol { get; set; }
+        public IdentityUserRole<int> YeniRol { get; set; }
+        public AppUser UpdateOlacakKullanici { get; set; }
+
+
+        public async Task<IdentityUserRole<int>> KullanicininEskiRolunuGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model)
         {
-            UserRole = context.UserRoles.Where(ur => ur.RoleId == model.RolId).FirstOrDefault();
-            return UserRole;
+
+            return await context.UserRoles.Where(ur => ur.UserId == model.Id).FirstOrDefaultAsync();
+
+
         }
-        private async Task<List<SelectListItem>> RollerListesiniGetirAsync()
+        public async Task<IdentityUserRole<int>> KullanicininYeniRolunuGetirAsync(KisiDuzenleViewModel model) 
+        {
+            return new IdentityUserRole<int>
+            {
+                UserId = model.Id,
+                RoleId = model.RolId
+            };
+
+        }
+        public async Task<List<SelectListItem>> RollerListesiniGetirAsync(VeterinerDBContext context)
         {
             RollerListesi = new();
-            var roller = await _context.Roles.ToListAsync();
+            var roller = await context.Roles.ToListAsync();
 
             foreach (var rol in roller)
             {
@@ -55,61 +57,43 @@ namespace VeterinerApp.Models.ViewModel.Admin
             }
             return RollerListesi;
         }
-        private async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync()
+        public async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model)
         {
-            var secilenKisi = await _context.Users.Where(u => u.InsanTckn == _model.InsanTckn).FirstOrDefaultAsync();
+            var secilenKisi = await context.Users.Where(u => u.InsanTckn == model.InsanTckn).FirstOrDefaultAsync();
 
-            Id = secilenKisi.Id;
-            InsanAdi = secilenKisi.InsanAdi;
-            InsanSoyadi = secilenKisi.InsanSoyadi;
-            CalisiyorMu = secilenKisi.CalisiyorMu;
-            Email = secilenKisi.Email;
-            PhoneNumber = secilenKisi.PhoneNumber;
-            DiplomaNo = secilenKisi.DiplomaNo;
-            UserName = secilenKisi.UserName;
-            Maas = secilenKisi.Maas;
-            RollerListesi = await RollerListesiniGetirAsync();
-            Rol = await _context.Roles
-                .Where(r => r.Id == _context.UserRoles
+            model.Id = secilenKisi.Id;
+            model.InsanAdi = secilenKisi.InsanAdi;
+            model.InsanSoyadi = secilenKisi.InsanSoyadi;
+            model.CalisiyorMu = secilenKisi.CalisiyorMu;
+            model.Email = secilenKisi.Email;
+            model.PhoneNumber = secilenKisi.PhoneNumber;
+            model.DiplomaNo = secilenKisi.DiplomaNo;
+            model.UserName = secilenKisi.UserName;
+            model.Maas = secilenKisi.Maas;
+            model.RollerListesi = await RollerListesiniGetirAsync(context);
+            model.Rol = await context.Roles
+                .Where(r => r.Id == context.UserRoles
                       .Where(ur => ur.UserId == secilenKisi.Id)
                       .Select(ur => ur.RoleId)
                       .FirstOrDefault())
                 .FirstOrDefaultAsync();
-            RolId = this.Rol.Id;
-            RolAdi = this.Rol.Name;
-
-
-            //AccessFailedCount = secilenKisi.AccessFailedCount;
-            //ConcurrencyStamp = secilenKisi.ConcurrencyStamp;
-            //EmailConfirmed = secilenKisi.EmailConfirmed;
-            //Hayvanlar = secilenKisi.Hayvanlar;
-            //ImgURL = secilenKisi.ImgURL;
-            //LockoutEnabled = secilenKisi.LockoutEnabled;
-            //LockoutEnd = secilenKisi.LockoutEnd;
-            //MaasOdemeleri = secilenKisi.MaasOdemeleri;
-            //Muayeneler = secilenKisi.Muayeneler;
-            //NormalizedEmail = secilenKisi.NormalizedEmail;
-            //NormalizedUserName = secilenKisi.NormalizedUserName;
-            //PasswordHash = secilenKisi.PasswordHash;
-            //SecurityStamp = secilenKisi.SecurityStamp;
-            //SifreGecerlilikTarihi = secilenKisi.SifreGecerlilikTarihi;
-            //SifreOlusturmaTarihi = secilenKisi.SifreOlusturmaTarihi;
-            //TermOfUse = secilenKisi.TermOfUse;
-
-            return this;
+            model.RolId = this.Rol.Id;
+            model.RolAdi = this.Rol.Name;
+            
+            return model;
         }
-        public async Task<AppUser> UpdateOlacakKullaniciyiGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel Model)
+        public async Task<AppUser> UpdateOlacakKullaniciyiGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model)
         {
-            var UpdateOlacakKullanici = await context.AppUsers.FindAsync(Model.Id);
+            var UpdateOlacakKullanici = await context.AppUsers.FindAsync(model.Id);
 
-            UpdateOlacakKullanici.InsanAdi = Model.InsanAdi.ToUpper();
-            UpdateOlacakKullanici.InsanSoyadi = Model.InsanSoyadi.ToUpper();
-            UpdateOlacakKullanici.CalisiyorMu = Model.CalisiyorMu;
-            UpdateOlacakKullanici.Email = Model.Email.ToLower();
-            UpdateOlacakKullanici.PhoneNumber = Model.PhoneNumber;
-            UpdateOlacakKullanici.DiplomaNo = Model.DiplomaNo;
-            UpdateOlacakKullanici.UserName = Model.UserName.ToUpper();
-            UpdateOlacakKullanici.Maas = Model.Maas;
+            UpdateOlacakKullanici.InsanAdi = model.InsanAdi.ToUpper();
+            UpdateOlacakKullanici.InsanSoyadi = model.InsanSoyadi.ToUpper();
+            UpdateOlacakKullanici.CalisiyorMu = model.CalisiyorMu;
+            UpdateOlacakKullanici.Email = model.Email.ToLower();
+            UpdateOlacakKullanici.PhoneNumber = model.PhoneNumber;
+            UpdateOlacakKullanici.DiplomaNo = model.DiplomaNo;
+            UpdateOlacakKullanici.UserName = model.UserName.ToUpper();
+            UpdateOlacakKullanici.Maas = model.Maas;
 
             return UpdateOlacakKullanici;
         }

@@ -13,9 +13,9 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public List<SelectListItem> CinslerListesi { get; set; }
 
-        public async Task<CinsSilViewModel> CinslerListesiGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> CinslerListesiGetirAsync(VeterinerDBContext context)
         {
-            var cinsler = await _context.Cinsler.ToListAsync();
+            var cinsler = await context.Cinsler.ToListAsync();
             CinslerListesi = new();
             foreach (var cins in cinsler)
             {
@@ -25,12 +25,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     Value = cins.CinsId.ToString()
                 });
             }
-            return this;
+            return CinslerListesi;
         }
 
-        public async Task<Cins> SilinecekCinsiGetir(CinsSilViewModel model, VeterinerDBContext _context)
+        public async Task<Cins> SilinecekCinsiGetir(CinsSilViewModel model, VeterinerDBContext context)
         {
-            return await _context.Cinsler.FindAsync(model.CinsId);
+            return await context.Cinsler.FindAsync(model.CinsId);
         }
     }
 }

@@ -8,15 +8,16 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class RolSilViewModel :AppRole
+    public class RolSilViewModel : AppRole
     {
- 
-        public List<SelectListItem> RollerListesi { get; set; }
 
-        public async Task<RolSilViewModel> RollerListesiniGetir(VeterinerDBContext _context)
+        public List<SelectListItem> RollerListesi { get; set; }
+        public AppRole SilinecekRol { get; set; }
+
+        public async Task<List<SelectListItem>> RollerListesiniGetir(VeterinerDBContext context)
         {
-            var roller = await _context.Roles.ToListAsync();
-            RollerListesi = new List<SelectListItem>();
+            var roller = await context.Roles.ToListAsync();
+            RollerListesi = new ();
             foreach (var rol in roller)
             {
                 RollerListesi.Add(new SelectListItem
@@ -26,12 +27,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 });
             }
 
-            return this;
+            return RollerListesi;
         }
 
-        public async Task<AppRole> SilinecekRoluGetir(VeterinerDBContext _context, RolSilViewModel model)
+        public async Task<AppRole> SilinecekRoluGetir(VeterinerDBContext context, RolSilViewModel model)
         {
-            return await _context.Roles.FirstOrDefaultAsync(x => x.Id == model.Id);
+            return await context.Roles.FirstOrDefaultAsync(x => x.Id == model.Id);
         }
     }
 }

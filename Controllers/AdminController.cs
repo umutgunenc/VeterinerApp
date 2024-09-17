@@ -15,6 +15,8 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using VeterinerApp.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using VeterinerApp.Models.Validators;
+using System.Diagnostics.CodeAnalysis;
 
 
 
@@ -53,7 +55,6 @@ namespace VeterinerApp.Controllers
             RenkEkleValidators renkvalidator = new();
             ValidationResult result = renkvalidator.Validate(model);
 
-
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
@@ -74,8 +75,9 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> RenkSil()
         {
             RenkSilViewModel model = new();
+            model.RenklerListesi = await model.RenklerListesiniGetirAsync(_veterinerDbContext);
 
-            return View(await model.RenklerListesiniGetirAsync(_veterinerDbContext));
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> RenkSil(RenkSilViewModel model)
@@ -89,9 +91,9 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
+                model.RenklerListesi = await model.RenklerListesiniGetirAsync(_veterinerDbContext);
 
-
-                return View(await model.RenklerListesiniGetirAsync(_veterinerDbContext));
+                return View(model);
             }
             var silinecekRenk = await model.SilinecekRengiGetirAsync(model, _veterinerDbContext);
             _veterinerDbContext.Renkler.Remove(silinecekRenk);
@@ -138,8 +140,9 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> CinsSil()
         {
             CinsSilViewModel model = new();
+            model.CinslerListesi = await model.CinslerListesiGetirAsync(_veterinerDbContext);
 
-            return View(await model.CinslerListesiGetirAsync(_veterinerDbContext));
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> CinsSil(CinsSilViewModel model)
@@ -155,8 +158,8 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-
-                return View(await model.CinslerListesiGetirAsync(_veterinerDbContext));
+                model.CinslerListesi = await model.CinslerListesiGetirAsync(_veterinerDbContext);
+                return View(model);
             }
 
             var silinecekCins = await model.SilinecekCinsiGetir(model, _veterinerDbContext);
@@ -204,8 +207,9 @@ namespace VeterinerApp.Controllers
         {
 
             TurSilViewModel model = new();
+            model.TurListesi = await model.TurListesiniGetirASync(_veterinerDbContext);
 
-            return View(await model.TurListesiniGetirASync(_veterinerDbContext));
+            return View(model);
 
         }
         [HttpPost]
@@ -220,8 +224,8 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
-
-                return View(await model.TurListesiniGetirASync(_veterinerDbContext));
+                model.TurListesi = await model.TurListesiniGetirASync(_veterinerDbContext);
+                return View(model);
 
             }
             var silinecekTur = await model.SilinecekTuruGetirAsync(model, _veterinerDbContext);
@@ -238,7 +242,11 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> CinsTurEslestir()
         {
             var model = new CinsTurEslestirViewModel();
-            return View(await model.CinsTurListesiGetirAsync(_veterinerDbContext));
+
+            model.TurlerListesi = await model.TurlerListesiGetirAsync(_veterinerDbContext);
+            model.CinslerListesi = await model.CinslerListesiGetirAsync(_veterinerDbContext);
+
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> CinsTurEslestir(CinsTurEslestirViewModel model)
@@ -253,15 +261,18 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                return View(await model.CinsTurListesiGetirAsync(_veterinerDbContext));
+                model.TurlerListesi = await model.TurlerListesiGetirAsync(_veterinerDbContext);
+                model.CinslerListesi = await model.CinslerListesiGetirAsync(_veterinerDbContext);
+
+                return View(model);
             }
 
 
             await _veterinerDbContext.CinsTur.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
 
-            model.Cins = await _veterinerDbContext.Cinsler.FirstOrDefaultAsync(x => x.CinsId == model.CinsId);
-            model.Tur = await _veterinerDbContext.Turler.FirstOrDefaultAsync(x => x.TurId == model.TurId);
+            model.Cins = await model.SecilenCinsiGetirAsync(_veterinerDbContext, model);
+            model.Tur = await model.SecilenTuruGetirAsync(_veterinerDbContext, model);
 
             TempData["CinsTurEklendi"] = $"{model.Cins.CinsAdi} cinsi ve {model.Tur.TurAdi} türü eşleştirildi";
 
@@ -272,8 +283,9 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> CinsTurEslesmeKaldir()
         {
             var model = new CinsTurEslesmeKaldirViewModel();
+            model.CinslerTurlerListesi = await model.CinslerTurlerListesiniGetirAsync(_veterinerDbContext);
 
-            return View(await model.CinslerTurlerListesiniGetirAsync(_veterinerDbContext));
+            return View(model);
 
         }
         [HttpPost]
@@ -290,31 +302,18 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                return View(await model.CinslerTurlerListesiniGetirAsync(_veterinerDbContext));
+                model.CinslerTurlerListesi = await model.CinslerTurlerListesiniGetirAsync(_veterinerDbContext);
+
+                return View(model);
             }
 
-            var eslesmesiKaldirilacakCinsTur = await model.EslesmesiKaldirilacakCinsTuruGetirAsync(model, _veterinerDbContext);
+            model.EslemesiKaldiralacakCinstur = await model.EslesmesiKaldirilacakCinsTuruGetirAsync(model, _veterinerDbContext);
 
-            var cinsAdi = await _veterinerDbContext.Cinsler
-                .Where(c => c.CinsId ==
-                            _veterinerDbContext.CinsTur
-                                .Where(ct => ct.Id == eslesmesiKaldirilacakCinsTur.Id)
-                                .Select(ct => ct.CinsId)
-                                .FirstOrDefault())
-                .Select(c => c.CinsAdi)
-                .FirstOrDefaultAsync();
-
-            var turAdi = await _veterinerDbContext.Turler
-                .Where(c => c.TurId ==
-                            _veterinerDbContext.CinsTur
-                                .Where(ct => ct.Id == eslesmesiKaldirilacakCinsTur.Id)
-                                .Select(ct => ct.TurId)
-                                .FirstOrDefault())
-                .Select(t => t.TurAdi)
-                .FirstOrDefaultAsync();
+            var cinsAdi = await model.EslesmesiKaldirilacakCinsAdiniGetirAsync(model, _veterinerDbContext);
+            var turAdi = await model.EslesmesiKaldirilacakTurAdiniGetirAsync(model, _veterinerDbContext);
 
 
-            _veterinerDbContext.CinsTur.Remove(eslesmesiKaldirilacakCinsTur);
+            _veterinerDbContext.CinsTur.Remove(model.EslemesiKaldiralacakCinstur);
             await _veterinerDbContext.SaveChangesAsync();
             TempData["EslemeKaldiridi"] = $"{cinsAdi} cinsi ve {turAdi} türü arasındaki eşleştirme kaldırıldı.";
 
@@ -356,7 +355,9 @@ namespace VeterinerApp.Controllers
         {
             var model = new RolSilViewModel();
 
-            return View(await model.RollerListesiniGetir(_veterinerDbContext));
+            model.RollerListesi = await model.RollerListesiniGetir(_veterinerDbContext);
+
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> RolSil(RolSilViewModel model)
@@ -372,14 +373,15 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", erros.ErrorMessage);
                 }
 
-                return View(model.RollerListesiniGetir(_veterinerDbContext));
+                model.RollerListesi = await model.RollerListesiniGetir(_veterinerDbContext);
 
+                return View(model);
             }
-            var silinecekRol = await model.SilinecekRoluGetir(_veterinerDbContext,model);
-            _veterinerDbContext.Roles.Remove(await model.SilinecekRoluGetir(_veterinerDbContext, model));
+            model.SilinecekRol = await model.SilinecekRoluGetir(_veterinerDbContext, model);
+            _veterinerDbContext.Roles.Remove(model.SilinecekRol);
             await _veterinerDbContext.SaveChangesAsync();
 
-            TempData["RolSilindi"] = $"{silinecekRol.Name} başarı ile silindi.";
+            TempData["RolSilindi"] = $"{model.SilinecekRol.Name} başarı ile silindi.";
 
             return RedirectToAction();
         }
@@ -388,17 +390,18 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> KisiEkle()
         {
             var model = new KisiEkleViewModel();
+            model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
 
-            return View(await model.RollerListesiniGetirAsync(_veterinerDbContext));
+            return View(model);
 
         }
         [HttpPost]
         public async Task<IActionResult> KisiEkle(KisiEkleViewModel model)
         {
-            var kisi = await model.KisiOlusturAsync(_veterinerDbContext, model);
+            model.Kullanici = await model.KisiOlusturAsync(_veterinerDbContext, model);
 
             KisiEkleValidators validator = new KisiEkleValidators();
-            ValidationResult result = validator.Validate(kisi);
+            ValidationResult result = validator.Validate(model.Kullanici);
 
             if (!result.IsValid)
             {
@@ -406,11 +409,12 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+                model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
 
-                return View(await kisi.RollerListesiniGetirAsync(_veterinerDbContext));
+                return View(model);
             }
 
-            var createResult = await _userManager.CreateAsync(kisi, kisi.KullaniciSifresi);
+            var createResult = await _userManager.CreateAsync(model.Kullanici, model.KullaniciSifresi);
             await _veterinerDbContext.SaveChangesAsync(); // Kullaniciya rol atayabilmek için kullanıcıyı veritabanına kaydetmemiz gerekiyor.
 
             if (!createResult.Succeeded)
@@ -419,11 +423,13 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("Error", error.Description);
                 }
-                return View(await kisi.RollerListesiniGetirAsync(_veterinerDbContext));
+                model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
+
+                return View(model);
             }
+            model.KullaniciRolu = await model.KisininRolunuGetirAsync(_veterinerDbContext, model);
 
-
-            await _veterinerDbContext.UserRoles.AddAsync(await kisi.KisininRolunuGetirAsync(_veterinerDbContext, kisi));
+            await _veterinerDbContext.UserRoles.AddAsync(model.KullaniciRolu);
 
             if (await _veterinerDbContext.SaveChangesAsync() > 0)
             {
@@ -540,10 +546,11 @@ namespace VeterinerApp.Controllers
                 {
 
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı." + " " + ex.Message;
-                    _veterinerDbContext.Users.Remove(kisi);
-                    await _veterinerDbContext.SaveChangesAsync();
 
-                    return View(await kisi.RollerListesiniGetirAsync(_veterinerDbContext));
+                    _veterinerDbContext.Users.Remove(model.Kullanici);
+                    await _veterinerDbContext.SaveChangesAsync();
+                    model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
+                    return View(model);
                 }
 
             }
@@ -556,7 +563,7 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> KisiSec(KisiSecViewModel model)
+        public async Task<IActionResult> KisiSec(KisiDuzenleViewModel model)
         {
 
             KisiSecValidators validator = new();
@@ -571,18 +578,21 @@ namespace VeterinerApp.Controllers
                 return View();
             }
 
-            var secilenKisi = new KisiDuzenleViewModel(_veterinerDbContext, model);
 
-            //View Component'ta kullanmak secilen kişinin bilgilerini, Viewbag'e atıyoruz.
-            //View Component'ta ViewBag'den alıp kullanacağız.
-            ViewBag.SecilenKisi = secilenKisi;
+            model.SecilenKisi = await model.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
+            model.Signature = Signature.CreateSignature(model.Id, model.InsanTckn);
+
+            ViewBag.model = model;
+
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> KisiDuzenle(KisiDuzenleViewModel model)
         {
+            if (!Signature.VerifySignature(model.Id, model.InsanTckn, model.Signature))
+                return View("BadRequest");
 
-
+            //TODO validator duzgun calismiyor
             KisiDuzenleValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
@@ -591,19 +601,24 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-
-                KisiSecViewModel kisiSecViewModel = new();
-                kisiSecViewModel.InsanTckn = model.InsanTckn;
-
-                model = new(_veterinerDbContext, kisiSecViewModel);
-
-                ViewBag.SecilenKisi = model;
-                return View("KisiSec");
+                model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
+                ViewBag.model = model;
+                return View("KisiSec", model);
             }
-            var kisiRolu = await model.UserRoleGetirAsync(_veterinerDbContext, model);
-            var kisi = await model.UpdateOlacakKullaniciyiGetirAsync(_veterinerDbContext, model);
-            _veterinerDbContext.UserRoles.Update(kisiRolu);
-            _veterinerDbContext.Users.Update(kisi);
+
+            model.EskiRol = await model.KullanicininEskiRolunuGetirAsync(_veterinerDbContext, model);
+            model.YeniRol = await model.KullanicininYeniRolunuGetirAsync(model);
+
+
+            if (model.EskiRol.RoleId != model.YeniRol.RoleId)
+            {
+                _veterinerDbContext.UserRoles.Remove(model.EskiRol);
+                await _veterinerDbContext.UserRoles.AddAsync(model.YeniRol);
+            }
+
+            model.UpdateOlacakKullanici = await model.UpdateOlacakKullaniciyiGetirAsync(_veterinerDbContext, model);
+            _veterinerDbContext.Users.Update(model.UpdateOlacakKullanici);
+
             await _veterinerDbContext.SaveChangesAsync();
 
             TempData["KisiGuncellendi"] = $"{model.InsanAdi} {model.InsanSoyadi} adlı kişinin bilgileri başarı ile güncellendi.";
@@ -615,9 +630,9 @@ namespace VeterinerApp.Controllers
         {
             int sayfadaGosterilecekKayitSayisi = 4;
 
-            var kisiler = new KisileriListeleViewModel(_veterinerDbContext);
+            var kisiler = new KisileriListeleViewModel();
 
-            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(kisiler.KisiListesiniGetir(), sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
+            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(kisiler.KisiListesiniGetir(_veterinerDbContext), sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
             ViewBag.ToplamKayit = kisiler;
             return View(viewModel);
         }
@@ -625,20 +640,19 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> KisileriListele(string secilenKisiTckn, int sayfaNumarasi = 1)
         {
             int sayfadaGosterilecekKayitSayisi = 4;
-            var kisiler = new KisileriListeleViewModel(_veterinerDbContext);
+            KisileriListeleViewModel kisiler = new();
+
+            kisiler.SecilenKisi = await kisiler.SecilenKisiyiGetirAsync(secilenKisiTckn, _veterinerDbContext);
 
 
-            var secilenKisi = kisiler.SecilenKisi(secilenKisiTckn);
-
-            if (secilenKisi == null)
-            {
+            if (kisiler.SecilenKisi == null)
                 return View("BadRequest");
-            }
-
-            ViewBag.SecilenKisi = secilenKisi;
 
 
-            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(kisiler.KisiListesiniGetir(), sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
+            ViewBag.SecilenKisi = kisiler.SecilenKisi;
+
+
+            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(kisiler.KisiListesiniGetir(_veterinerDbContext), sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
             return View(viewModel);
         }
 
@@ -647,9 +661,8 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
         [HttpPost]
-        public IActionResult KategoriEkle(KategoriViewModel model)
+        public async Task<IActionResult> KategoriEkle(KategoriViewModel model)
         {
             KategoriEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -662,16 +675,108 @@ namespace VeterinerApp.Controllers
                 }
                 return View(model);
             }
+
             model.KategoriAdi = model.KategoriAdi.ToUpper();
-            _veterinerDbContext.Kategoriler.Add(model);
-            if (_veterinerDbContext.SaveChanges() > 0)
-            {
-                TempData["KategoriEklendi"] = $"{model.KategoriAdi.ToUpper()} kategorisi başarı ile eklendi.";
-            }
+
+            await _veterinerDbContext.Kategoriler.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["KategoriEklendi"] = $" {model.KategoriAdi} isimli kategori başarı ile eklendi";
 
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> KategoriSil()
+        {
+            KategoriSilViewModel model = new();
+            model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KategoriSil(KategoriSilViewModel model)
+        {
+            KategoriSilValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
+
+                return View(model);
+            }
+
+            model.SilinecekKategori = await model.SilinecekKategoriyiGetirAsync(_veterinerDbContext, model);
+            _veterinerDbContext.Kategoriler.Remove(model.SilinecekKategori);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["KategoriSilindi"] = $"{model.SilinecekKategori.KategoriAdi} başarı ile silindi.";
+            return RedirectToAction();
+        }
+
+        [HttpGet]
+        public IActionResult BirimEkle()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BirimEkle(BirimEkleViewModel model)
+        {
+            model.BirimAdi = model.BirimAdi.ToUpper();
+
+            BirimEkleValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View();
+            }
+
+            await _veterinerDbContext.Birimler.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["BirimEklendi"] = $"{model.BirimAdi} isimli birim başarı ile eklendi.";
+
+            return RedirectToAction();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BirimSil()
+        {
+            BirimSilViewModel model = new();
+            model.BirimLerListesi = await model.BirimlerListesiniGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BirimSil(BirimSilViewModel model)
+        {
+            BirimSilValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                model.BirimLerListesi = await model.BirimlerListesiniGetirAsync(_veterinerDbContext);
+                return View();
+            }
+
+            model.SilinecekBirim = await model.SilinecekBirimGetirAsync(_veterinerDbContext, model);
+
+            _veterinerDbContext.Birimler.Remove(model.SilinecekBirim);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["BirimSilindi"] = $"{model.SilinecekBirim.BirimAdi} başarı ile silindi.";
+            return RedirectToAction();
+        }
     }
 }
 

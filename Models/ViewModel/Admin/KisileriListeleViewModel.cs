@@ -10,22 +10,14 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class KisileriListeleViewModel : AppUser
     {
-        private readonly VeterinerDBContext _context;
-        public KisileriListeleViewModel()
-        {
-
-        }
-        public KisileriListeleViewModel(VeterinerDBContext context)
-        {
-            _context = context;
-        }
-        public IQueryable<KisileriListeleViewModel> KisilerListesi { get; set; }
-        public string RolId { get; set; }
+ 
         public string RolAdi { get; set; }
+        public AppUser SecilenKisi { get;set; }
 
-        public KisileriListeleViewModel SecilenKisi(string tckn)
+
+        public async Task<KisileriListeleViewModel> SecilenKisiyiGetirAsync(string tckn, VeterinerDBContext context)
         {
-            return _context.AppUsers.Where(x => x.InsanTckn == tckn).Select(kisi=>new KisileriListeleViewModel
+            return await context.AppUsers.Where(x => x.InsanTckn == tckn).Select(kisi=>new KisileriListeleViewModel
             {
                 InsanAdi = kisi.InsanAdi,
                 InsanSoyadi = kisi.InsanSoyadi,
@@ -36,19 +28,19 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 UserName = kisi.UserName,
                 CalisiyorMu = kisi.CalisiyorMu,
                 Maas = kisi.Maas,
-                RolAdi = _context.Roles
-                        .Where(r => r.Id == _context.UserRoles
+                RolAdi = context.Roles
+                        .Where(r => r.Id == context.UserRoles
                                             .Where(ur => ur.UserId == kisi.Id)
                                             .Select(ur => ur.RoleId)
                                             .FirstOrDefault())
                         .Select(r => r.Name)
                         .FirstOrDefault()
-            }).FirstOrDefault();
+            }).FirstOrDefaultAsync();
         }
 
-        public IQueryable<KisileriListeleViewModel> KisiListesiniGetir()
+        public IQueryable<KisileriListeleViewModel> KisiListesiniGetir(VeterinerDBContext context)
         {
-            var kisiler = _context.Users.Select(kisi => new KisileriListeleViewModel
+            var kisiler = context.Users.Select(kisi => new KisileriListeleViewModel
             {
                 InsanTckn = kisi.InsanTckn,
                 InsanAdi = kisi.InsanAdi,
@@ -56,8 +48,8 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 CalisiyorMu = kisi.CalisiyorMu,
                 Email = kisi.Email,
                 PhoneNumber = kisi.PhoneNumber,
-                RolAdi = _context.Roles
-                        .Where(r => r.Id == _context.UserRoles
+                RolAdi = context.Roles
+                        .Where(r => r.Id == context.UserRoles
                                             .Where(ur => ur.UserId == kisi.Id)
                                             .Select(ur => ur.RoleId)
                                             .FirstOrDefault())

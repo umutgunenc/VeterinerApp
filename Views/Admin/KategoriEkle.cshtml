@@ -20,13 +20,13 @@
 
 @if (TempData["KategoriEklendi"] != null)
 {
-    <div class="alert alert-success" id="successMessage">@TempData["KategoriEklendi"]</div>
+    <div class="alert alert-success" id="KategoriEklendi">@TempData["KategoriEklendi"]</div>
 }
 
 @section Scripts {
     <script>
         setTimeout(function () {
-            var successMessage = document.getElementById("successMessage");
+            var successMessage = document.getElementById("KategoriEklendi");
             successMessage.remove();
         }, 2500);
     </script>

@@ -36,6 +36,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.CinsTur.Any(x => x.Id == id);
         }
+
+        public static bool BeKategori(int kategoriId)
+        {
+            return _context.Kategoriler.Any(x => x.KategoriId == kategoriId);
+        }
+        
         public static bool BeMatchedCinsTur(int cinsId, int turId)
         {
             return _context.CinsTur.Any(x => x.CinsId == cinsId && x.TurId == turId);
@@ -137,6 +143,13 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.Hayvanlar.Any(h => h.HayvanId == hayvanId);
         }
+
+        public static bool BeBirim(int birimId)
+        {
+            return _context.Birimler.Any(b => b.BirimId == birimId);
+        }
+
+
         public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
         {
             return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
@@ -259,6 +272,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return !_context.Users.Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
         }
 
+
+        public static bool BeUniqueBirim(string birimAdi)
+        {
+            return !_context.Birimler.Any(x => x.BirimAdi.ToUpper() == birimAdi.ToUpper());
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -273,6 +292,11 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         public static bool BeNotUsedRenk(int Id)
         {
             return !_context.Hayvanlar.Any(x => x.RenkId == Id);
+        }
+
+        public static bool BeNotUsedBirim(int birimId)
+        {
+            return !_context.Stoklar.Any(x => x.BirimId == birimId);
         }
         public static bool BeNotUsedTurCins(int id)
         {
@@ -292,9 +316,14 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.CinsTur.Where(x => x.CinsId == cinsId).Any();
         }
-        public static bool BeNotMatchedTur(int id)
+        public static bool BeNotMatchedTur(int turId)
         {
-            return !_context.CinsTur.Any(x => x.TurId == id);
+            return !_context.CinsTur.Any(x => x.TurId == turId);
+        }
+
+        public static bool BeNotMatchedKategori(int kategoriId)
+        {
+            return !_context.Stoklar.Any(x => x.KategoriId == kategoriId);
         }
         public static bool BeNotOwnedAnimal(int hayvanId, string yeniSahipTCKN)
         {

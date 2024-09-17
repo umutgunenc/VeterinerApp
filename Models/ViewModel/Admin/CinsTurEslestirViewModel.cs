@@ -14,9 +14,9 @@ namespace VeterinerApp.Models.ViewModel.Admin
         public List<SelectListItem> TurlerListesi { get; set; } 
         public List<SelectListItem> CinslerListesi { get; set; }
 
-        private async Task<List<SelectListItem>> TurlerListesiGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> TurlerListesiGetirAsync(VeterinerDBContext context)
         {
-            var turler=await _context.Turler.ToListAsync();
+            var turler=await context.Turler.ToListAsync();
             TurlerListesi = new();
             foreach (var tur in turler)
             {
@@ -28,9 +28,9 @@ namespace VeterinerApp.Models.ViewModel.Admin
             }
             return TurlerListesi;
         }
-        private async Task<List<SelectListItem>> CinslerListesiGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> CinslerListesiGetirAsync(VeterinerDBContext context)
         {
-            var cinsler = await _context.Cinsler.ToListAsync();
+            var cinsler = await context.Cinsler.ToListAsync();
             CinslerListesi = new();
 
             foreach (var cins in cinsler)
@@ -43,12 +43,15 @@ namespace VeterinerApp.Models.ViewModel.Admin
             }
             return CinslerListesi;
         }
-
-        public async Task<CinsTurEslestirViewModel> CinsTurListesiGetirAsync(VeterinerDBContext _context)
+        public async Task<Cins> SecilenCinsiGetirAsync(VeterinerDBContext context, CinsTurEslestirViewModel model)
         {
-            TurlerListesi = await TurlerListesiGetirAsync( _context);
-            CinslerListesi = await CinslerListesiGetirAsync( _context);
-            return this;
+           return await context.Cinsler.FirstOrDefaultAsync(x => x.CinsId == model.CinsId);
         }
+
+        public async Task<Tur> SecilenTuruGetirAsync(VeterinerDBContext context, CinsTurEslestirViewModel model)
+        {
+            return await context.Turler.FirstOrDefaultAsync(x => x.TurId == model.TurId);
+        }
+
     }
 }

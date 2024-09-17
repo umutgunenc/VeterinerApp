@@ -102,9 +102,14 @@
             </div>
         </div>
     </div>
+
     <input type="hidden" asp-for="InsanTckn" />
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Signature" />
     <button type="submit" class="col btn btn-dark rounded mb-2">Düzenle</button>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
 </form>
 
 

@@ -9,7 +9,7 @@
         <div class="col">
             <select asp-for="TurId" class="form-control" id="mySelect">
                 <option selected disabled>Silinecek Türü Seçiniz</option>
-                @foreach (var turler in Model.Turler)
+                @foreach (var turler in Model.TurListesi)
                 {
                     <option value="@turler.Value">@turler.Text</option>
                 }

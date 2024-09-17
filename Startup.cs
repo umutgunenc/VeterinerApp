@@ -17,6 +17,9 @@ using VeterinerApp.Fonksiyonlar;
 using VeterinerApp.Models.Entity;
 
 
+
+
+
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -31,13 +34,13 @@ public class Startup
         services.AddControllersWithViews()
             .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
 
+
         //DB bağlantısı için servis eklendi
         services.AddDbContext<VeterinerDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
         // Email gönderme servisi eklendi
         services.AddTransient<IEmailSender, EmailSender>();
-
 
         //Identity servisi eklendi
         services.AddIdentity<AppUser, AppRole>(options =>
@@ -67,7 +70,6 @@ public class Startup
         {
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
-
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

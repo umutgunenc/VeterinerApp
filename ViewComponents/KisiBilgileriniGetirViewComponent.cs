@@ -12,6 +12,7 @@ public class KisiBilgileriniGetirViewComponent : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync(KisileriListeleViewModel model)
     {
 
+
         return View(model);
     }
 }

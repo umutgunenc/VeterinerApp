@@ -1,4 +1,4 @@
-﻿@model KisiSecViewModel
+﻿@model KisiDuzenleViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
@@ -19,11 +19,11 @@
     </div>
 </form>
 
+@if (ViewBag.model != null)
 
-@if (ViewBag.SecilenKisi != null)
-    {
-        @await Component.InvokeAsync("KisiDuzenle", ViewBag.SecilenKisi)
-    }
+    @await Component.InvokeAsync("KisiDuzenle", ViewBag.model)
+}
+
 
 @if (TempData["KisiGuncellendi"] != null)
 {

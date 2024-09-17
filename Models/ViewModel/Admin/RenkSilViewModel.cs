@@ -10,16 +10,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
 {
     public class RenkSilViewModel :Renk
     {
-        public RenkSilViewModel()
-        {
-
-        }
 
         public List<SelectListItem> RenklerListesi { get; set; }
 
-        public async Task<RenkSilViewModel> RenklerListesiniGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> RenklerListesiniGetirAsync(VeterinerDBContext context)
         {
-            var Renkler = await _context.Renkler.ToListAsync();
+            var Renkler = await context.Renkler.ToListAsync();
             RenklerListesi = new();
 
             foreach (var renk in Renkler)
@@ -30,12 +26,12 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     Value = renk.RenkId.ToString()
                 });
             }
-            return this;
+            return RenklerListesi;
         }
 
-        public async Task<Renk> SilinecekRengiGetirAsync(RenkSilViewModel model,VeterinerDBContext _context)
+        public async Task<Renk> SilinecekRengiGetirAsync(RenkSilViewModel model,VeterinerDBContext context)
         {
-            return await _context.Renkler.FindAsync(model.RenkId);
+            return await context.Renkler.FindAsync(model.RenkId);
 
         }
 

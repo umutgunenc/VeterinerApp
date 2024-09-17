@@ -11,26 +11,26 @@ namespace VeterinerApp.Models.ViewModel.Admin
     {
 
 
-        public List<SelectListItem> Turler { get; set; }
+        public List<SelectListItem> TurListesi { get; set; }
 
-        public async Task<List<SelectListItem>> TurListesiniGetirASync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> TurListesiniGetirASync(VeterinerDBContext context)
         {
-            var turler =await _context.Turler.ToListAsync();
-
+            var turler =await context.Turler.ToListAsync();
+            TurListesi = new();
             foreach (var tur in turler)
             {
-                Turler.Add(new SelectListItem
+                TurListesi.Add(new SelectListItem
                 {
                     Text = tur.TurAdi,
                     Value = tur.TurId.ToString()
                 });
             }
-            return Turler;
+            return TurListesi;
         }
 
-        public async Task<Tur> SilinecekTuruGetirAsync(TurSilViewModel model, VeterinerDBContext _context)
+        public async Task<Tur> SilinecekTuruGetirAsync(TurSilViewModel model, VeterinerDBContext context)
         {
-            return await _context.Turler.FindAsync(model.TurId);
+            return await context.Turler.FindAsync(model.TurId);
         }
 
 

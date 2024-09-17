@@ -11,7 +11,7 @@ using VeterinerApp.Models.Validators.ValidateFunctions;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public partial class KisiSecValidators : AbstractValidator<KisiSecViewModel>
+    public partial class KisiSecValidators : AbstractValidator<KisiDuzenleViewModel>
     {
         public KisiSecValidators()
         {

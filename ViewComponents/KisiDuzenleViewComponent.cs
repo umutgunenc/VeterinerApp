@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 namespace VeterinerApp.ViewComponents
 {
     public class KisiDuzenleViewComponent : ViewComponent
-    {
-        private readonly VeterinerDBContext _veterinerDbContext;
+    {   private readonly VeterinerDBContext _context;
 
-        public KisiDuzenleViewComponent(VeterinerDBContext veterinerDbContext)
+        public KisiDuzenleViewComponent(VeterinerDBContext context)
         {
-            _veterinerDbContext = veterinerDbContext;
+            _context = context;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(KisiDuzenleViewModel model)
         {
+            
             if (model == null)
             {
                 return View("KisiSec");
             }
-
+            //model = await model.SecilenKisiyiGetirAsync(_context, model);
             return View(model);
         }
     }
