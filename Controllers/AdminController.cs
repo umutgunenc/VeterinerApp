@@ -17,6 +17,7 @@ using VeterinerApp.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerApp.Models.Validators;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 
 
@@ -836,7 +837,25 @@ namespace VeterinerApp.Controllers
             return Json(model.StokListesi);
         }
 
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> StokDetay(string secilenStokId)
+        {
+            if (string.IsNullOrEmpty(secilenStokId))
+                return View("BadRequest");
 
+            if (!int.TryParse(secilenStokId, out int stokId))
+                return View("BadRequest");
+
+            if (!await _veterinerDbContext.Stoklar.AnyAsync(s => s.Id == stokId))
+                return View("BadRequest");
+
+            StokDetayViewModel model = new();
+            model.StokDetayListesi = await model.StokDetaylariniGetirAsync(stokId, _veterinerDbContext);
+            model.OrtalamaAlisFiyati = model.OrtalamaAlisFiyatiniHesapla();
+
+            return Json(model);
+        }
     }
 
 }

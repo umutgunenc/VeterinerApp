@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Calisan;
 
 namespace VeterinerApp.Controllers
 {
@@ -15,16 +14,7 @@ namespace VeterinerApp.Controllers
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult StokEkle()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult StokEkle(StokHareketViewModel model)
-        {
 
-            return View();
-        }
+
     }
 }

@@ -1,0 +1,110 @@
+﻿
+<table class="table table-responsive table-hover table-dark text-left mb-2 rounded-top-md">
+    <thead>
+        <tr>
+            <th scope="col" class="text-center p-0 py-2 pl-1">
+                <span role="button" id="StokId">
+                    Stok Id <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokAdi">
+                    Stok Adı <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokBarkod">
+                    Stok Barkodu <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokKategori">
+                    Kategorisi <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokSayisi">
+                    Sayısı <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokBirimi">
+                    Birimi <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center  p-0 py-2">
+                <span role="button" id="StokAktifMi">
+                    Aktif Mi <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+
+            <th scope="col" class="text-center p-0 py-2">
+                <span role="button" id="StokAciklama">
+                    Açıklama <i class="fa-solid fa-sort"></i>
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready.function(){
+            var liste = [];
+            var currentPage = 1;
+            var itemsPerPage = 10;
+            var siralamaYonleri = {};
+
+            function veriYukle() {
+                $.ajax({
+                    url: "/Admin/StokDetay",
+                    type: "GET",
+                    success: function (response) {
+                        liste = response; // Veriyi kaydet
+                        updateShowCount(); // Gösterim seçeneklerini güncelle
+                        tabloyuDoldur(); // Tabloyu doldur
+                        sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
+                    },
+                });
+            }
+
+            function tabloyuDoldur() {
+                var tableBody = $('#tableBody');
+                tableBody.empty();
+
+                // Sayfalandırma hesaplamaları
+                var startIndex = (currentPage - 1) * itemsPerPage;
+                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    var stok = liste[i];
+                    var aktifMi = stok.aktifMi ? 'Evet' : 'Hayır';
+                    var row = `<tr class="clickableRow" role="button" data-id="${stok.id}">
+                                   <td class="col-1 text-center">${stok.id}</td>
+                                   <td class="col-2 text-center">${stok.stokAdi}</td>
+                                   <td class="col-1 text-center">${stok.stokBarkod}</td>
+                                   <td class="col-1 text-center">${stok.kategoriAdi}</td>
+                                   <td class="col-1 text-center">${stok.stokSayisi}</td>
+                                   <td class="col-1 text-center">${stok.birimAdi}</td>
+                                   <td class="col-1 text-center">${aktifMi}</td>
+                                   <td class="col-4 text-center">${stok.aciklama}</td>
+                               </tr>`;
+                    tableBody.append(row);
+                }
+
+                $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${endIndex - startIndex} adedi gösterilmektedir.`);
+            }
+
+        }
+    </script>
+
+
+}

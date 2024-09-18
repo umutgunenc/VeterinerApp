@@ -17,7 +17,7 @@ namespace VeterinerApp.ViewComponents
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(KisiDuzenleViewModel model)
+        public IViewComponentResult InvokeAsync(KisiDuzenleViewModel model)
         {
             
             if (model == null)

@@ -14,7 +14,6 @@ namespace VeterinerApp.Models.ViewModel.Animal
     public class EditAnimalViewModel : Hayvan
     {
         private readonly VeterinerDBContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
         public EditAnimalViewModel(VeterinerDBContext context)
         {
