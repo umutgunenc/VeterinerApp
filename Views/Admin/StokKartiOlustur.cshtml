@@ -1,0 +1,68 @@
+﻿@model StokKartiOlusturViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="StokKartiOlustur" asp-controller="Admin" method="post">
+    <div class="form-col">
+        <div class="col mb-2">
+            <input type="text" asp-for="StokAdi" class="form-control" placeholder="Stok Adı">
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="StokAdi">
+        </span>
+        <div class="col mb-2">
+            <input type="text" asp-for="StokBarkod" class="form-control" placeholder="Barkod">
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="StokBarkod">
+        </span>
+
+        <div class="col mb-2">
+            <select class="custom-select form-control" asp-for="BirimId" asp-items="Model.BirimlerListesi">
+                <option selected disabled>Birim Seçiniz</option>
+            </select>
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="BirimId">
+        </span>
+
+        <div class="col mb-2">
+            <select class="custom-select form-control" asp-for="KategoriId" asp-items="Model.KategoriListesi">
+                <option selected disabled>Kategori Seçiniz</option>
+            </select>
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="KategoriId">
+        </span>
+
+        <div class="col mb-2">
+            <textarea asp-for="Aciklama" class="form-control" placeholder="Açıklama" rows="3"></textarea>
+        </div>
+
+        <div class="col mb-2">
+            <button type="submit" class="col btn btn-dark rounded mb-2">Ekle</button>
+            </span>
+        </div>
+
+    </div>
+
+
+</form>
+
+
+@if (TempData["StokKartiOlusturuldu"] != null)
+{
+    <div class="alert alert-success" role="alert" id="StokKartiOlusturuldu">
+        @TempData["StokKartiOlusturuldu"]
+    </div>
+
+}
+
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("StokKartiOlusturuldu");
+            message.remove();
+        }, 5000);
+    </script>
+}

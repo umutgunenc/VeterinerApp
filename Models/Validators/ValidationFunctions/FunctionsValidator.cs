@@ -268,12 +268,20 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
             return !_context.Users.Any(x => x.Email.ToUpper() == insanMail.ToUpper() && x.Id != id);
         }
-
-
         public static bool BeUniqueBirim(string birimAdi)
         {
             return !_context.Birimler.Any(x => x.BirimAdi.ToUpper() == birimAdi.ToUpper());
         }
+        public static bool BeUniqueBarkod(string barkod)
+        {
+            return !_context.Stoklar.Any(x => x.StokBarkod == barkod);
+        }
+        public static bool BeUniqueStokAdi(string stokAdi)
+        {
+            return !_context.Stoklar.Any(x => x.StokAdi == stokAdi);
+        }
+
+
 
         /// <summary>
         /// 
@@ -286,11 +294,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var role = _context.Roles.Find(rolId);
             return role != null && validRoles.Contains(role.Name.ToLower());
         }
+
+
         public static bool BeNotUsedRenk(int Id)
         {
             return !_context.Hayvanlar.Any(x => x.RenkId == Id);
         }
-
         public static bool BeNotUsedBirim(int birimId)
         {
             return !_context.Stoklar.Any(x => x.BirimId == birimId);
@@ -317,7 +326,6 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.CinsTur.Any(x => x.TurId == turId);
         }
-
         public static bool BeNotMatchedKategori(int kategoriId)
         {
             return !_context.Stoklar.Any(x => x.KategoriId == kategoriId);
@@ -326,6 +334,8 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
         }
+
+
 
 
         private static readonly List<string> radioValues = new List<string>

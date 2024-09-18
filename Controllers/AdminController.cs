@@ -778,10 +778,65 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult StokGoruntule()
+        public async Task<IActionResult> StokKartiOlustur()
         {
+            StokKartiOlusturViewModel model = new();
+            model.BirimlerListesi = await model.BirimListesiniGetirAsync(_veterinerDbContext);
+            model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StokKartiOlustur(StokKartiOlusturViewModel model)
+        {
+            model.StokAdi = model.StokAdi.ToUpper();
+            model.StokBarkod = model.StokBarkod.ToUpper();
+            model.AktifMi = true;
+            model.StokSayisi = 0;
+            if (string.IsNullOrEmpty(model.Aciklama))
+                model.Aciklama = "";
+            else
+                model.Aciklama = model.Aciklama.ToUpper();
+
+
+            StokKartiOlusturValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                model.BirimlerListesi = await model.BirimListesiniGetirAsync(_veterinerDbContext);
+                model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
+                return View(model);
+            }
+
+            await _veterinerDbContext.Stoklar.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["StokKartiOlusturuldu"] = $"{model.StokAdi} isimli stok kartı başarı ile oluşturuldu.";
+            return RedirectToAction();
+
+
 
         }
+
+        [HttpGet]
+        public IActionResult StokGoruntule()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> StokGoruntuleData()
+        {
+            StokGoruntuleViewModel model = new();
+            model.StokListesi = await model.StokListesiniGetirAsync(_veterinerDbContext);
+            return Json(model.StokListesi);
+        }
+
+
     }
 
 }
