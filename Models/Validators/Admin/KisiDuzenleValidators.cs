@@ -28,15 +28,15 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotEmpty().WithMessage("Lütfen telefon numarasını giriniz.")
                 .NotNull().WithMessage("Lütfen telefon numarasını giriniz.")
                 .Matches(@"^0\d{10}$").WithMessage("Telefon numarası geçersiz.")
-                .Must((model, insanTel) => FunctionsValidator.BeUniqueTel(model.Id, insanTel))
-                .WithMessage("Girilen telefon numarası zaten sisteme kayıtlı.");
+                .Must((model, telefonNo) => FunctionsValidator.BeUniqueTel(model.Id, telefonNo)).WithMessage("Girilen telefon numarası zaten sisteme kayıtlı.");
+
 
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.")
                 .NotNull().WithMessage("Lütfen e-mail adresi giriniz.")
                 .NotEmpty().WithMessage("Lütfen e-mail adresi giriniz.")
                 .MaximumLength(100).WithMessage("e-mail adresi maksimum 100 karakter uzunluğunda olabilir.")
-                .Must((model, insanMail) => FunctionsValidator.BeUniqueEmail(model.Id, insanMail))
+                .Must((model, mailAdresi) => FunctionsValidator.BeUniqueEmail(model.Id, mailAdresi))
                 .WithMessage("Girilen e-posta adresi zaten sisteme kayıtlı.");
 
             RuleFor(x => x.DiplomaNo)

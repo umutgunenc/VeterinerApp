@@ -36,12 +36,10 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.CinsTur.Any(x => x.Id == id);
         }
-
         public static bool BeKategori(int kategoriId)
         {
             return _context.Kategoriler.Any(x => x.KategoriId == kategoriId);
         }
-        
         public static bool BeMatchedCinsTur(int cinsId, int turId)
         {
             return _context.CinsTur.Any(x => x.CinsId == cinsId && x.TurId == turId);
@@ -143,17 +141,19 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.Hayvanlar.Any(h => h.HayvanId == hayvanId);
         }
-
         public static bool BeBirim(int birimId)
         {
             return _context.Birimler.Any(b => b.BirimId == birimId);
         }
-
-
         public static bool BeOwnedByCurrentUser(EditAnimalViewModel model, int hayvanId)
         {
             return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
         }
+
+
+
+
+
 
         public static bool LoginSucceed(AppUser user)
         {
@@ -204,12 +204,9 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="id"></param>
         /// <param name="insanTel"></param>
         /// <returns></returns>
-        public static bool BeUniqueTel(int id, string insanTel)
+        public static bool BeUniqueTel(int kisiId, string telefonNo)
         {
-            if (string.IsNullOrEmpty(insanTel))
-                return true;
-
-            return !_context.Users.Any(x => x.PhoneNumber == insanTel && x.Id != id);
+            return !_context.Users.Any(x => x.PhoneNumber == telefonNo && x.Id != kisiId);
         }
         public static bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
         {

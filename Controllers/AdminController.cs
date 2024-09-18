@@ -563,7 +563,7 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> KisiSec(KisiDuzenleViewModel model)
+        public async Task<IActionResult> KisiSec(KisiSecViewModel model)
         {
 
             KisiSecValidators validator = new();
@@ -578,11 +578,11 @@ namespace VeterinerApp.Controllers
                 return View();
             }
 
+            KisiDuzenleViewModel kisiDuzenleViewModel = new();
+            kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
+            kisiDuzenleViewModel.Signature = Signature.CreateSignature(kisiDuzenleViewModel.Id, kisiDuzenleViewModel.InsanTckn);
 
-            model.SecilenKisi = await model.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
-            model.Signature = Signature.CreateSignature(model.Id, model.InsanTckn);
-
-            ViewBag.model = model;
+            ViewBag.model = kisiDuzenleViewModel;
 
             return View(model);
         }
@@ -592,7 +592,6 @@ namespace VeterinerApp.Controllers
             if (!Signature.VerifySignature(model.Id, model.InsanTckn, model.Signature))
                 return View("BadRequest");
 
-            //TODO validator duzgun calismiyor
             KisiDuzenleValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
@@ -603,11 +602,11 @@ namespace VeterinerApp.Controllers
                 }
                 model.RollerListesi = await model.RollerListesiniGetirAsync(_veterinerDbContext);
                 ViewBag.model = model;
-                return View("KisiSec", model);
+                return View("KisiSec");
             }
 
             model.EskiRol = await model.KullanicininEskiRolunuGetirAsync(_veterinerDbContext, model);
-            model.YeniRol = await model.KullanicininYeniRolunuGetirAsync(model);
+            model.YeniRol = model.KullanicininYeniRolunuGetir(model);
 
 
             if (model.EskiRol.RoleId != model.YeniRol.RoleId)
@@ -777,6 +776,13 @@ namespace VeterinerApp.Controllers
             TempData["BirimSilindi"] = $"{model.SilinecekBirim.BirimAdi} başarı ile silindi.";
             return RedirectToAction();
         }
+
+        [HttpGet]
+        public IActionResult StokGoruntule()
+        {
+
+        }
     }
+
 }
 
