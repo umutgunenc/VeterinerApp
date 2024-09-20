@@ -850,9 +850,8 @@ namespace VeterinerApp.Controllers
             if (!await _veterinerDbContext.Stoklar.AnyAsync(s => s.Id == stokId))
                 return View("BadRequest");
 
-            StokDetayViewModel model = new();
-            model.StokDetayListesi = await model.StokDetaylariniGetirAsync(stokId, _veterinerDbContext);
-            model.OrtalamaAlisFiyati = model.OrtalamaAlisFiyatiniHesapla();
+            StokDetayViewModel model = new(_veterinerDbContext, stokId);
+
 
             return Json(model);
         }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinerApp.Data;
@@ -9,34 +10,52 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class StokDetayViewModel 
+    public class StokDetayViewModel :Stok
     {
+        private readonly VeterinerDBContext _context;
+
+        public StokDetayViewModel(VeterinerDBContext context,  int stokId)
+        {
+            _context = context;
+            ModeliOlusturAsync(stokId).Wait();
+        }
+
+        public async Task<StokDetayViewModel> ModeliOlusturAsync(int stokId)
+        {
+            StokHareketDetay stokHareketDetay = new(_context, stokId);
+            var stok = await _context.Stoklar.Where(s => s.Id == stokId).FirstOrDefaultAsync();
+            KategoriAdi = await KategoriAdiniGetirAsync(stokId);
+            BirimAdi = await BirimAdiniGetirAsync(stokId);
+            Id = stok.Id;
+            StokAdi = stok.StokAdi;
+            StokBarkod = stok.StokBarkod;
+            Aciklama = stok.Aciklama;
+            AktifMi = stok.AktifMi;
+            BirimId = stok.BirimId;
+            KategoriId = stok.KategoriId;
+            StokSayisi = stok.StokSayisi;
+            OrtalamaAlisFiyati = stokHareketDetay.OrtalamaAlisFiyatiniHesapla();
+            StokHareketDetayListesi = stokHareketDetay.StokHareketDetayListesi;
+            StokSayisi = stok.StokSayisi;
+            Birim = stok.Birim;
+
+            return this;
+        }
+
         public string KategoriAdi { get; set; }
         public string BirimAdi { get; set; }
-         
-        private int Id { get; set; }
-
-        private string StokAdi { get; set; }
-
-        private int StokHareketId { get; set; }
-        private DateTime? SatisTarihi { get; set; }
-        private double? SatisFiyati { get; set; }
-        private DateTime? AlisTarihi { get; set; }
-        private double? AlisFiyati { get; set; }
         public double? OrtalamaAlisFiyati { get; set; }
-        private string CalisanSoyadi { get; set; }
-        private string CalisanAdi { get; set; }
-        private int? StokGirisAdet { get; set; }
-        private int? StokCikisAdet { get; set; }
-        private List<StokHareket> StokHarektlerListesi { get; set; }
-        public List<StokDetayViewModel> StokDetayListesi { get; set; }
 
 
-        private async Task<string> KategoriAdiniGetirAsync(int StokId, VeterinerDBContext context)
+
+
+        public List<StokHareketDetay> StokHareketDetayListesi { get; set; }
+
+        private async Task<string> KategoriAdiniGetirAsync(int stokId)
         {
-            KategoriAdi = await context.Kategoriler
-                .Where(k => k.KategoriId == context.Stoklar
-                                                   .Where(s => s.Id == StokId)
+            KategoriAdi = await _context.Kategoriler
+                .Where(k => k.KategoriId == _context.Stoklar
+                                                   .Where(s => s.Id == stokId)
                                                    .Select(s => s.KategoriId)
                                                    .FirstOrDefault())
                 .Select(k => k.KategoriAdi)
@@ -44,11 +63,11 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
             return KategoriAdi;
         }
-        private async Task<string> BirimAdiniGetirAsync(int StokId, VeterinerDBContext context)
+        private async Task<string> BirimAdiniGetirAsync(int stokId)
         {
-            BirimAdi = await context.Birimler
-                .Where(b => b.BirimId == context.Stoklar
-                                                .Where(s => s.Id == StokId)
+            BirimAdi = await _context.Birimler
+                .Where(b => b.BirimId == _context.Stoklar
+                                                .Where(s => s.Id == stokId)
                                                 .Select(s => s.BirimId)
                                                 .FirstOrDefault())
                 .Select(b => b.BirimAdi)
@@ -56,9 +75,58 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
             return BirimAdi;
         }
-        private async Task<List<StokHareket>> StokHareketListesiniGetirAsync(int stokId, VeterinerDBContext context)
+
+
+
+
+
+    }
+
+    public class StokHareketDetay : StokHareket
+    {
+        private readonly VeterinerDBContext _context;
+
+        public StokHareketDetay()
         {
-            var stokHareketler = await context.StokHareketler.Where(sh=>sh.StokId== stokId).ToListAsync();
+            
+        }
+
+        public StokHareketDetay(VeterinerDBContext context,int stokId)
+        {
+            _context = context;
+            ModeliOlusturAsync(stokId).Wait();
+
+        }
+        private async Task<StokHareketDetay> ModeliOlusturAsync(int stokId)
+        {
+            StokHarektlerListesi = await StokHareketListesiniGetirAsync(stokId);
+            StokHareketDetayListesi = await StokHareketDetayListesiniGetirAsync(stokId);
+            return this;
+        }
+
+        public string CalisanAdi { get; set; }
+        public string CalisanSoyadi { get; set; }
+        private List<StokHareket> StokHarektlerListesi { get; set; }
+        public List<StokHareketDetay> StokHareketDetayListesi { get; set; }
+
+
+        public double? OrtalamaAlisFiyatiniHesapla()
+        {
+            double? toplamAlisFiyati = 0.0;
+            int? toplamAlinanAdet = 0;
+            foreach (var StokHareket in StokHarektlerListesi)
+            {
+                toplamAlinanAdet += StokHareket.StokGirisAdet;
+                toplamAlisFiyati += StokHareket.StokGirisAdet * StokHareket.AlisFiyati;
+
+            }
+            if (toplamAlinanAdet > 0)
+                return  Math.Round((double)(toplamAlisFiyati / toplamAlinanAdet), 2);
+            return null;
+        }
+        private async Task<List<StokHareket>> StokHareketListesiniGetirAsync(int stokId)
+        {
+            var stokHareketler = await _context.StokHareketler.Where(sh => sh.StokId == stokId).ToListAsync();
             StokHarektlerListesi = new();
             foreach (var stokHareket in stokHareketler)
             {
@@ -78,56 +146,37 @@ namespace VeterinerApp.Models.ViewModel.Admin
             return StokHarektlerListesi;
 
         }
-        public async Task<List<StokDetayViewModel>> StokDetaylariniGetirAsync(int stokId, VeterinerDBContext context)
+        private async Task<List<StokHareketDetay>> StokHareketDetayListesiniGetirAsync(int stokId)
         {
-            StokDetayListesi = new();
-            StokHarektlerListesi = await StokHareketListesiniGetirAsync(stokId, context);
+            StokHareketDetayListesi = new();
+            StokHarektlerListesi = await StokHareketListesiniGetirAsync(stokId);
             foreach (var StokHareket in StokHarektlerListesi)
             {
-                StokDetayListesi.Add(new StokDetayViewModel
+                StokHareketDetayListesi.Add(new StokHareketDetay()
                 {
-                    Id = stokId,
+
                     StokHareketId = StokHareket.StokHareketId,
-                    StokAdi = await context.Stoklar.Where(s => s.Id == stokId).Select(s => s.StokAdi).FirstOrDefaultAsync(),
-                    KategoriAdi = await KategoriAdiniGetirAsync(stokId, context),
-                    BirimAdi = await BirimAdiniGetirAsync(stokId, context),
                     SatisTarihi = StokHareket.SatisTarihi,
                     AlisTarihi = StokHareket.AlisTarihi,
                     AlisFiyati = StokHareket.AlisFiyati,
                     SatisFiyati = StokHareket.SatisFiyati,
-                    CalisanAdi = await context.AppUsers
+                    StokGirisAdet = StokHareket.StokGirisAdet,
+                    StokCikisAdet = StokHareket.StokCikisAdet,
+                    CalisanAdi = await _context.AppUsers
                         .Where(ap => ap.Id == StokHareket.CalisanId)
                         .Select(ap => ap.InsanAdi)
                         .FirstAsync(),
-                    CalisanSoyadi = await context.AppUsers
+                    CalisanSoyadi = await _context.AppUsers
                         .Where(ap => ap.Id == StokHareket.CalisanId)
                         .Select(ap => ap.InsanSoyadi)
                         .FirstAsync(),
-                    StokGirisAdet = StokHareket.StokGirisAdet,
-                    StokCikisAdet = StokHareket.StokCikisAdet,
 
                 });
 
             }
-            return StokDetayListesi;
+            return StokHareketDetayListesi;
 
         }
-
-        public double? OrtalamaAlisFiyatiniHesapla()
-        {
-            double? toplamAlisFiyati = 0.0;
-            int? toplamAlinanAdet = 0;
-            foreach (var StokHareket in StokHarektlerListesi)
-            {
-                toplamAlinanAdet += StokHareket.StokGirisAdet;
-                toplamAlisFiyati += StokHareket.StokGirisAdet * StokHareket.AlisFiyati;
-
-            }
-            if (toplamAlinanAdet > 0) 
-                return OrtalamaAlisFiyati = Math.Round((double)(toplamAlisFiyati / toplamAlinanAdet), 2);
-            return null;
-        }
-
 
     }
 }
