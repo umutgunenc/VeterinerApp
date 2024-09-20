@@ -3,49 +3,49 @@
     <thead>
         <tr>
             <th scope="col" class="text-center p-0 py-2 pl-1">
-                <span role="button" id="StokId">
+                <span role="button" id="stokHareketId">
                     Stok Id <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokAdi">
+                <span role="button" id="alisFiyati">
                     Stok Adı <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokBarkod">
+                <span role="button" id="alisTarihi">
                     Stok Barkodu <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokKategori">
+                <span role="button" id="stokGirisAdet">
                     Kategorisi <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokSayisi">
+                <span role="button" id="satisFiyati">
                     Sayısı <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokBirimi">
+                <span role="button" id="satisTarihi">
                     Birimi <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="StokAktifMi">
+                <span role="button" id="stokCikisAdet">
                     Aktif Mi <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
 
             <th scope="col" class="text-center p-0 py-2">
-                <span role="button" id="StokAciklama">
+                <span role="button" id="calisanAdi">
                     Açıklama <i class="fa-solid fa-sort"></i>
                 </span>
             </th>
@@ -65,7 +65,7 @@
 
             function veriYukle() {
                 $.ajax({
-                    url: "/Admin/StokDetay",
+                    url: "/Admin/StokDetay/1",
                     type: "GET",
                     success: function (response) {
                         liste = response; // Veriyi kaydet
@@ -76,6 +76,7 @@
                 });
             }
 
+
             function tabloyuDoldur() {
                 var tableBody = $('#tableBody');
                 tableBody.empty();
@@ -85,24 +86,180 @@
                 var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
 
                 for (var i = startIndex; i < endIndex; i++) {
-                    var stok = liste[i];
+                    var stokHareket = liste.stokHareketDetayListesi[i];
                     var aktifMi = stok.aktifMi ? 'Evet' : 'Hayır';
-                    var row = `<tr class="clickableRow" role="button" data-id="${stok.id}">
-                                   <td class="col-1 text-center">${stok.id}</td>
-                                   <td class="col-2 text-center">${stok.stokAdi}</td>
-                                   <td class="col-1 text-center">${stok.stokBarkod}</td>
-                                   <td class="col-1 text-center">${stok.kategoriAdi}</td>
-                                   <td class="col-1 text-center">${stok.stokSayisi}</td>
-                                   <td class="col-1 text-center">${stok.birimAdi}</td>
-                                   <td class="col-1 text-center">${aktifMi}</td>
-                                   <td class="col-4 text-center">${stok.aciklama}</td>
-                               </tr>`;
+                    var row = `<tr class="clickableRow" role="button" data-id="${stokHareket.stokHareketId}">
+                                                   <td class="col-1 text-center">${stokHareket.stokHareketId}</td>
+                                                   <td class="col-2 text-center">${stokHareket.alisFiyati}</td>
+                                                   <td class="col-1 text-center">${stokHareket.alisTarihi}</td>
+                                                   <td class="col-1 text-center">${stokHareket.stokGirisAdet}</td>
+                                                   <td class="col-1 text-center">${stokHareket.satisFiyati}</td>
+                                                   <td class="col-1 text-center">${stokHareket.satisTarihi}</td>
+                                                   <td class="col-1 text-center">${aktistokHareket.stokCikisAdet}</td>
+                                                   <td class="col-4 text-center">${stokHareket.calisanAdi} ${stokHareket.calisanSoyadi}</td>
+                                               </tr>`;
                     tableBody.append(row);
                 }
 
                 $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${endIndex - startIndex} adedi gösterilmektedir.`);
             }
+            // Gösterim seçeneklerini güncelleyen fonksiyon
+            function updateShowCount() {
+                var totalPages = Math.ceil(liste.length / itemsPerPage);
+                $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${Math.min(itemsPerPage, liste.length)} adedi gösterilmektedir.`);
+                sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
+            }
 
+            // Sayfa numaralarını güncelleme fonksiyonu
+            function sayfaNumaralarınıGuncelle() {
+                var totalPages = Math.ceil(liste.length / itemsPerPage);
+                var pageNumbers = $('#pageNumbers');
+                pageNumbers.empty();
+
+                $('#firstPage').prop('disabled', currentPage === 1);
+                $('#prevPage').prop('disabled', currentPage === 1);
+                $('#nextPage').prop('disabled', currentPage === totalPages);
+                $('#lastPage').prop('disabled', currentPage === totalPages);
+
+                if (totalPages <= 1) {
+                    $('#firstPage').hide();
+                    $('#prevPage').hide();
+                    $('#nextPage').hide();
+                    $('#lastPage').hide();
+                    return;
+                }
+
+                $('#firstPage').show();
+                $('#prevPage').show();
+                $('#nextPage').show();
+                $('#lastPage').show();
+
+                for (var i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                        var button = $('<button>').text(i).attr('data-page', i).toggleClass('active', i === currentPage);
+                        pageNumbers.append(button);
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        pageNumbers.append($('<span>').text('...'));
+                    }
+                }
+            }
+
+            // Sıralama fonksiyonu
+            function sirala(stun) {
+                var yon = siralamaYonleri[stun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
+
+                liste.sort(function (a, b) {
+                    if (a[stun] < b[stun]) {
+                        return -1 * yon;
+                    }
+                    if (a[stun] > b[stun]) {
+                        return 1 * yon;
+                    }
+                    return 0;
+                });
+
+                // Sıralama yönünü tersine çevir (Bir sonraki tıklamada ters sıralasın)
+                siralamaYonleri[stun] = !siralamaYonleri[stun];
+
+                tabloyuDoldur(); // Sıralandıktan sonra tabloyu güncelle
+                sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
+            }
+
+            // Sayfa değişimini yönetmek için fonksiyonlar
+            function sayfaGuncelle(newPage) {
+                currentPage = newPage;
+                tabloyuDoldur();
+                sayfaNumaralarınıGuncelle();
+            }
+
+            // Gösterim seçeneklerinin değişmesi
+            $('#showCount').change(function () {
+                itemsPerPage = parseInt($(this).val(), 10);
+                sayfaGuncelle(1); // İlk sayfaya dön
+            });
+
+            $('#firstPage').click(function () {
+                if (!$(this).prop('disabled')) {
+                    sayfaGuncelle(1);
+                }
+            });
+
+            $('#prevPage').click(function () {
+                if (!$(this).prop('disabled')) {
+                    sayfaGuncelle(currentPage - 1);
+                }
+            });
+
+            $('#nextPage').click(function () {
+                if (!$(this).prop('disabled')) {
+                    sayfaGuncelle(currentPage + 1);
+                }
+            });
+
+            $('#lastPage').click(function () {
+                if (!$(this).prop('disabled')) {
+                    sayfaGuncelle(Math.ceil(liste.length / itemsPerPage));
+                }
+            });
+
+            $('#pageNumbers').on('click', 'button', function () {
+                var page = parseInt($(this).attr('data-page'), 10);
+                sayfaGuncelle(page);
+            });
+
+            // Sıralama başlıklarına tıklama olaylarını ekleyin
+            $('#stokHareketId').click(function (e) {
+                e.preventDefault();
+                sirala('stokHareketId');
+            });
+
+            $('#alisFiyati').click(function (e) {
+                e.preventDefault();
+                sirala('alisFiyati');
+            });
+
+            $('#alisTarihi').click(function (e) {
+                e.preventDefault();
+                sirala('alisTarihi');
+            });
+
+            $('#stokGirisAdet').click(function (e) {
+                e.preventDefault();
+                sirala('stokGirisAdet');
+            });
+
+            $('#satisFiyati').click(function (e) {
+                e.preventDefault();
+                sirala('satisFiyati');
+            });
+
+            $('#satisTarihi').click(function (e) {
+                e.preventDefault();
+                sirala('satisTarihi');
+            });
+
+            $('#satisTarihi').click(function (e) {
+                e.preventDefault();
+                sirala('satisTarihi');
+            });
+
+            $('#calisanAdi').click(function (e) {
+                e.preventDefault();
+                sirala('calisanAdi');
+            });
+
+            veriYukle(); // Sayfa yüklenirken veriyi yükle
+
+            $(document).on('click', '.clickableRow', function () {
+                var id = $(this).data('id');
+                var form = $('#StokDetayForm');
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'secilenStokId',
+                    value: id
+                }).appendTo(form);
+                form.submit();
+            });
         }
     </script>
 

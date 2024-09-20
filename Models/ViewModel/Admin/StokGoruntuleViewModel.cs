@@ -26,6 +26,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
             foreach (var stok in stoklar)
             {
+                
                 var StokHareketler = await context.StokHareketler.Where(sh => sh.StokId == stok.Id).ToListAsync();
                 if (StokHareketler.Any())
                 {
@@ -36,11 +37,11 @@ namespace VeterinerApp.Models.ViewModel.Admin
                         stokGiris += stokHareket.StokGirisAdet ?? 0;
                         stokCikis += stokHareket.StokCikisAdet ?? 0;
                     }
-                    stok.StokSayisi = stokGiris - stokCikis ;
+                    StokSayisi = stokGiris - stokCikis ;
                 }
                 else
                 {
-                    stok.StokSayisi = 0;
+                    StokSayisi = 0;
                 }
 
                 StokListesi.Add(new StokGoruntuleViewModel
@@ -59,7 +60,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
                                                 .Where(b => b.BirimId == stok.BirimId)
                                                 .Select(b => b.BirimAdi)
                                                 .FirstOrDefaultAsync(),
-                    StokSayisi = stok.StokSayisi
+                    StokSayisi = StokSayisi
                 });
             }
 

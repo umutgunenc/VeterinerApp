@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
     public class StokDetayViewModel :Stok
     {
         private readonly VeterinerDBContext _context;
+        public int StokSayisi { get; set; }
 
         public StokDetayViewModel(VeterinerDBContext context,  int stokId)
         {
@@ -33,10 +35,9 @@ namespace VeterinerApp.Models.ViewModel.Admin
             AktifMi = stok.AktifMi;
             BirimId = stok.BirimId;
             KategoriId = stok.KategoriId;
-            StokSayisi = stok.StokSayisi;
+            StokSayisi = stokHareketDetay.StokSayisiniHesapla(stok);
             OrtalamaAlisFiyati = stokHareketDetay.OrtalamaAlisFiyatiniHesapla();
             StokHareketDetayListesi = stokHareketDetay.StokHareketDetayListesi;
-            StokSayisi = stok.StokSayisi;
             Birim = stok.Birim;
 
             return this;
@@ -106,10 +107,22 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public string CalisanAdi { get; set; }
         public string CalisanSoyadi { get; set; }
+        
         private List<StokHareket> StokHarektlerListesi { get; set; }
         public List<StokHareketDetay> StokHareketDetayListesi { get; set; }
 
+        public int StokSayisiniHesapla(Stok stok)
+        {
+            int stokGiris = 0;
+            int stokCikis = 0;
 
+            foreach (var stokHareket in StokHarektlerListesi)
+            {
+                stokGiris += stokHareket.StokGirisAdet ?? 0;
+                stokCikis += stokHareket.StokCikisAdet ?? 0;
+            }
+            return stokGiris - stokCikis;
+        }
         public double? OrtalamaAlisFiyatiniHesapla()
         {
             double? toplamAlisFiyati = 0.0;

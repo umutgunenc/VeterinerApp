@@ -793,7 +793,6 @@ namespace VeterinerApp.Controllers
             model.StokAdi = model.StokAdi.ToUpper();
             model.StokBarkod = model.StokBarkod.ToUpper();
             model.AktifMi = true;
-            model.StokSayisi = 0;
             if (string.IsNullOrEmpty(model.Aciklama))
                 model.Aciklama = "";
             else
@@ -830,7 +829,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> StokGoruntuleData()
+        public async Task<IActionResult> StokGoruntuleData()
         {
             StokGoruntuleViewModel model = new();
             model.StokListesi = await model.StokListesiniGetirAsync(_veterinerDbContext);
@@ -855,6 +854,8 @@ namespace VeterinerApp.Controllers
 
             return Json(model);
         }
+
+
     }
 
 }

@@ -121,17 +121,18 @@
                     var stok = liste[i];
                     var aktifMi = stok.aktifMi ? 'Evet' : 'Hayır';
                     var row = `<tr class="clickableRow" role="button" data-id="${stok.id}">
-                                               <td class="col-1 text-center">${stok.id}</td>
-                                               <td class="col-2 text-center">${stok.stokAdi}</td>
-                                               <td class="col-1 text-center">${stok.stokBarkod}</td>
-                                               <td class="col-1 text-center">${stok.kategoriAdi}</td>
-                                               <td class="col-1 text-center">${stok.stokSayisi}</td>
-                                               <td class="col-1 text-center">${stok.birimAdi}</td>
-                                               <td class="col-1 text-center">${aktifMi}</td>
-                                               <td class="col-4 text-center">${stok.aciklama}</td>
-                                           </tr>`;
+                                   <td class="col-1 text-center">${stok.id}</td>
+                                   <td class="col-2 text-center">${stok.stokAdi}</td>
+                                   <td class="col-1 text-center">${stok.stokBarkod}</td>
+                                   <td class="col-1 text-center">${stok.kategoriAdi}</td>
+                                   <td class="col-1 text-center">${stok.stokSayisi}</td>
+                                   <td class="col-1 text-center">${stok.birimAdi}</td>
+                                   <td class="col-1 text-center">${aktifMi}</td>
+                                   <td class="col-4 text-center">${stok.aciklama}</td>
+                               </tr>`;
                     tableBody.append(row);
                 }
+
 
                 $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${endIndex - startIndex} adedi gösterilmektedir.`);
             }

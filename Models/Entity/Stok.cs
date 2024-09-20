@@ -16,7 +16,6 @@ namespace VeterinerApp.Models.Entity
         public int Id { get; set; }
         public string StokBarkod { get; set; }
         public string StokAdi { get; set; }
-        public int StokSayisi { get; set; }
         public int BirimId { get; set; }
         public string Aciklama { get; set; }
         public bool AktifMi { get; set; }
