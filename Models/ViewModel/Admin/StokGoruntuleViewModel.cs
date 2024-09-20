@@ -12,6 +12,9 @@ namespace VeterinerApp.Models.ViewModel.Admin
         public string KategoriAdi { get; set; }
         public string BirimAdi { get; set; }
 
+        public int StokSayisi { get; set; }
+        
+
         public List<StokGoruntuleViewModel> StokListesi { get; set; }
 
 
@@ -23,6 +26,23 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
             foreach (var stok in stoklar)
             {
+                var StokHareketler = await context.StokHareketler.Where(sh => sh.StokId == stok.Id).ToListAsync();
+                if (StokHareketler.Any())
+                {
+                    int stokGiris = 0;
+                    int stokCikis = 0;
+                    foreach (var stokHareket in StokHareketler)
+                    {
+                        stokGiris += stokHareket.StokGirisAdet ?? 0;
+                        stokCikis += stokHareket.StokCikisAdet ?? 0;
+                    }
+                    stok.StokSayisi = stokGiris - stokCikis ;
+                }
+                else
+                {
+                    stok.StokSayisi = 0;
+                }
+
                 StokListesi.Add(new StokGoruntuleViewModel
                 {
                     Id = stok.Id,
@@ -30,8 +50,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     AktifMi = stok.AktifMi,
                     Aciklama = stok.Aciklama,
                     StokBarkod = stok.StokBarkod,
-                    BirimId = stok.BirimId,
-                    KategoriId = stok.KategoriId,
                     KategoriAdi = await context.Kategoriler
                                                 .Where(k => k.KategoriId == stok.KategoriId)
                                                 .Select(k => k.KategoriAdi)
@@ -40,8 +58,8 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     BirimAdi = await context.Birimler
                                                 .Where(b => b.BirimId == stok.BirimId)
                                                 .Select(b => b.BirimAdi)
-                                                .FirstOrDefaultAsync()
-
+                                                .FirstOrDefaultAsync(),
+                    StokSayisi = stok.StokSayisi
                 });
             }
 
