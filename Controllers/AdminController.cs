@@ -51,7 +51,6 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RenkEkle(RenkEkleViewModel model)
         {
-            model.RenkAdi = model.RenkAdi.ToUpper();
 
             RenkEkleValidators renkvalidator = new();
             ValidationResult result = renkvalidator.Validate(model);
@@ -65,6 +64,8 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
+            model.RenkAdi = model.RenkAdi.ToUpper();
+
             await _veterinerDbContext.Renkler.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
             TempData["Success"] = $"{model.RenkAdi} rengi eklendi";
@@ -114,7 +115,6 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> CinsEkle(CinsEkleViewModel model)
         {
 
-            model.CinsAdi = model.CinsAdi.ToUpper();
 
             CinsEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -128,6 +128,7 @@ namespace VeterinerApp.Controllers
                 }
                 return View();
             }
+            model.CinsAdi = model.CinsAdi.ToUpper();
 
             await _veterinerDbContext.Cinsler.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
@@ -181,7 +182,6 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> TurEkle(TurEKleViewModel model)
         {
-            model.TurAdi = model.TurAdi.ToUpper();
 
             TurEkleValidators validator = new TurEkleValidators();
             ValidationResult result = validator.Validate(model);
@@ -195,6 +195,8 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
+            model.TurAdi = model.TurAdi.ToUpper();
+
             await _veterinerDbContext.Turler.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
 
@@ -329,7 +331,6 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RolEkle(RolEkleViewModel model)
         {
-            model.Name = model.Name.ToUpper();
 
             RolValidators rolValidator = new RolValidators();
             ValidationResult result = rolValidator.Validate(model);
@@ -343,6 +344,7 @@ namespace VeterinerApp.Controllers
 
                 return View();
             }
+            model.Name = model.Name.ToUpper();
 
             await _veterinerDbContext.Roles.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
@@ -693,7 +695,6 @@ namespace VeterinerApp.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> KategoriSil(KategoriSilViewModel model)
         {
@@ -723,11 +724,9 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> BirimEkle(BirimEkleViewModel model)
         {
-            model.BirimAdi = model.BirimAdi.ToUpper();
 
             BirimEkleValidator validator = new();
             ValidationResult result = validator.Validate(model);
@@ -739,6 +738,7 @@ namespace VeterinerApp.Controllers
                 }
                 return View();
             }
+            model.BirimAdi = model.BirimAdi.ToUpper();
 
             await _veterinerDbContext.Birimler.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
@@ -786,19 +786,9 @@ namespace VeterinerApp.Controllers
             model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> StokKartiOlustur(StokKartiOlusturViewModel model)
         {
-            model.StokAdi = model.StokAdi.ToUpper();
-            model.StokBarkod = model.StokBarkod.ToUpper();
-            model.AktifMi = true;
-            if (string.IsNullOrEmpty(model.Aciklama))
-                model.Aciklama = "";
-            else
-                model.Aciklama = model.Aciklama.ToUpper();
-
-
             StokKartiOlusturValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
@@ -813,12 +803,19 @@ namespace VeterinerApp.Controllers
                 return View(model);
             }
 
+            model.StokAdi = model.StokAdi.ToUpper();
+            model.StokBarkod = model.StokBarkod.ToUpper();
+            model.AktifMi = true;
+
+            if (string.IsNullOrEmpty(model.Aciklama))
+                model.Aciklama = "";
+            else
+                model.Aciklama = model.Aciklama.ToUpper();
+
             await _veterinerDbContext.Stoklar.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
             TempData["StokKartiOlusturuldu"] = $"{model.StokAdi} isimli stok kartı başarı ile oluşturuldu.";
             return RedirectToAction();
-
-
 
         }
 
@@ -827,7 +824,6 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
         [HttpGet]
         public async Task<IActionResult> StokGoruntuleData()
         {
@@ -850,15 +846,12 @@ namespace VeterinerApp.Controllers
             ViewBag.StokId = secilenStokId;
             return View();
         }
-
         [HttpPost]
         public IActionResult StokDetayData(string secilenStokId)
         {
-
             if (!int.TryParse(secilenStokId, out int stokId))
                 return View();
             StokDetayViewModel model = new(_veterinerDbContext, stokId);
-
 
             return Json(model);
         }
@@ -866,7 +859,6 @@ namespace VeterinerApp.Controllers
         [HttpGet]
         public IActionResult StokDuzenle()
         {
-
             return View();
         }
         [HttpPost]
@@ -892,7 +884,6 @@ namespace VeterinerApp.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> StokDuzenleKaydet(StokDuzenleKaydetViewModel model)
         {

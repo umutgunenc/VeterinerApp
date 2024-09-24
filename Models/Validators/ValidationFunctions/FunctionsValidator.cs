@@ -82,6 +82,8 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeAllowedRol(string roller)
         {
+            if (string.IsNullOrEmpty(roller))
+                return true;
             roller = roller.ToUpper();
             if (roller == "admin".ToUpper() || roller == "veteriner".ToUpper() || roller == "çalışan".ToUpper() || roller == "müşteri".ToUpper())
                 return true;
@@ -89,6 +91,8 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeValidRadioPhotoAdd(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return false;
             return radioValues.Contains(value);
         }
         public static bool BeValidExtensionForPhoto(IFormFile file)
@@ -98,10 +102,18 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeUsedTCKN(string girilenTCKN)
         {
+            if (string.IsNullOrEmpty(girilenTCKN))
+                return true;
+
             return _context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
         }
         public static bool BeValidTCKN(string tcKimlikNo)
         {
+
+            if (string.IsNullOrEmpty(tcKimlikNo))
+                return true;
+
+
             bool returnvalue = false;
             if (tcKimlikNo.Length == 11)
             {
@@ -131,6 +143,9 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeValidPasswordDate(string username, string password)
         {
+            if (username == null || password == null)
+                return false;
+
             return _context.Users.Any(x => x.UserName.ToUpper() == username.ToUpper() && x.SifreGecerlilikTarihi >= DateTime.Now);
         }
         public static bool BeRegisteredParentAnimal(int? animalId)
@@ -152,8 +167,8 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
         public static bool BeInStock(string barkod)
         {
-            if (barkod == null)
-                return false;
+            if (string.IsNullOrEmpty(barkod))
+                return true;
             return _context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
         }
 
@@ -175,30 +190,47 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         //}
         public static bool BeUniqueKategori(string kategoriAdi)
         {
+            if (string.IsNullOrEmpty(kategoriAdi))
+                return true;
+
             return !_context.Kategoriler.Any(x => x.KategoriAdi.ToUpper() == kategoriAdi.ToUpper());
         }
         public static bool BeUniqueTCKN(string girilenTCKN)
         {
+            if (string.IsNullOrEmpty(girilenTCKN))
+                return true;
+
             return !_context.Users.Any(x => x.InsanTckn.ToUpper() == girilenTCKN.ToUpper());
         }
         public static bool BeUniqueCins(string girilenDeger)
         {
+            if (string.IsNullOrEmpty(girilenDeger))
+                return true;
+
             return !_context.Cinsler.Any(x => x.CinsAdi.ToUpper() == girilenDeger.ToUpper());
         }
         public static bool BeUniqueTur(string girilenTur)
         {
+            if (string.IsNullOrEmpty(girilenTur))
+                return true;
             return !_context.Turler.Any(t => t.TurAdi.ToUpper() == girilenTur.ToUpper());
         }
         public static bool BeUniqueRol(string rol)
         {
+            if (string.IsNullOrEmpty(rol))
+                return true;
             return !_context.Roles.Any(x => x.Name.ToUpper() == rol.ToUpper());
         }
         public static bool BeUniqueRenk(string girilenDeger)
         {
+            if (string.IsNullOrEmpty(girilenDeger))
+                return true;
             return !_context.Renkler.Any(x => x.RenkAdi.ToUpper() == girilenDeger.ToUpper());
         }
         public static bool BeUniqueTel(string TelNo)
         {
+            if (string.IsNullOrEmpty(TelNo))
+                return true;
             return !_context.Users.Any(x => x.PhoneNumber.ToUpper() == TelNo.ToUpper());
         }
         /// <summary>
@@ -209,14 +241,15 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <returns></returns>
         public static bool BeUniqueTel(int kisiId, string telefonNo)
         {
+            if (string.IsNullOrEmpty(telefonNo))
+                return true;
             return !_context.Users.Any(x => x.PhoneNumber == telefonNo && x.Id != kisiId);
         }
         public static bool BeUniqueOrNullDiplomaNo(string diplomaNumarasi)
         {
             if (string.IsNullOrEmpty(diplomaNumarasi))
-            {
                 return true;
-            }
+
             return !_context.Users.Any(x => x.DiplomaNo.ToUpper() == diplomaNumarasi.ToUpper());
         }
         /// <summary>
@@ -273,10 +306,14 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeUniqueBirim(string birimAdi)
         {
+            if (string.IsNullOrEmpty(birimAdi))
+                return true;
             return !_context.Birimler.Any(x => x.BirimAdi.ToUpper() == birimAdi.ToUpper());
         }
         public static bool BeUniqueBarkod(string barkod)
         {
+            if (string.IsNullOrEmpty(barkod))
+                return true;
             return !_context.Stoklar.Any(x => x.StokBarkod == barkod);
         }
         /// <summary>
@@ -285,12 +322,16 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="id"></param>
         /// <param name="barkod"></param>
         /// <returns></returns>
-        public static bool BeUniqueBarkod(int stokId, string Barkod)
+        public static bool BeUniqueBarkod(int stokId, string barkod)
         {
-            return !_context.Stoklar.Any(x => x.StokBarkod == Barkod && x.Id != stokId);
+            if (string.IsNullOrEmpty(barkod))
+                return true;
+            return !_context.Stoklar.Any(x => x.StokBarkod == barkod && x.Id != stokId);
         }
         public static bool BeUniqueStokAdi(string stokAdi)
         {
+            if (string.IsNullOrEmpty(stokAdi))
+                return true;
             return !_context.Stoklar.Any(x => x.StokAdi == stokAdi);
         }
         /// <summary>
@@ -299,9 +340,11 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         /// <param name="id"></param>
         /// <param name="StokAdi"></param>
         /// <returns></returns>
-        public static bool BeUniqueStokAdi(int stokId, string StokAdi)
+        public static bool BeUniqueStokAdi(int stokId, string stokAdi)
         {
-            return !_context.Stoklar.Any(x => x.StokAdi == StokAdi && x.Id != stokId);
+            if (string.IsNullOrEmpty(stokAdi))
+                return true;
+            return !_context.Stoklar.Any(x => x.StokAdi == stokAdi && x.Id != stokId);
         }
 
 
@@ -354,6 +397,8 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         }
         public static bool BeNotOwnedAnimal(int hayvanId, string yeniSahipTCKN)
         {
+            if (string.IsNullOrEmpty(yeniSahipTCKN))
+                return true;
             return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
         }
 
