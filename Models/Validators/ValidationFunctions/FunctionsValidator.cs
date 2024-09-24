@@ -152,12 +152,10 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
 
         public static bool BeInStock(string barkod)
         {
+            if (barkod == null)
+                return false;
             return _context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
         }
-
-
-
-
 
 
         public static bool LoginSucceed(AppUser user)
@@ -295,7 +293,16 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.Stoklar.Any(x => x.StokAdi == stokAdi);
         }
-
+        /// <summary>
+        /// Girilen stok dışındaki stok ismi benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="StokAdi"></param>
+        /// <returns></returns>
+        public static bool BeUniqueStokAdi(int stokId, string StokAdi)
+        {
+            return !_context.Stoklar.Any(x => x.StokAdi == StokAdi && x.Id != stokId);
+        }
 
 
         /// <summary>

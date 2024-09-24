@@ -4,7 +4,7 @@ using VeterinerApp.Models.ViewModel.Admin;
 
 namespace VeterinerApp.Models.Validators.Admin
 {
-    public class StokDuzenleKaydetValidator :AbstractValidator<StokDuzenleViewModel>
+    public class StokDuzenleKaydetValidator :AbstractValidator<StokDuzenleKaydetViewModel>
     {
         public StokDuzenleKaydetValidator()
         {
@@ -12,7 +12,7 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotEmpty().WithMessage("Stok adı boş olamaz.")
                 .NotNull().WithMessage("Stok adı boş olamaz.")
                 .MaximumLength(50).WithMessage("Stok adı en fazla 50 karakter olabilir.")
-                .Must(FunctionsValidator.BeUniqueStokAdi).WithMessage("Sistem aynı isimde bir stok bulunmaktadır.");
+                .Must((model,StokAdi)=>FunctionsValidator.BeUniqueStokAdi(model.Id,StokAdi)).WithMessage("Sistem aynı isimde bir stok bulunmaktadır.");
 
             RuleFor(x => x.BirimId)
                 .NotNull().WithMessage("Birim seçimi yapılmalıdır.")

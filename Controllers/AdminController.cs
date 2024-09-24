@@ -870,9 +870,9 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> StokDuzenle(StokDuzenleViewModel model)
+        public async Task<IActionResult> StokDuzenle(StokDuzenleStokSecViewModel model)
         {
-            StokDuzenleValidators validator = new();
+            StokDuzenleStokSecValidator validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -880,29 +880,54 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+
                 return View(model);
             }
-            ViewBag.StokModel = model;
+
+            StokDuzenleKaydetViewModel stokDetay = new();
+            stokDetay = await stokDetay.ModeliOlusturAsync(_veterinerDbContext, model);
+            stokDetay.Signature = Signature.CreateSignature(stokDetay.Id, stokDetay.Id.ToString());
+
+            ViewBag.StokModel = stokDetay;
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> StokDuzenleKaydet(StokDetayGetirViewModel model)
+        public async Task<IActionResult> StokDuzenleKaydet(StokDuzenleKaydetViewModel model)
         {
-            if(!Signature.VerifySignature(model.Id, model.Id.ToString(), model.Signature))
+            if (!Signature.VerifySignature(model.Id, model.Id.ToString(), model.Signature))
             {
                 return View("BadRequest");
             }
 
 
-
             StokDuzenleKaydetValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
+            if (!result.IsValid)
+            {
+                foreach (var Error in result.Errors)
+                {
+                    ModelState.AddModelError("", Error.ErrorMessage);
+                }
+                model.BirimListesi = await model.BirimListesiniGetirAsync(_veterinerDbContext);
+                model.KategoriListesi = await model.KategoriListesiniGetirAsync(_veterinerDbContext);
+                ViewBag.StokModel = model;
+                return View("StokDuzenle");
 
+            }
 
-            return View();
+            model.StokAdi = model.StokAdi.ToUpper();
+            model.Aciklama = model.Aciklama.ToUpper();
+            model.StokBarkod = model.StokBarkod.ToUpper();
+
+            _veterinerDbContext.Update(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["StokDuzenlendi"] = $"{model.StokAdi} isimli stoğa ait bilgiler başarı ile düzenlendi";
+
+            return View("StokDuzenle");
         }
     }
 
