@@ -27,6 +27,8 @@
     <script>
 
         $(document).ready(function () {
+            var startIndex;
+            var endIndex;
             var liste = [];
             var stokHareket = [];
             var gosterilecekItemListesi = [];
@@ -34,6 +36,7 @@
             var itemsPerPage = 10;
             var siralamaYonleri = {};
             let id = document.getElementById("stokId").textContent;
+
             function veriYukle() {
                 $.ajax({
                     url: `/Admin/StokDetayData`,
@@ -43,8 +46,6 @@
                         if (response && response.stokHareketDetayListesi) {
                             liste = response.stokHareketDetayListesi;
                             tabloyuDoldurHepsi();
-                            updateShowCount();
-                            sayfaNumaralarınıGuncelle();
                             bilgileriGetir(response);
 
                         } else {
@@ -75,6 +76,23 @@
                                                                          <hr style="border-color:white;">
                                                                          <p class="text-white text-monospace font-weight-bold">Açıklama:\xa0${aciklama}</p>`
                 bilgiBody.innerHTML = p;
+
+                var radioButtons = $("#radioButtons")
+                radioButtons.html(`<div class="mb-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="hepsiniGoster" checked="checked">
+                                            <label class="form-check-label" for="hepsiniGoster">Hepsini Göster</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="alislariGoster">
+                                            <label class="form-check-label" for="alislariGoster">Alışları Göster</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="satislariGoster">
+                                            <label class="form-check-label" for="satislariGoster">Satışları Göster</label>
+                                        </div>
+                                    </div>`
+                );
             }
 
             function tabloyuDoldurHepsi() {
@@ -135,15 +153,22 @@
                 tableBody.empty();
 
                 // Sayfalandırma hesaplamaları
-                var startIndex = (currentPage - 1) * itemsPerPage;
-                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
+                startIndex = 0;
+                endIndex = 0;
+                startIndex = (currentPage - 1) * itemsPerPage;
+                endIndex = Math.min(startIndex + itemsPerPage, liste.length);
 
                 gosterilecekItemListesi = [];
+                for (var i = 0; i < liste.length; i++) {
+
+                    gosterilecekItemListesi.push(liste[i]);
+                }
 
                 for (var i = startIndex; i < endIndex; i++) {
+
                     stokHareket = [];
                     stokHareket = liste[i];
-                    gosterilecekItemListesi.push(liste[i]);
+
 
                     var stokHareketId = stokHareket.stokHareketId;
                     var alisFiyati = stokHareket.alisFiyati || " ";
@@ -212,18 +237,22 @@
                 var tableBody = $('#tableBody');
                 tableBody.empty();
 
-                // Sayfalandırma hesaplamaları
-                var startIndex = (currentPage - 1) * itemsPerPage;
-                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
-
                 gosterilecekItemListesi = [];
-                for (var i = startIndex; i < endIndex; i++) {
+
+                for (var i = 0; i < liste.length; i++) {
                     if (liste[i].alisFiyati == null || liste[i].alisTarihi == null || liste[i].stokGirisAdet == null) {
                         continue;
                     }
-                    stokHareket = [];
-                    stokHareket = liste[i];
                     gosterilecekItemListesi.push(liste[i]);
+                }
+                startIndex = 0;
+                endIndex = 0;
+                startIndex = (currentPage - 1) * itemsPerPage;
+                endIndex = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    stokHareket = [];
+                    stokHareket = gosterilecekItemListesi[i];
                     var stokHareketId = stokHareket.stokHareketId;
                     var alisFiyati = stokHareket.alisFiyati || " ";
                     var alisTarihi = formatDate(stokHareket.alisTarihi);
@@ -284,18 +313,22 @@
                 var tableBody = $('#tableBody');
                 tableBody.empty();
 
-                // Sayfalandırma hesaplamaları
-                var startIndex = (currentPage - 1) * itemsPerPage;
-                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
-
                 gosterilecekItemListesi = [];
-                for (var i = startIndex; i < endIndex; i++) {
+
+                for (var i = 0; i < liste.length; i++) {
                     if (liste[i].satisFiyati == null || liste[i].satisTarihi == null || liste[i].stokCikisAdet == null) {
                         continue;
                     }
-                    stokHareket = [];
-                    stokHareket = liste[i];
                     gosterilecekItemListesi.push(liste[i]);
+                }
+                startIndex = 0;
+                endIndex = 0;
+                startIndex = (currentPage - 1) * itemsPerPage;
+                endIndex = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    stokHareket = [];
+                    stokHareket = gosterilecekItemListesi[i];
                     var stokHareketId = stokHareket.stokHareketId;
                     var satisFiyati = stokHareket.satisFiyati || " ";
                     var satisTarihi = formatDate(stokHareket.satisTarihi);
@@ -314,11 +347,6 @@
 
                 var sonSayfa = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
                 kayitlarBilgileriniGetir(gosterilecekItemListesi, startIndex, sonSayfa);
-            }
-            function updateShowCount() {
-                var totalPages = Math.ceil(stokHareket.length / itemsPerPage);
-                $('#totalCount').text(`Toplam ${gosterilecekItemListesi.length} kayıt bulunmuştur. ${Math.min(itemsPerPage, gosterilecekItemListesi.length)} adedi gösterilmektedir.`);
-                sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
             }
 
             function sayfaNumaralarınıGuncelle() {
@@ -354,7 +382,6 @@
                 }
             }
 
-
             function formatDate(dateString) {
 
                 if (dateString == null) {
@@ -372,7 +399,6 @@
                 return `${day}-${month}-${year} ${hours}:${minutes}`;
             }
 
-            // Sıralama fonksiyonu
             function sirala(sutun) {
 
                 var yon = siralamaYonleri[sutun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
@@ -407,6 +433,7 @@
             // Sayfa değişimini yönetmek için fonksiyonlar
             function sayfaGuncelle(newPage) {
                 currentPage = newPage;
+
                 if ($('#hepsiniGoster').is(':checked')) {
                     tabloyuDoldurHepsi();
                 }
@@ -420,36 +447,38 @@
             }
 
             // Gösterim seçeneklerinin değişmesi
-            $('#showCount').change(function () {
+            $(document).on('change', '#showCount' , function () {
                 itemsPerPage = parseInt($(this).val(), 10);
-                sayfaGuncelle(1); // İlk sayfaya dön
+                kayitlarBilgileriniGetir(kayitlarBilgileriniGetir,startIndex,endIndex);
+                sayfaGuncelle(1); 
             });
 
-            $('#firstPage').click(function () {
+            $(document).on('click', '#firstPage', function () {
                 if (!$(this).prop('disabled')) {
                     sayfaGuncelle(1);
                 }
             });
 
-            $('#prevPage').click(function () {
+            $(document).on('click','#prevPage', function () {
                 if (!$(this).prop('disabled')) {
                     sayfaGuncelle(currentPage - 1);
                 }
             });
 
-            $('#nextPage').click(function () {
+            $(document).on('click', '#nextPage',function () {
                 if (!$(this).prop('disabled')) {
                     sayfaGuncelle(currentPage + 1);
                 }
             });
 
-            $('#lastPage').click(function () {
+            $(document).on('click', '#lastPage',function () {
                 if (!$(this).prop('disabled')) {
+                    console.log("son")
                     sayfaGuncelle(Math.ceil(liste.length / itemsPerPage));
                 }
             });
 
-            $('#pageNumbers').on('click', 'button', function () {
+            $(document).on('click', '#pageNumbers button', function () {
                 var page = parseInt($(this).attr('data-page'), 10);
                 sayfaGuncelle(page);
             });
@@ -494,63 +523,44 @@
             function veriYukleHepsi() {
 
                 tabloyuDoldurHepsi();
-                updateShowCount();
-                sayfaNumaralarınıGuncelle();
+                sayfaGuncelle(1);
             }
             function veriYukleAlislar() {
 
                 tabloyuDoldurAlislar();
-                updateShowCount();
-                sayfaNumaralarınıGuncelle();
+                sayfaGuncelle(1);
 
             }
             function veriYukleSatislar() {
 
                 tabloyuDoldurSatislar();
-                updateShowCount();
-                sayfaNumaralarınıGuncelle();
+                sayfaGuncelle(1);
             }
-            function kayitlarBilgileriniGetir(kayitListesi, ilkSayfa, sonSayfa) {
-                var kayitBilgileri = $('#table-controls')
-                console.log(kayitListesi.length);
-                console.log(ilkSayfa);
-                console.log(sonSayfa);
+            function kayitlarBilgileriniGetir(kayitListesi, ilkSayfadakiKayitSayisi, sonSayfadakiKayitSayisi) {
+                var kayitBilgileri = $('#table-controls');
+                var selectedCount = $('#showCount').val() || 10;
+
 
                 kayitBilgileri.html(`
-                            <div class="show-options">
-                                 <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
-                                 <select id="showCount">
-                                     <option value="10">10</option>
-                                     <option value="20">20</option>
-                                     <option value="50">50</option>
-                                 </select>
-                                 <span id="totalCount">Toplam ${kayitListesi.length} kayıt bulunmuştur. ${sonSayfa - ilkSayfa} adedi gösterilmektedir.</span>
-                             </div>
+                    <div class="show-options">
+                        <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
+                        <select id="showCount">
+                            <option value="10" ${selectedCount == 10 ? 'selected' : ''}>10</option>
+                            <option value="20" ${selectedCount == 20 ? 'selected' : ''}>20</option>
+                            <option value="50" ${selectedCount == 50 ? 'selected' : ''}>50</option>
+                        </select>
+                        <span id="totalCount">Toplam ${kayitListesi.length} kayıt bulunmuştur. ${ilkSayfadakiKayitSayisi + 1}. kayıttan ${sonSayfadakiKayitSayisi}. kayıta kadar gösterilmektedir.</span>
+                    </div>
 
-                             <div class="pagination">
-                                 <button id="firstPage" disabled>İlk</button>
-                                 <button id="prevPage" disabled>Önceki</button>
-                                 <span id="pageNumbers"></span>
-                                 <button id="nextPage" disabled>Sonraki</button>
-                                 <button id="lastPage" disabled>Son</button>
-                             </div>`
-                );
-                var radioButtons = $("#radioButtons")
-                radioButtons.html(`<div class="mb-2">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="hepsiniGoster" checked="checked">
-                                            <label class="form-check-label" for="hepsiniGoster">Hepsini Göster</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="alislariGoster">
-                                            <label class="form-check-label" for="alislariGoster">Alışları Göster</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="satislariGoster">
-                                            <label class="form-check-label" for="satislariGoster">Satışları Göster</label>
-                                        </div>
-                                    </div>`
-                );
+                    <div class="pagination">
+                        <button id="firstPage" disabled>İlk</button>
+                        <button id="prevPage" disabled>Önceki</button>
+                        <span id="pageNumbers"></span>
+                        <button id="nextPage" disabled>Sonraki</button>
+                        <button id="lastPage" disabled>Son</button>
+                    </div>
+                `);
+                sayfaNumaralarınıGuncelle()
             }
         });
     </script>
