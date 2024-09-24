@@ -863,7 +863,47 @@ namespace VeterinerApp.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public IActionResult StokDuzenle()
+        {
 
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> StokDuzenle(StokDuzenleViewModel model)
+        {
+            StokDuzenleValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+            ViewBag.StokModel = model;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StokDuzenleKaydet(StokDetayGetirViewModel model)
+        {
+            if(!Signature.VerifySignature(model.Id, model.Id.ToString(), model.Signature))
+            {
+                return View("BadRequest");
+            }
+
+
+
+            StokDuzenleKaydetValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+
+
+            return View();
+        }
     }
 
 }

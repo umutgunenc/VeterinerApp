@@ -14,7 +14,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
     public class StokDetayViewModel : Stok
     {
         private readonly VeterinerDBContext _context;
-        public int StokSayisi { get; set; }
+        public double StokSayisi { get; set; }
 
         public StokDetayViewModel(VeterinerDBContext context, int stokId)
         {
@@ -111,10 +111,10 @@ namespace VeterinerApp.Models.ViewModel.Admin
         private List<StokHareket> StokHarektlerListesi { get; set; }
         public List<StokHareketDetay> StokHareketDetayListesi { get; set; }
 
-        public int StokSayisiniHesapla(Stok stok)
+        public double StokSayisiniHesapla(Stok stok)
         {
-            int stokGiris = 0;
-            int stokCikis = 0;
+            double stokGiris = 0;
+            double stokCikis = 0;
 
             foreach (var stokHareket in StokHarektlerListesi)
             {

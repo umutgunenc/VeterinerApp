@@ -12,7 +12,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
         public string KategoriAdi { get; set; }
         public string BirimAdi { get; set; }
 
-        public int StokSayisi { get; set; }
+        public double StokSayisi { get; set; }
         
 
         public List<StokGoruntuleViewModel> StokListesi { get; set; }
@@ -30,8 +30,8 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 var StokHareketler = await context.StokHareketler.Where(sh => sh.StokId == stok.Id).ToListAsync();
                 if (StokHareketler.Any())
                 {
-                    int stokGiris = 0;
-                    int stokCikis = 0;
+                    double stokGiris = 0;
+                    double stokCikis = 0;
                     foreach (var stokHareket in StokHareketler)
                     {
                         stokGiris += stokHareket.StokGirisAdet ?? 0;

@@ -150,6 +150,11 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
         }
 
+        public static bool BeInStock(string barkod)
+        {
+            return _context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
+        }
+
 
 
 
@@ -275,6 +280,16 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         public static bool BeUniqueBarkod(string barkod)
         {
             return !_context.Stoklar.Any(x => x.StokBarkod == barkod);
+        }
+        /// <summary>
+        /// Girilen stok dışındaki barkod numarası benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="barkod"></param>
+        /// <returns></returns>
+        public static bool BeUniqueBarkod(int stokId, string Barkod)
+        {
+            return !_context.Stoklar.Any(x => x.StokBarkod == Barkod && x.Id != stokId);
         }
         public static bool BeUniqueStokAdi(string stokAdi)
         {

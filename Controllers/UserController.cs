@@ -295,7 +295,7 @@ namespace VeterinerApp.Controllers
 
             try
             {
-                _emailSender.SendEmailAsync(user.Email, "Hesap Silme Talebi", message);
+                await _emailSender.SendEmailAsync(user.Email, "Hesap Silme Talebi", message);
                 TempData["MailGonderildi"] = "Hesabınızı silmek için gerekli bağlantı mail adresinize gönderildi. Mail adresinizde bulunan linke tıklayarak hesabınızı silebilirsiniz.";
                 return RedirectToAction("Information");
             }

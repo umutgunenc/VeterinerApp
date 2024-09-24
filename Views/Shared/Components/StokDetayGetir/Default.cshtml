@@ -1,0 +1,85 @@
+﻿@model StokDetayGetirViewModel
+
+
+<form asp-action="StokDuzenleKaydet" asp-controller="Admin" method="post">
+    <div>
+        <div class="form-group row mb-3">
+            <label asp-for="StokAdi" class="col-md-3 col-form-label">Stok Adı</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="StokAdi" class="form-control" placeholder="Stok Adı">
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokAdi">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="StokBarkod" class="col-md-3 col-form-label">Stok Barkod Numarsı</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="StokBarkod" class="form-control" placeholder="Stok Barkod Numarsı">
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokBarkod">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group row mb-3">
+            <label asp-for="KategoriId" class="col-md-3 col-form-label">Kategori Listesi</label>
+            <div class="col-md-9">
+                <select class="custom-select" asp-for="KategoriId" asp-items="Model.KategoriListesi">
+                    <option selected disabled>Kategori Seçiniz</option>
+                </select>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="KategoriId">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="BirimId" class="col-md-3 col-form-label">Birim Listesi</label>
+            <div class="col-md-9">
+                <select class="custom-select" asp-for="BirimId" asp-items="Model.BirimListesi">
+                    <option selected disabled>Birim Seçiniz</option>
+                </select>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="BirimId">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="AktifMi" class="col-md-3 col-form-label">Stok Aktif Mi</label>
+            <div class="col-md-9">
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio1" name="AktifMi" class="custom-control-input" asp-for="AktifMi" value="true">
+                    <label class="custom-control-label" for="customRadio1">EVET</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio2" name="AktifMi" class="custom-control-input" asp-for="AktifMi" value="false">
+                    <label class="custom-control-label" for="customRadio2">HAYIR</label>
+                </div>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AktifMi">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label asp-for="Aciklama" class="col-md-3 col-form-label">Açıklama</label>
+            <div class="col-md-9">
+                <textarea asp-for="Aciklama" class="form-control" placeholder="Açıklama" rows="4"></textarea>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Aciklama">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Signature" />
+    <button type="submit" class="col btn btn-dark rounded mb-2">Düzenle</button>
+
+</form>

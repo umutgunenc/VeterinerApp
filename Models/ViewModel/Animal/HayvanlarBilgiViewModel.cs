@@ -22,8 +22,6 @@ namespace VeterinerApp.Models.ViewModel.Animal
             _context = context;
         }
 
-        public Cinsiyet HayvanCinsiyet { get; set; }
-        public double HayvanKilo { get; set; }
         public string TurAdi { get; set; }
         public string CinsAdi { get; set; }
         public string HayvanAnneAdi { get; set; }

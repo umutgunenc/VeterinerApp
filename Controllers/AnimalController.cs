@@ -531,11 +531,11 @@ namespace VeterinerApp.Controllers
                     return View("BadRequest");
                 }
 
-                var hayvan = _context.Hayvanlar.Find(hayvanId);
-                var yeniSahip = _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefault();
+                var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+                var yeniSahip = await _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefaultAsync();
                 if (!_context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.SahipId == yeniSahip.Id))
                 {
-                    _context.SahipHayvan.Add(new SahipHayvan
+                    await _context.SahipHayvan.AddAsync(new SahipHayvan
                     {
                         HayvanId = hayvanId,
                         SahipId = yeniSahip.Id,
@@ -562,7 +562,7 @@ namespace VeterinerApp.Controllers
 
         public async Task<IActionResult> EmailRejectYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
         {
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
             if (user.InsanTckn != yeniSahipTCKN)
             {
                 return View("BadRequest");

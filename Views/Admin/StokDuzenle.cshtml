@@ -1,0 +1,27 @@
+﻿@model StokDuzenleViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="StokDuzenle" asp-controller="Admin" method="post">
+    <div class="form-row mb-2">
+        <div class="col">
+            <input asp-for="StokBarkod" class="form-control" placeholder="Duzenlemek istediğiniz stoğun barkod numarasını giriniz">
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+        </div>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="StokBarkod">
+        </span>
+    </div>
+</form>
+
+@if (ViewBag.StokModel != null)
+{
+    @await Component.InvokeAsync("StokDetayGetir", ViewBag.StokModel)
+
+}
