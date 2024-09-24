@@ -835,8 +835,6 @@ namespace VeterinerApp.Controllers
             model.StokListesi = await model.StokListesiniGetirAsync(_veterinerDbContext);
             return Json(model.StokListesi);
         }
-
-        [HttpGet]
         [HttpPost]
         public async Task<IActionResult> StokDetay(string secilenStokId)
         {
@@ -849,6 +847,16 @@ namespace VeterinerApp.Controllers
             if (!await _veterinerDbContext.Stoklar.AnyAsync(s => s.Id == stokId))
                 return View("BadRequest");
 
+            ViewBag.StokId = secilenStokId;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult StokDetayData(string secilenStokId)
+        {
+
+            if (!int.TryParse(secilenStokId, out int stokId))
+                return View();
             StokDetayViewModel model = new(_veterinerDbContext, stokId);
 
 

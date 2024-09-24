@@ -1,83 +1,136 @@
-﻿
+﻿<p id="bilgiler">
+
+</p>
+
+<div id="radioButtons">
+
+</div>
+
 <table class="table table-responsive table-hover table-dark text-left mb-2 rounded-top-md">
-    <thead>
-        <tr>
-            <th scope="col" class="text-center p-0 py-2 pl-1">
-                <span role="button" id="stokHareketId">
-                    Stok Id <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
+    <thead id="tableHeader">
 
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="alisFiyati">
-                    Stok Adı <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="alisTarihi">
-                    Stok Barkodu <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="stokGirisAdet">
-                    Kategorisi <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="satisFiyati">
-                    Sayısı <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="satisTarihi">
-                    Birimi <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center  p-0 py-2">
-                <span role="button" id="stokCikisAdet">
-                    Aktif Mi <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-
-            <th scope="col" class="text-center p-0 py-2">
-                <span role="button" id="calisanAdi">
-                    Açıklama <i class="fa-solid fa-sort"></i>
-                </span>
-            </th>
-        </tr>
     </thead>
     <tbody id="tableBody">
     </tbody>
 </table>
 
+<div id="table-controls">
+
+</div>
+
+@if (ViewBag.StokId != null)
+{
+    <span hidden="hidden" id="stokId">@ViewBag.StokId</span>
+}
+
 @section scripts{
     <script>
-        $(document).ready.function(){
+
+        $(document).ready(function () {
             var liste = [];
+            var stokHareket = [];
+            var gosterilecekItemListesi = [];
             var currentPage = 1;
             var itemsPerPage = 10;
             var siralamaYonleri = {};
-
+            let id = document.getElementById("stokId").textContent;
             function veriYukle() {
                 $.ajax({
-                    url: "/Admin/StokDetay/1",
-                    type: "GET",
+                    url: `/Admin/StokDetayData`,
+                    type: "POST",
+                    data: { secilenStokId: id },
                     success: function (response) {
-                        liste = response; // Veriyi kaydet
-                        updateShowCount(); // Gösterim seçeneklerini güncelle
-                        tabloyuDoldur(); // Tabloyu doldur
-                        sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
+                        if (response && response.stokHareketDetayListesi) {
+                            liste = response.stokHareketDetayListesi;
+                            tabloyuDoldurHepsi();
+                            updateShowCount();
+                            sayfaNumaralarınıGuncelle();
+                            bilgileriGetir(response);
+
+                        } else {
+                            console.error("stokHareketDetayListesi boş ya da undefined.");
+                        }
                     },
                 });
+                veriYukleHepsi();
             }
 
+            veriYukle();
 
-            function tabloyuDoldur() {
+            function bilgileriGetir(response) {
+                var bilgiBody = document.getElementById("bilgiler");
+                bilgiBody.innerHTML = "";
+                var aciklama = response.aciklama;
+                var aktifMi = response.aktifMi ? "Güncel" : "Güncel Değil"
+                var birimAdi = response.birimAdi;
+                var kategoriAdi = response.kategoriAdi;
+                var ortalamaAlisFiyati = response.ortalamaAlisFiyati;
+                var stokAdi = response.stokAdi;
+                var stokBarkod = response.stokBarkod;
+                var stokSayisi = response.stokSayisi;
+
+                var p = `<p class="text-white text-monospace font-weight-bold">Ürün Adı:\xa0${stokAdi} \xa0\xa0\ Barkod Numarası:\xa0${stokBarkod} \xa0\xa0\ Kategorisi:\xa0${kategoriAdi} </p>
+                                                                         <hr style="border-color:white;">
+                                                                         <p class="text-white text-monospace font-weight-bold">Stok Miktarı:\xa0${stokSayisi} ${birimAdi}\xa0\xa0Ortalama Alış Fiyatı:\xa0${ortalamaAlisFiyati}₺\xa0\xa0Stok Durumu:\xa0${aktifMi}</p>
+                                                                         <hr style="border-color:white;">
+                                                                         <p class="text-white text-monospace font-weight-bold">Açıklama:\xa0${aciklama}</p>`
+                bilgiBody.innerHTML = p;
+            }
+
+            function tabloyuDoldurHepsi() {
+                var tableHeader = $('#tableHeader');
+                tableHeader.empty();
+                var tableHeaderRow = `<tr>
+                                                          <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                              <span role="button" id="stokHareketId">
+                                                                  İşlem No <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="alisFiyati">
+                                                                  Alış Fiyatı <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="alisTarihi">
+                                                                  Alış Tarihi <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="stokGirisAdet">
+                                                                  Adet <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="satisFiyati">
+                                                                  Satış Fiyatı <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="satisTarihi">
+                                                                  Satış Tarihi <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="stokCikisAdet">
+                                                                  Adet <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center p-0 py-2">
+                                                              <span role="button" id="calisanAdi">
+                                                                  Çalışan <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+                                                      </tr>`
+                tableHeader.append(tableHeaderRow);
+
                 var tableBody = $('#tableBody');
                 tableBody.empty();
 
@@ -85,34 +138,191 @@
                 var startIndex = (currentPage - 1) * itemsPerPage;
                 var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
 
+                gosterilecekItemListesi = [];
+
                 for (var i = startIndex; i < endIndex; i++) {
-                    var stokHareket = liste.stokHareketDetayListesi[i];
-                    var aktifMi = stok.aktifMi ? 'Evet' : 'Hayır';
-                    var row = `<tr class="clickableRow" role="button" data-id="${stokHareket.stokHareketId}">
-                                                   <td class="col-1 text-center">${stokHareket.stokHareketId}</td>
-                                                   <td class="col-2 text-center">${stokHareket.alisFiyati}</td>
-                                                   <td class="col-1 text-center">${stokHareket.alisTarihi}</td>
-                                                   <td class="col-1 text-center">${stokHareket.stokGirisAdet}</td>
-                                                   <td class="col-1 text-center">${stokHareket.satisFiyati}</td>
-                                                   <td class="col-1 text-center">${stokHareket.satisTarihi}</td>
-                                                   <td class="col-1 text-center">${aktistokHareket.stokCikisAdet}</td>
-                                                   <td class="col-4 text-center">${stokHareket.calisanAdi} ${stokHareket.calisanSoyadi}</td>
+                    stokHareket = [];
+                    stokHareket = liste[i];
+                    gosterilecekItemListesi.push(liste[i]);
+
+                    var stokHareketId = stokHareket.stokHareketId;
+                    var alisFiyati = stokHareket.alisFiyati || " ";
+                    var alisTarihi = formatDate(stokHareket.alisTarihi);
+                    var stokGirisAdet = stokHareket.stokGirisAdet || " ";
+                    var satisFiyati = stokHareket.satisFiyati || " ";
+                    var satisTarihi = formatDate(stokHareket.satisTarihi);
+                    var stokCikisAdet = stokHareket.stokCikisAdet || " ";
+                    var calisanAdi = stokHareket.calisanAdi;
+                    var calisanSoyadi = stokHareket.calisanSoyadi
+                    var row = `<tr data-id="${stokHareketId}">
+                                                   <td class="col-1 text-center">${stokHareketId}</td>
+                                                   <td class="col-2 text-center">${alisFiyati}</td>
+                                                   <td class="col-2 text-center">${alisTarihi}</td>
+                                                   <td class="col-1 text-center">${stokGirisAdet}</td>
+                                                   <td class="col-2 text-center">${satisFiyati}</td>
+                                                   <td class="col-2 text-center">${satisTarihi}</td>
+                                                   <td class="col-1 text-center">${stokCikisAdet}</td>
+                                                   <td class="col-1 text-center">${calisanAdi} ${calisanSoyadi}</td>
                                                </tr>`;
                     tableBody.append(row);
                 }
 
-                $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${endIndex - startIndex} adedi gösterilmektedir.`);
+                var sonSayfa = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
+                kayitlarBilgileriniGetir(gosterilecekItemListesi, startIndex, sonSayfa);
+
             }
-            // Gösterim seçeneklerini güncelleyen fonksiyon
+
+            function tabloyuDoldurAlislar() {
+                var tableHeader = $('#tableHeader');
+                tableHeader.empty();
+                var tableHeaderRow = `<tr>
+                                                          <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                              <span role="button" id="stokHareketId">
+                                                                  İşlem No <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="alisFiyati">
+                                                                  Alış Fiyatı <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="alisTarihi">
+                                                                  Alış Tarihi <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center  p-0 py-2">
+                                                              <span role="button" id="stokGirisAdet">
+                                                                  Adet <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+
+                                                          <th scope="col" class="text-center p-0 py-2">
+                                                              <span role="button" id="calisanAdi">
+                                                                  Çalışan <i class="fa-solid fa-sort"></i>
+                                                              </span>
+                                                          </th>
+                                                      </tr>`
+                tableHeader.append(tableHeaderRow);
+
+
+                var tableBody = $('#tableBody');
+                tableBody.empty();
+
+                // Sayfalandırma hesaplamaları
+                var startIndex = (currentPage - 1) * itemsPerPage;
+                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
+
+                gosterilecekItemListesi = [];
+                for (var i = startIndex; i < endIndex; i++) {
+                    if (liste[i].alisFiyati == null || liste[i].alisTarihi == null || liste[i].stokGirisAdet == null) {
+                        continue;
+                    }
+                    stokHareket = [];
+                    stokHareket = liste[i];
+                    gosterilecekItemListesi.push(liste[i]);
+                    var stokHareketId = stokHareket.stokHareketId;
+                    var alisFiyati = stokHareket.alisFiyati || " ";
+                    var alisTarihi = formatDate(stokHareket.alisTarihi);
+                    var stokGirisAdet = stokHareket.stokGirisAdet || " ";
+                    var calisanAdi = stokHareket.calisanAdi;
+                    var calisanSoyadi = stokHareket.calisanSoyadi
+                    var row = `<tr data-id="${stokHareketId}">
+
+                                                  <td class="col-sm-1 text-center">${stokHareketId}</td>
+                                                  <td class="col-sm-2 text-center">${alisFiyati}</td>
+                                                  <td class="col-sm-4 text-center">${alisTarihi}</td>
+                                                  <td class="col-sm-2 text-center">${stokGirisAdet}</td>
+                                                  <td class="col-sm-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
+                                              </tr>`;
+                    tableBody.append(row);
+                }
+
+                var sonSayfa = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
+                kayitlarBilgileriniGetir(gosterilecekItemListesi, startIndex, sonSayfa);
+
+            }
+
+            function tabloyuDoldurSatislar() {
+                var tableHeader = $('#tableHeader');
+                tableHeader.empty();
+                var tableHeaderRow = `<tr>
+                                                         <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                             <span role="button" id="stokHareketId">
+                                                                 İşlem No <i class="fa-solid fa-sort"></i>
+                                                             </span>
+                                                         </th>
+
+                                                         <th scope="col" class="text-center  p-0 py-2">
+                                                             <span role="button" id="satisFiyati">
+                                                                 Satış Fiyatı <i class="fa-solid fa-sort"></i>
+                                                             </span>
+                                                         </th>
+
+                                                         <th scope="col" class="text-center  p-0 py-2">
+                                                             <span role="button" id="satisTarihi">
+                                                                 Satış Tarihi <i class="fa-solid fa-sort"></i>
+                                                             </span>
+                                                         </th>
+
+                                                         <th scope="col" class="text-center  p-0 py-2">
+                                                             <span role="button" id="stokCikisAdet">
+                                                                 Adet <i class="fa-solid fa-sort"></i>
+                                                             </span>
+                                                         </th>
+
+                                                         <th scope="col" class="text-center p-0 py-2">
+                                                             <span role="button" id="calisanAdi">
+                                                                 Çalışan <i class="fa-solid fa-sort"></i>
+                                                             </span>
+                                                         </th>
+                                                     </tr>`
+                tableHeader.append(tableHeaderRow);
+                var tableBody = $('#tableBody');
+                tableBody.empty();
+
+                // Sayfalandırma hesaplamaları
+                var startIndex = (currentPage - 1) * itemsPerPage;
+                var endIndex = Math.min(startIndex + itemsPerPage, liste.length);
+
+                gosterilecekItemListesi = [];
+                for (var i = startIndex; i < endIndex; i++) {
+                    if (liste[i].satisFiyati == null || liste[i].satisTarihi == null || liste[i].stokCikisAdet == null) {
+                        continue;
+                    }
+                    stokHareket = [];
+                    stokHareket = liste[i];
+                    gosterilecekItemListesi.push(liste[i]);
+                    var stokHareketId = stokHareket.stokHareketId;
+                    var satisFiyati = stokHareket.satisFiyati || " ";
+                    var satisTarihi = formatDate(stokHareket.satisTarihi);
+                    var stokCikisAdet = stokHareket.stokCikisAdet || " ";
+                    var calisanAdi = stokHareket.calisanAdi;
+                    var calisanSoyadi = stokHareket.calisanSoyadi
+                    var row = `<tr class="" role="button" data-id="${stokHareketId}">
+                                                   <td class="col-2 text-center">${stokHareketId}</td>
+                                                   <td class="col-2 text-center">${satisFiyati}</td>
+                                                   <td class="col-3 text-center">${satisTarihi}</td>
+                                                   <td class="col-2 text-center">${stokCikisAdet}</td>
+                                                   <td class="col-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
+                                               </tr>`;
+                    tableBody.append(row);
+                }
+
+                var sonSayfa = Math.min(startIndex + itemsPerPage, gosterilecekItemListesi.length);
+                kayitlarBilgileriniGetir(gosterilecekItemListesi, startIndex, sonSayfa);
+            }
             function updateShowCount() {
-                var totalPages = Math.ceil(liste.length / itemsPerPage);
-                $('#totalCount').text(`Toplam ${liste.length} kayıt bulunmuştur. ${Math.min(itemsPerPage, liste.length)} adedi gösterilmektedir.`);
+                var totalPages = Math.ceil(stokHareket.length / itemsPerPage);
+                $('#totalCount').text(`Toplam ${gosterilecekItemListesi.length} kayıt bulunmuştur. ${Math.min(itemsPerPage, gosterilecekItemListesi.length)} adedi gösterilmektedir.`);
                 sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
             }
 
-            // Sayfa numaralarını güncelleme fonksiyonu
             function sayfaNumaralarınıGuncelle() {
-                var totalPages = Math.ceil(liste.length / itemsPerPage);
+                var totalPages = Math.ceil(gosterilecekItemListesi.length / itemsPerPage);
                 var pageNumbers = $('#pageNumbers');
                 pageNumbers.empty();
 
@@ -144,31 +354,68 @@
                 }
             }
 
+
+            function formatDate(dateString) {
+
+                if (dateString == null) {
+                    return "";
+                }
+                var date = new Date(dateString);
+
+                var day = String(date.getDate()).padStart(2, '0');
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var year = date.getFullYear();
+                var hours = String(date.getHours()).padStart(2, '0');
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+
+
+                return `${day}-${month}-${year} ${hours}:${minutes}`;
+            }
+
             // Sıralama fonksiyonu
-            function sirala(stun) {
-                var yon = siralamaYonleri[stun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
+            function sirala(sutun) {
+
+                var yon = siralamaYonleri[sutun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
 
                 liste.sort(function (a, b) {
-                    if (a[stun] < b[stun]) {
+                    if (a[sutun] < b[sutun]) {
                         return -1 * yon;
                     }
-                    if (a[stun] > b[stun]) {
+                    if (a[sutun] > b[sutun]) {
                         return 1 * yon;
                     }
                     return 0;
                 });
 
                 // Sıralama yönünü tersine çevir (Bir sonraki tıklamada ters sıralasın)
-                siralamaYonleri[stun] = !siralamaYonleri[stun];
+                siralamaYonleri[sutun] = !siralamaYonleri[sutun];
 
-                tabloyuDoldur(); // Sıralandıktan sonra tabloyu güncelle
+
+                if ($('#hepsiniGoster').is(':checked')) {
+                    tabloyuDoldurHepsi();
+                }
+                if ($('#alislariGoster').is(':checked')) {
+                    tabloyuDoldurAlislar();
+                }
+                if ($('#satislariGoster').is(':checked')) {
+                    tabloyuDoldurSatislar();
+                }
+
                 sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
             }
 
             // Sayfa değişimini yönetmek için fonksiyonlar
             function sayfaGuncelle(newPage) {
                 currentPage = newPage;
-                tabloyuDoldur();
+                if ($('#hepsiniGoster').is(':checked')) {
+                    tabloyuDoldurHepsi();
+                }
+                if ($('#alislariGoster').is(':checked')) {
+                    tabloyuDoldurAlislar();
+                }
+                if ($('#satislariGoster').is(':checked')) {
+                    tabloyuDoldurSatislar();
+                }
                 sayfaNumaralarınıGuncelle();
             }
 
@@ -208,59 +455,104 @@
             });
 
             // Sıralama başlıklarına tıklama olaylarını ekleyin
-            $('#stokHareketId').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#stokHareketId', function (e) {
                 sirala('stokHareketId');
             });
 
-            $('#alisFiyati').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#alisFiyati', function (e) {
                 sirala('alisFiyati');
             });
 
-            $('#alisTarihi').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#alisTarihi', function (e) {
                 sirala('alisTarihi');
             });
 
-            $('#stokGirisAdet').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#stokGirisAdet', function (e) {
                 sirala('stokGirisAdet');
             });
 
-            $('#satisFiyati').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#satisFiyati', function (e) {
                 sirala('satisFiyati');
             });
 
-            $('#satisTarihi').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#satisTarihi', function (e) {
                 sirala('satisTarihi');
             });
 
-            $('#satisTarihi').click(function (e) {
-                e.preventDefault();
-                sirala('satisTarihi');
+            $(document).on('click', '#stokCikisAdet', function (e) {
+                sirala('stokCikisAdet');
             });
 
-            $('#calisanAdi').click(function (e) {
-                e.preventDefault();
+            $(document).on('click', '#calisanAdi', function (e) {
                 sirala('calisanAdi');
             });
 
-            veriYukle(); // Sayfa yüklenirken veriyi yükle
+            $(document).on('click', '#hepsiniGoster', veriYukleHepsi)
+            $(document).on('click', '#alislariGoster', veriYukleAlislar)
+            $(document).on('click', '#satislariGoster', veriYukleSatislar)
 
-            $(document).on('click', '.clickableRow', function () {
-                var id = $(this).data('id');
-                var form = $('#StokDetayForm');
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'secilenStokId',
-                    value: id
-                }).appendTo(form);
-                form.submit();
-            });
-        }
+            function veriYukleHepsi() {
+
+                tabloyuDoldurHepsi();
+                updateShowCount();
+                sayfaNumaralarınıGuncelle();
+            }
+            function veriYukleAlislar() {
+
+                tabloyuDoldurAlislar();
+                updateShowCount();
+                sayfaNumaralarınıGuncelle();
+
+            }
+            function veriYukleSatislar() {
+
+                tabloyuDoldurSatislar();
+                updateShowCount();
+                sayfaNumaralarınıGuncelle();
+            }
+            function kayitlarBilgileriniGetir(kayitListesi, ilkSayfa, sonSayfa) {
+                var kayitBilgileri = $('#table-controls')
+                console.log(kayitListesi.length);
+                console.log(ilkSayfa);
+                console.log(sonSayfa);
+
+                kayitBilgileri.html(`
+                            <div class="show-options">
+                                 <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
+                                 <select id="showCount">
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
+                                     <option value="50">50</option>
+                                 </select>
+                                 <span id="totalCount">Toplam ${kayitListesi.length} kayıt bulunmuştur. ${sonSayfa - ilkSayfa} adedi gösterilmektedir.</span>
+                             </div>
+
+                             <div class="pagination">
+                                 <button id="firstPage" disabled>İlk</button>
+                                 <button id="prevPage" disabled>Önceki</button>
+                                 <span id="pageNumbers"></span>
+                                 <button id="nextPage" disabled>Sonraki</button>
+                                 <button id="lastPage" disabled>Son</button>
+                             </div>`
+                );
+                var radioButtons = $("#radioButtons")
+                radioButtons.html(`<div class="mb-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="hepsiniGoster" checked="checked">
+                                            <label class="form-check-label" for="hepsiniGoster">Hepsini Göster</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="alislariGoster">
+                                            <label class="form-check-label" for="alislariGoster">Alışları Göster</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioButton" id="satislariGoster">
+                                            <label class="form-check-label" for="satislariGoster">Satışları Göster</label>
+                                        </div>
+                                    </div>`
+                );
+            }
+        });
     </script>
 
 

@@ -11,12 +11,12 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class StokDetayViewModel :Stok
+    public class StokDetayViewModel : Stok
     {
         private readonly VeterinerDBContext _context;
         public int StokSayisi { get; set; }
 
-        public StokDetayViewModel(VeterinerDBContext context,  int stokId)
+        public StokDetayViewModel(VeterinerDBContext context, int stokId)
         {
             _context = context;
             ModeliOlusturAsync(stokId).Wait();
@@ -89,10 +89,10 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public StokHareketDetay()
         {
-            
+
         }
 
-        public StokHareketDetay(VeterinerDBContext context,int stokId)
+        public StokHareketDetay(VeterinerDBContext context, int stokId)
         {
             _context = context;
             ModeliOlusturAsync(stokId).Wait();
@@ -107,7 +107,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public string CalisanAdi { get; set; }
         public string CalisanSoyadi { get; set; }
-        
+
         private List<StokHareket> StokHarektlerListesi { get; set; }
         public List<StokHareketDetay> StokHareketDetayListesi { get; set; }
 
@@ -123,18 +123,25 @@ namespace VeterinerApp.Models.ViewModel.Admin
             }
             return stokGiris - stokCikis;
         }
+
+        //TODO LIFO veya FIFO seklinde hesapla
         public double? OrtalamaAlisFiyatiniHesapla()
         {
             double? toplamAlisFiyati = 0.0;
-            int? toplamAlinanAdet = 0;
+            double? toplamAlinanAdet = 0;
             foreach (var StokHareket in StokHarektlerListesi)
             {
+                if (StokHareket.StokGirisAdet == null || StokHareket.AlisFiyati == null)
+                {
+                    StokHareket.StokGirisAdet = 0;
+                    StokHareket.AlisFiyati = 0;
+                }
                 toplamAlinanAdet += StokHareket.StokGirisAdet;
                 toplamAlisFiyati += StokHareket.StokGirisAdet * StokHareket.AlisFiyati;
 
             }
             if (toplamAlinanAdet > 0)
-                return  Math.Round((double)(toplamAlisFiyati / toplamAlinanAdet), 2);
+                return Math.Round((double)(toplamAlisFiyati / toplamAlinanAdet), 2);
             return null;
         }
         private async Task<List<StokHareket>> StokHareketListesiniGetirAsync(int stokId)

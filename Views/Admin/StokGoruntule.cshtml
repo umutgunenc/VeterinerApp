@@ -1,7 +1,4 @@
-﻿@*@section AdminMenu {
-        @await Html.PartialAsync("_AdminMenu")
-    }*@
-
+﻿
 <form asp-action="StokDetay" asp-controller="Admin" method="post" id="StokDetayForm">
 
     <table class="table table-responsive table-hover table-dark text-left mb-2 rounded-top-md">
@@ -63,7 +60,6 @@
     </table>
 
     <div class="table-controls">
-        <!-- Gösterim Seçenekleri -->
         <div class="show-options">
             <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
             <select id="showCount">
@@ -74,7 +70,6 @@
             <span id="totalCount">Toplam 0 kayıt bulunmuştur. 0 adedi gösterilmektedir.</span>
         </div>
 
-        <!-- Sayfa Numaraları -->
         <div class="pagination">
             <button id="firstPage" disabled>İlk</button>
             <button id="prevPage" disabled>Önceki</button>
@@ -179,21 +174,21 @@
             }
 
             // Sıralama fonksiyonu
-            function sirala(stun) {
-                var yon = siralamaYonleri[stun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
+            function sirala(sutun) {
+                var yon = siralamaYonleri[sutun] ? 1 : -1; // Sıralama yönü (artan veya azalan)
 
                 liste.sort(function (a, b) {
-                    if (a[stun] < b[stun]) {
+                    if (a[sutun] < b[sutun]) {
                         return -1 * yon;
                     }
-                    if (a[stun] > b[stun]) {
+                    if (a[sutun] > b[sutun]) {
                         return 1 * yon;
                     }
                     return 0;
                 });
 
                 // Sıralama yönünü tersine çevir (Bir sonraki tıklamada ters sıralasın)
-                siralamaYonleri[stun] = !siralamaYonleri[stun];
+                siralamaYonleri[sutun] = !siralamaYonleri[sutun];
 
                 tabloyuDoldur(); // Sıralandıktan sonra tabloyu güncelle
                 sayfaNumaralarınıGuncelle(); // Sayfa numaralarını güncelle
