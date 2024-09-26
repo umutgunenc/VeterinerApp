@@ -1,0 +1,41 @@
+﻿@model StokGirisViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+<form asp-action="StokGiris" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <div class="col">
+            <input asp-for="ArananMetin" class="form-control" placeholder="Ara">
+        </div>
+        <button type="submit" class="btn btn-dark rounded mb-2">Ara</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="ArananMetin">
+        </span>
+    </div>
+
+</form>
+
+@if (ViewBag.AramaSonucu != null)
+{
+    @await Component.InvokeAsync("StokGirisDetayGetir", ViewBag.AramaSonucu)
+}
+
+@if (TempData["StokGirisiYapildi"] != null)
+{
+    <div class="alert alert-success" id="StokGirisiYapildi">@TempData["StokGirisiYapildi"]</div>
+
+}
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("StokGirisiYapildi");
+            successMessage.remove();
+        }, 3500);</script>
+}
+
+
+

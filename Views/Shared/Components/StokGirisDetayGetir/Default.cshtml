@@ -1,0 +1,50 @@
+﻿@model StokGirisKaydetViewModel
+
+<form asp-action="StokGirisKaydet" asp-controller="Admin" method="post">
+    <div class="form-row mt-3 mb-2">
+        <div class="col">
+            <select asp-for="StokId" class="form-control" asp-items="Model.AramaSonucListesi">
+                <option selected disabled>Stok Girişi Yapılacak Stoğu Seçiniz</option>
+            </select>
+        </div>
+    </div>
+    <div class="my-1">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokId">
+        </span>
+    </div>
+    <div class="form-row my-2">
+        <div class="col">
+            <input type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="AlisTarihi" class="form-control">
+        </div>
+    </div>
+    <div class="my-1">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AlisTarihi">
+        </span>
+    </div>
+    <div class="form-row my-2">
+        <div class="col">
+            <input type="number" step="0.01" min="0" asp-for="StokGirisAdet" class="form-control" placeholder="Miktar">
+        </div>
+    </div>
+    <div class="my-1">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokGirisAdet">
+        </span>
+    </div>
+    <div class="form-row my-2">
+        <div class="col">
+            <input type="number" step="0.01" min="0" asp-for="AlisFiyati" class="form-control" placeholder="Alış Birim Fiyatı">
+        </div>
+    </div>
+    <div class="my-1">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AlisFiyati">
+        </span>
+    </div>
+
+
+    @for (int i = 0; i < Model.ImzaListesi.Count; i++)
+    {
+        <input type="hidden" asp-for="ImzaListesi[i]" value="@Model.ImzaListesi[i]" />
+    }
+
+    <button type="submit" class="col btn btn-dark rounded my-2">Kaydet</button>
+</form>

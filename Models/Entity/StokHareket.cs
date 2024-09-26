@@ -22,3 +22,6 @@ namespace VeterinerApp.Models.Entity
         public virtual Stok Stok { get; set; }
     }
 }
+
+
+

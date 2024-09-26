@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
     {
 
         private static readonly VeterinerDBContext _context = new();
+
+
+
 
         public static bool BeRenk(int Id)
         {
@@ -164,15 +168,27 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
         }
-
         public static bool BeInStock(string barkod)
         {
             if (string.IsNullOrEmpty(barkod))
                 return true;
             return _context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
+        }          
+
+
+        public static bool SeacrhInStock(string arananMetin)
+        {
+            if (string.IsNullOrEmpty(arananMetin))
+                return true;
+            arananMetin = arananMetin.ToUpper();
+
+            return _context.Stoklar
+                    .Where(s => (s.StokBarkod.ToUpper().Contains(arananMetin) ||
+                                 s.StokAdi.ToUpper().Contains(arananMetin)) &&
+                                 s.AktifMi == true)
+                    .Any();
+
         }
-
-
         public static bool LoginSucceed(AppUser user)
         {
             return _context.Users.Any(x => x.UserName == user.UserName && x.PasswordHash == user.PasswordHash);

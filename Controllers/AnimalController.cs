@@ -200,7 +200,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> EditAnimal(EditAnimalViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (!Signature.VerifySignature(model.HayvanId, model.SahipTckn, model.Imza))
+            if (!Signature.VerifySignature(model.HayvanId.ToString(), model.SahipTckn, model.Imza))
             {
                 return View("Badrequest");
             }
@@ -326,7 +326,7 @@ namespace VeterinerApp.Controllers
             {
                 return View("BadRequest");
             }
-            var signature = Signature.CreateSignature(hayvanId, user.InsanTckn);
+            var signature = Signature.CreateSignature(hayvanId.ToString(), user.InsanTckn);
 
             AddNewSahipViewModel ViewModel = new(_context);
             ViewModel = ViewModel.ViewModelOlustur(hayvan, signature, user);
@@ -339,7 +339,7 @@ namespace VeterinerApp.Controllers
         public async Task<IActionResult> AddSahip(AddNewSahipViewModel model)
         {
 
-            if (!Signature.VerifySignature(model.HayvanId, model.UserTCKN, model.Signature))
+            if (!Signature.VerifySignature(model.HayvanId.ToString(), model.UserTCKN, model.Signature))
             {
                 return View("Badrequest");
             }
@@ -363,8 +363,8 @@ namespace VeterinerApp.Controllers
             }
 
             var yeniSahip = _context.Users.Where(u => u.InsanTckn == model.YeniSahipTCKN).FirstOrDefault();
-            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.UserTCKN) }, Request.Scheme, Request.Host.Value);
-            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId, model.UserTCKN) }, Request.Scheme, Request.Host.Value);
+            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.UserTCKN) }, Request.Scheme, Request.Host.Value);
+            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.UserTCKN) }, Request.Scheme, Request.Host.Value);
             var cinsiyet = hayvan.HayvanCinsiyet == Cinsiyet.Erkek ? "Erkek" : "Dişi";
             var dogumTarihi = hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy");
             var olumTarihi = hayvan.HayvanOlumTarihi != null ? hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy") : "Hayatta";
@@ -526,7 +526,7 @@ namespace VeterinerApp.Controllers
             }
             else
             {
-                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
                 {
                     return View("BadRequest");
                 }
@@ -569,7 +569,7 @@ namespace VeterinerApp.Controllers
             }
             else
             {
-                if (!Signature.VerifySignature(hayvanId, yeniSahipTCKN, imza))
+                if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
                 {
                     return View("BadRequest");
                 }

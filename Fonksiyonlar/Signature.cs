@@ -6,9 +6,9 @@ namespace VeterinerApp.Fonksiyonlar
 {
     public static class Signature
     {
-        public static string CreateSignature(int Integer, string String)
+        public static string CreateSignature(string String1, string String2)
         {
-            string data = $"{Integer}-{String}";
+            string data = $"{String1}-{String2}";
 
             var sha256 = SHA256.Create();
             {
@@ -17,9 +17,9 @@ namespace VeterinerApp.Fonksiyonlar
             }
         }
 
-        public static bool VerifySignature(int Integer, string String, string signature)
+        public static bool VerifySignature(string String1, string String2, string signature)
         {
-            var expectedSignature = CreateSignature(Integer, String);
+            var expectedSignature = CreateSignature(String1, String2);
             return signature == expectedSignature;
         }
     }

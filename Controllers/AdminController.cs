@@ -6,18 +6,15 @@ using VeterinerApp.Models.Entity;
 using VeterinerApp.Data;
 using VeterinerApp.Fonksiyonlar;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinerApp.Models.ViewModel.Admin;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using VeterinerApp.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerApp.Models.Validators;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 
@@ -583,7 +580,7 @@ namespace VeterinerApp.Controllers
 
             KisiDuzenleViewModel kisiDuzenleViewModel = new();
             kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
-            kisiDuzenleViewModel.Signature = Signature.CreateSignature(kisiDuzenleViewModel.Id, kisiDuzenleViewModel.InsanTckn);
+            kisiDuzenleViewModel.Signature = Signature.CreateSignature(kisiDuzenleViewModel.Id.ToString(), kisiDuzenleViewModel.InsanTckn);
 
             ViewBag.model = kisiDuzenleViewModel;
 
@@ -592,7 +589,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> KisiDuzenle(KisiDuzenleViewModel model)
         {
-            if (!Signature.VerifySignature(model.Id, model.InsanTckn, model.Signature))
+            if (!Signature.VerifySignature(model.Id.ToString(), model.InsanTckn, model.Signature))
                 return View("BadRequest");
 
             KisiDuzenleValidators validator = new();
@@ -878,7 +875,7 @@ namespace VeterinerApp.Controllers
 
             StokDuzenleKaydetViewModel stokDetay = new();
             stokDetay = await stokDetay.ModeliOlusturAsync(_veterinerDbContext, model);
-            stokDetay.Signature = Signature.CreateSignature(stokDetay.Id, stokDetay.Id.ToString());
+            stokDetay.Signature = Signature.CreateSignature(stokDetay.Id.ToString(), stokDetay.Id.ToString());
 
             ViewBag.StokModel = stokDetay;
 
@@ -887,7 +884,7 @@ namespace VeterinerApp.Controllers
         [HttpPost]
         public async Task<IActionResult> StokDuzenleKaydet(StokDuzenleKaydetViewModel model)
         {
-            if (!Signature.VerifySignature(model.Id, model.Id.ToString(), model.Signature))
+            if (!Signature.VerifySignature(model.Id.ToString(), model.Id.ToString(), model.Signature))
             {
                 return View("BadRequest");
             }
@@ -919,6 +916,70 @@ namespace VeterinerApp.Controllers
             TempData["StokDuzenlendi"] = $"{model.StokAdi} isimli stoğa ait bilgiler başarı ile düzenlendi";
 
             return View("StokDuzenle");
+        }
+
+        [HttpGet]
+        public IActionResult StokGiris()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult StokGiris(StokGirisViewModel model)
+        {
+            StokGirisValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+
+            ViewBag.AramaSonucu = model;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StokGirisKaydet(StokGirisKaydetViewModel model)
+        {
+            StokGirisKaydetValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                    return View("StokGiris");
+                }
+            }
+
+            var stok = await model.StoguGetirAsync(model,_veterinerDbContext);
+
+            foreach (var imza in model.ImzaListesi)
+            {
+
+                string string1 = stok.Id.ToString();
+                string string2 = stok.StokBarkod;
+                if (Signature.VerifySignature(string1, string2, imza))
+                    break;
+                    
+                return View("BadRequest");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var stokHareket = model.StokHareketBigileriniGetir(model, user);
+
+            _veterinerDbContext.StokHareketler.Add(stokHareket);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["StokGirisiYapildi"] = "Stok girişi başarılı bir şekilde yapıldı.";
+
+            return View("StokGiris");
         }
     }
 

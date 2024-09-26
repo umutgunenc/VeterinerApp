@@ -121,7 +121,7 @@ namespace VeterinerApp.Models.ViewModel.Animal
         }
         private string SignatureOlustur(int hayvanId, string TCKN)
         {
-            return Signature.CreateSignature(hayvanId, TCKN);
+            return Signature.CreateSignature(hayvanId.ToString(), TCKN);
         }
 
         public EditAnimalViewModel ModelOlustur(Hayvan hayvan, AppUser user)
