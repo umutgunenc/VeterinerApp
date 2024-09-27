@@ -967,11 +967,9 @@ namespace VeterinerApp.Controllers
                 girisModel.ArananMetin = arananMetin;
                 TempData["ArananMetin"] = girisModel.ArananMetin;
 
-
                 var (isSuccess, aramaSonucu) = await model.AramaSonucunuGetirAsync(girisModel, _veterinerDbContext);
 
                 ViewBag.AramaSonucu = aramaSonucu;
-
 
                 return View("StokGiris",girisModel);
 
@@ -1055,7 +1053,6 @@ namespace VeterinerApp.Controllers
                 var (isSuccess, aramaSonucu) = await model.AramaSonucunuGetirAsync(cikisModel, _veterinerDbContext);
 
                 ViewBag.AramaSonucu = aramaSonucu;
-
 
                 return View("StokCikis", cikisModel);
             }
