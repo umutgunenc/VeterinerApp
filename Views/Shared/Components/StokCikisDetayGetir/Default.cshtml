@@ -1,0 +1,61 @@
+﻿@model StokCikisKaydetViewModel
+
+<form asp-action="StokCikisKaydet" asp-controller="Admin" method="post">
+    <div class="form-row mt-3">
+        <label asp-for="StokId" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Stok Seçiniz</label>
+
+        <div class="col-md-10">
+            <select asp-for="StokId" class="form-control" asp-items="Model.AramaSonucListesi">
+                <option selected disabled>Stok Çıkışı Yapılacak Stoğu Seçiniz</option>
+            </select>
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokId">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+            <label asp-for="SatisTarihi" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Satış Tarihi</label>
+            <div class="col-md-10">
+                <input type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="SatisTarihi" class="form-control">
+                <div class="my-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SatisTarihi">
+                    </span>
+                </div>
+            </div>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="StokCikisAdet" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Adet</label>
+
+        <div class="col-md-10">
+            <input type="number" step="0.01" min="0" asp-for="StokCikisAdet" class="form-control" placeholder="Miktar">
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="StokCikisAdet">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="SatisFiyati" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Birim Fyatı</label>
+
+        <div class="col-md-10">
+            <input type="number" step="0.01" min="0" asp-for="SatisFiyati" class="form-control" placeholder="Satış Birim Fiyatı">
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SatisFiyati">
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+
+    @for (int i = 0; i < Model.ImzaListesi.Count; i++)
+    {
+        <input type="hidden" asp-for="ImzaListesi[i]" value="@Model.ImzaListesi[i]" />
+    }
+
+    <button type="submit" class="col btn btn-dark rounded my-2">Kaydet</button>
+</form>

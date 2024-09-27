@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using VeterinerApp.Data;
 using VeterinerApp.Models.Entity;
 using VeterinerApp.Models.Enum;
+using VeterinerApp.Models.ViewModel.Admin;
 using VeterinerApp.Models.ViewModel.Animal;
 
 namespace VeterinerApp.Models.Validators.ValidateFunctions
@@ -173,13 +174,32 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             if (string.IsNullOrEmpty(barkod))
                 return true;
             return _context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper());
-        }          
+        }
+        public static bool BePositiveStock(StokCikisKaydetViewModel model, double? miktar)
+        {
+            var stokHarektlerListesi = _context.StokHareketler
+                .Where(sh => sh.StokId == model.StokId)
+                .ToList();
+            double? toplamAlisMiktari = 0;
+            double? toplamSatisMiktari = 0;
+            foreach (var stokHareket in stokHarektlerListesi)
+            {
+                stokHareket.StokGirisAdet ??= 0;
+                stokHareket.StokCikisAdet ??= 0;
+                toplamAlisMiktari += stokHareket.StokGirisAdet;
+                toplamSatisMiktari += stokHareket.StokCikisAdet;
+            }
+
+            if (((toplamSatisMiktari + miktar) >= toplamAlisMiktari) || toplamAlisMiktari <= 0)
+                return false;
+            return true;
+        }
 
 
         public static bool SeacrhInStock(string arananMetin)
         {
             if (string.IsNullOrEmpty(arananMetin))
-                return true;
+                return false;
             arananMetin = arananMetin.ToUpper();
 
             return _context.Stoklar

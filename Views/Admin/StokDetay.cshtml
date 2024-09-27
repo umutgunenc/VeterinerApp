@@ -179,7 +179,7 @@
                     var stokCikisAdet = stokHareket.stokCikisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
-                    var row = `<tr data-id="${stokHareketId}">
+                    var row = `<tr>
                                                    <td class="col-1 text-center">${stokHareketId}</td>
                                                    <td class="col-2 text-center">${alisFiyati}</td>
                                                    <td class="col-2 text-center">${alisTarihi}</td>
@@ -259,14 +259,13 @@
                     var stokGirisAdet = stokHareket.stokGirisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
-                    var row = `<tr data-id="${stokHareketId}">
-
-                                                  <td class="col-sm-1 text-center">${stokHareketId}</td>
-                                                  <td class="col-sm-2 text-center">${alisFiyati}</td>
-                                                  <td class="col-sm-4 text-center">${alisTarihi}</td>
-                                                  <td class="col-sm-2 text-center">${stokGirisAdet}</td>
-                                                  <td class="col-sm-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
-                                              </tr>`;
+                    var row = `<tr>
+                                  <td class="col-sm-1 text-center">${stokHareketId}</td>
+                                  <td class="col-sm-2 text-center">${alisFiyati}</td>
+                                  <td class="col-sm-4 text-center">${alisTarihi}</td>
+                                  <td class="col-sm-2 text-center">${stokGirisAdet}</td>
+                                  <td class="col-sm-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
+                              </tr>`;
                     tableBody.append(row);
                 }
 
@@ -279,36 +278,36 @@
                 var tableHeader = $('#tableHeader');
                 tableHeader.empty();
                 var tableHeaderRow = `<tr>
-                                                         <th scope="col" class="text-center p-0 py-2 pl-1">
-                                                             <span role="button" id="stokHareketId">
-                                                                 İşlem No <i class="fa-solid fa-sort"></i>
-                                                             </span>
-                                                         </th>
+                                          <th scope="col" class="text-center p-0 py-2 pl-1">
+                                              <span role="button" id="stokHareketId">
+                                                  İşlem No <i class="fa-solid fa-sort"></i>
+                                              </span>
+                                          </th>
 
-                                                         <th scope="col" class="text-center  p-0 py-2">
-                                                             <span role="button" id="satisFiyati">
-                                                                 Satış Fiyatı <i class="fa-solid fa-sort"></i>
-                                                             </span>
-                                                         </th>
+                                          <th scope="col" class="text-center  p-0 py-2">
+                                              <span role="button" id="satisFiyati">
+                                                  Satış Fiyatı <i class="fa-solid fa-sort"></i>
+                                              </span>
+                                          </th>
 
-                                                         <th scope="col" class="text-center  p-0 py-2">
-                                                             <span role="button" id="satisTarihi">
-                                                                 Satış Tarihi <i class="fa-solid fa-sort"></i>
-                                                             </span>
-                                                         </th>
+                                          <th scope="col" class="text-center  p-0 py-2">
+                                              <span role="button" id="satisTarihi">
+                                                  Satış Tarihi <i class="fa-solid fa-sort"></i>
+                                              </span>
+                                          </th>
 
-                                                         <th scope="col" class="text-center  p-0 py-2">
-                                                             <span role="button" id="stokCikisAdet">
-                                                                 Adet <i class="fa-solid fa-sort"></i>
-                                                             </span>
-                                                         </th>
+                                          <th scope="col" class="text-center  p-0 py-2">
+                                              <span role="button" id="stokCikisAdet">
+                                                  Adet <i class="fa-solid fa-sort"></i>
+                                              </span>
+                                          </th>
 
-                                                         <th scope="col" class="text-center p-0 py-2">
-                                                             <span role="button" id="calisanAdi">
-                                                                 Çalışan <i class="fa-solid fa-sort"></i>
-                                                             </span>
-                                                         </th>
-                                                     </tr>`
+                                          <th scope="col" class="text-center p-0 py-2">
+                                              <span role="button" id="calisanAdi">
+                                                  Çalışan <i class="fa-solid fa-sort"></i>
+                                              </span>
+                                          </th>
+                                      </tr>`
                 tableHeader.append(tableHeaderRow);
                 var tableBody = $('#tableBody');
                 tableBody.empty();
@@ -335,13 +334,13 @@
                     var stokCikisAdet = stokHareket.stokCikisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
-                    var row = `<tr class="" role="button" data-id="${stokHareketId}">
-                                                   <td class="col-2 text-center">${stokHareketId}</td>
-                                                   <td class="col-2 text-center">${satisFiyati}</td>
-                                                   <td class="col-3 text-center">${satisTarihi}</td>
-                                                   <td class="col-2 text-center">${stokCikisAdet}</td>
-                                                   <td class="col-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
-                                               </tr>`;
+                    var row = `<tr>
+                                  <td class="col-2 text-center">${stokHareketId}</td>
+                                  <td class="col-2 text-center">${satisFiyati}</td>
+                                  <td class="col-3 text-center">${satisTarihi}</td>
+                                  <td class="col-2 text-center">${stokCikisAdet}</td>
+                                  <td class="col-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
+                              </tr>`;
                     tableBody.append(row);
                 }
 

@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Identity;
 using VeterinerApp.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerApp.Models.Validators;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 
@@ -923,11 +922,94 @@ namespace VeterinerApp.Controllers
         {
             return View();
         }
-
         [HttpPost]
-        public IActionResult StokGiris(StokGirisViewModel model)
+        public async Task<IActionResult> StokGiris(StokGirisViewModel model)
         {
             StokGirisValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+            StokGirisKaydetViewModel kaydetViewModel = new();
+
+            var (isSuccess, aramaSonucu) = await kaydetViewModel.AramaSonucunuGetirAsync(model, _veterinerDbContext);
+            if (!isSuccess)
+            {
+                ModelState.AddModelError("StokId", "Aradığınız stoğa ait bir kayıt bulunamadı");
+                return View("StokGiris", model);
+            }
+            TempData["ArananMetin"] =  model.ArananMetin;
+
+            ViewBag.AramaSonucu = aramaSonucu;
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> StokGirisKaydet(StokGirisKaydetViewModel model)
+        {
+            StokGirisKaydetValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+
+                }
+                string arananMetin = TempData["ArananMetin"].ToString();
+                StokGirisViewModel girisModel = new();
+                girisModel.ArananMetin = arananMetin;
+                TempData["ArananMetin"] = girisModel.ArananMetin;
+
+
+                var (isSuccess, aramaSonucu) = await model.AramaSonucunuGetirAsync(girisModel, _veterinerDbContext);
+
+                ViewBag.AramaSonucu = aramaSonucu;
+
+
+                return View("StokGiris",girisModel);
+
+            }
+
+            var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
+
+            foreach (var imza in model.ImzaListesi)
+            {
+
+                string string1 = stok.Id.ToString();
+                string string2 = stok.StokBarkod;
+                if (Signature.VerifySignature(string1, string2, imza))
+                    break;
+
+                return View("BadRequest");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var stokHareket = model.StokHareketBigileriniGetir(model, user);
+
+            _veterinerDbContext.StokHareketler.Add(stokHareket);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["StokGirisiYapildi"] = "Stok girişi başarılı bir şekilde yapıldı.";
+
+            return View("StokGiris");
+        }
+
+        [HttpGet]
+        public IActionResult StokCikis()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult StokCikis(StokCikisViewModel model)
+        {
+            StokCikisValidator validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -942,11 +1024,10 @@ namespace VeterinerApp.Controllers
 
             return View(model);
         }
-
         [HttpPost]
-        public async Task<IActionResult> StokGirisKaydet(StokGirisKaydetViewModel model)
+        public async Task<IActionResult> StokCikisKaydet(StokCikisKaydetViewModel model)
         {
-            StokGirisKaydetValidator validator = new();
+            StokCikisKaydetValidator validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -954,11 +1035,11 @@ namespace VeterinerApp.Controllers
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
-                    return View("StokGiris");
+                    return View("StokCikis");
                 }
             }
 
-            var stok = await model.StoguGetirAsync(model,_veterinerDbContext);
+            var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
 
             foreach (var imza in model.ImzaListesi)
             {
@@ -967,7 +1048,7 @@ namespace VeterinerApp.Controllers
                 string string2 = stok.StokBarkod;
                 if (Signature.VerifySignature(string1, string2, imza))
                     break;
-                    
+
                 return View("BadRequest");
             }
 
@@ -977,9 +1058,9 @@ namespace VeterinerApp.Controllers
             _veterinerDbContext.StokHareketler.Add(stokHareket);
             await _veterinerDbContext.SaveChangesAsync();
 
-            TempData["StokGirisiYapildi"] = "Stok girişi başarılı bir şekilde yapıldı.";
+            TempData["StokCikisiYapildi"] = "Stok çıkışı başarılı bir şekilde yapıldı.";
 
-            return View("StokGiris");
+            return View("StokCikis");
         }
     }
 

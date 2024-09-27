@@ -13,13 +13,13 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class StokGirisKaydetViewModel : StokHareket
+    public class StokCikisKaydetViewModel : StokHareket
     {
 
         public List<SelectListItem> AramaSonucListesi { get; set; }
         public List<string> ImzaListesi { get; set; }
 
-        public async Task<(bool, StokGirisKaydetViewModel)> AramaSonucunuGetirAsync(StokGirisViewModel model, VeterinerDBContext context)
+        public async Task<(bool, StokCikisKaydetViewModel)> AramaSonucunuGetirAsync(StokCikisViewModel model, VeterinerDBContext context)
         {
 
             if (string.IsNullOrEmpty(model.ArananMetin))
@@ -36,8 +36,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         }
 
-
-        private async Task<List<SelectListItem>> ArananStoguGetirAsync(StokGirisViewModel model, VeterinerDBContext context)
+        private async Task<List<SelectListItem>> ArananStoguGetirAsync(StokCikisViewModel model, VeterinerDBContext context)
         {
             string arananMetin = model.ArananMetin.ToUpper();
 
@@ -61,7 +60,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
             return AramaSonucListesi;
         }
 
-
         private async Task<List<string>> ImzaListesiOlusturAsync(VeterinerDBContext context)
         {
             ImzaListesi = new();
@@ -77,7 +75,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
             return ImzaListesi;
         }
 
-        public async Task<Stok> StoguGetirAsync(StokGirisKaydetViewModel model, VeterinerDBContext context)
+        public async Task<Stok> StoguGetirAsync(StokCikisKaydetViewModel model, VeterinerDBContext context)
         {
             var stok = await context.Stoklar
                 .Where(s => s.Id == model.StokId)
@@ -85,13 +83,13 @@ namespace VeterinerApp.Models.ViewModel.Admin
             return stok;
         }
 
-        public StokHareket StokHareketBigileriniGetir(StokGirisKaydetViewModel model, AppUser user)
+        public StokHareket StokHareketBigileriniGetir(StokCikisKaydetViewModel model, AppUser user)
         {
             StokHareketTarihi = System.DateTime.Now;
             StokId = model.StokId;
-            AlisTarihi = model.AlisTarihi;
-            AlisFiyati = model.AlisFiyati;
-            StokGirisAdet = model.StokGirisAdet;
+            SatisTarihi = model.SatisTarihi;
+            SatisFiyati = model.SatisFiyati;
+            StokCikisAdet = model.StokCikisAdet;
             CalisanId = user.Id;
 
             return this;

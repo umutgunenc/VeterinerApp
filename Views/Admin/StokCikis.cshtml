@@ -1,10 +1,10 @@
-﻿@model StokGirisViewModel
+﻿@model StokCikisViewModel
 
 @section AdminMenu {
     @await Html.PartialAsync("_AdminMenu")
 }
 
-<form asp-action="StokGiris" asp-controller="Admin" method="post">
+<form asp-action="StokCikis" asp-controller="Admin" method="post">
     <div class="form-row">
         <div class="col">
             <input asp-for="ArananMetin" class="form-control" placeholder="Ara">
@@ -20,20 +20,19 @@
 
 @if (ViewBag.AramaSonucu != null)
 {
-    @await Component.InvokeAsync("StokGirisDetayGetir", ViewBag.AramaSonucu)
+    @await Component.InvokeAsync("StokCikisDetayGetir", ViewBag.AramaSonucu)
 }
 
-
-@if (TempData["StokGirisiYapildi"] != null)
+@if (TempData["StokCikisiYapildi"] != null)
 {
-    <div class="alert alert-success" id="StokGirisiYapildi">@TempData["StokGirisiYapildi"]</div>
+    <div class="alert alert-success" id="StokCikisiYapildi">@TempData["StokCikisiYapildi"]</div>
 
 }
 
 @section scripts {
     <script>
         setTimeout(function () {
-            var successMessage = document.getElementById("StokGirisiYapildi");
+            var successMessage = document.getElementById("StokCikisiYapildi");
             successMessage.remove();
         }, 3500);</script>
 }

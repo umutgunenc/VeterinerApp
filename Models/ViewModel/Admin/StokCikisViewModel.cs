@@ -8,7 +8,7 @@ using VeterinerApp.Models.Entity;
 
 namespace VeterinerApp.Models.ViewModel.Admin
 {
-    public class StokGirisViewModel : Stok
+    public class StokCikisViewModel : Stok
     {
         public string ArananMetin { get; set; }   
 
