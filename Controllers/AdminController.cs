@@ -978,17 +978,17 @@ namespace VeterinerApp.Controllers
             }
 
             var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
+            int sayac = 0;
 
             foreach (var imza in model.ImzaListesi)
             {
-
                 string string1 = stok.Id.ToString();
                 string string2 = stok.StokBarkod;
                 if (Signature.VerifySignature(string1, string2, imza))
-                    break;
-
-                return View("BadRequest");
+                    sayac++;
             }
+            if (sayac != 1)
+                return View("BadRequest");
 
             var user = await _userManager.GetUserAsync(User);
             var stokHareket = model.StokHareketBigileriniGetir(model, user);
@@ -1007,7 +1007,7 @@ namespace VeterinerApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult StokCikis(StokCikisViewModel model)
+        public async Task<IActionResult> StokCikis(StokCikisViewModel model)
         {
             StokCikisValidator validator = new();
             ValidationResult result = validator.Validate(model);
@@ -1019,8 +1019,17 @@ namespace VeterinerApp.Controllers
                 }
                 return View(model);
             }
+            StokCikisKaydetViewModel kaydetViewModel = new();
 
-            ViewBag.AramaSonucu = model;
+            var (isSuccess, aramaSonucu) = await kaydetViewModel.AramaSonucunuGetirAsync(model, _veterinerDbContext);
+            if (!isSuccess)
+            {
+                ModelState.AddModelError("StokId", "Aradığınız stoğa ait bir kayıt bulunamadı");
+                return View("StokCikis", model);
+            }
+            TempData["ArananMetin"] = model.ArananMetin;
+
+            ViewBag.AramaSonucu = aramaSonucu;
 
             return View(model);
         }
@@ -1035,22 +1044,35 @@ namespace VeterinerApp.Controllers
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
-                    return View("StokCikis");
                 }
+
+                string arananMetin = TempData["ArananMetin"].ToString();
+                StokCikisViewModel cikisModel = new();
+                cikisModel.ArananMetin = arananMetin;
+                TempData["ArananMetin"] = cikisModel.ArananMetin;
+
+
+                var (isSuccess, aramaSonucu) = await model.AramaSonucunuGetirAsync(cikisModel, _veterinerDbContext);
+
+                ViewBag.AramaSonucu = aramaSonucu;
+
+
+                return View("StokCikis", cikisModel);
             }
 
             var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
 
+            int sayac = 0;
+
             foreach (var imza in model.ImzaListesi)
             {
-
                 string string1 = stok.Id.ToString();
                 string string2 = stok.StokBarkod;
                 if (Signature.VerifySignature(string1, string2, imza))
-                    break;
-
-                return View("BadRequest");
+                    sayac++;
             }
+            if (sayac != 1)
+                return View("BadRequest");
 
             var user = await _userManager.GetUserAsync(User);
             var stokHareket = model.StokHareketBigileriniGetir(model, user);

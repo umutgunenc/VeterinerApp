@@ -8,31 +8,16 @@ namespace VeterinerApp.ViewComponents
 {
     public class StokCikisDetayGetirViewComponent : ViewComponent
     {
-        private readonly VeterinerDBContext _context;
 
-        public StokCikisDetayGetirViewComponent(VeterinerDBContext context)
+        public async Task<IViewComponentResult> InvokeAsync(StokCikisKaydetViewModel model)
         {
-            _context = context;
-        }
 
-
-        public async Task<IViewComponentResult> InvokeAsync(StokCikisViewModel model)
-        {
-            
-            if(model == null)
+            if (model == null)
             {
-                return View("StokGiris");
-            }
-            StokCikisKaydetViewModel stokDetay = new();
-            var (isSuccess, aramaSonucu) = await stokDetay.AramaSonucunuGetirAsync(model, _context);
-            if (!isSuccess)
-            {
-                ModelState.AddModelError("StokId", "Aradığınız stoğa ait bir kayıt bulunamadı");
-                return View("StokGiris", model);
+                return View("StokCikis");
             }
 
-
-            return View(aramaSonucu);
+            return View(model);
 
         }
     }

@@ -20,7 +20,7 @@
 
 @if (ViewBag.AramaSonucu != null)
 {
-    @await Component.InvokeAsync("StokCikisDetayGetir", ViewBag.AramaSonucu)
+    @await Component.InvokeAsync("StokCikisDetayGetir", ViewBag.AramaSonucu);
 }
 
 @if (TempData["StokCikisiYapildi"] != null)
