@@ -1049,7 +1049,6 @@ namespace VeterinerApp.Controllers
                 cikisModel.ArananMetin = arananMetin;
                 TempData["ArananMetin"] = cikisModel.ArananMetin;
 
-
                 var (isSuccess, aramaSonucu) = await model.AramaSonucunuGetirAsync(cikisModel, _veterinerDbContext);
 
                 ViewBag.AramaSonucu = aramaSonucu;
