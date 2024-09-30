@@ -313,6 +313,20 @@ namespace VeterinerApp.Controllers
 
         }
 
+
+        //public IActionResult LoginWithFaceId()
+        //{
+        //    return View();
+        //}
+
+        //public IActionResult LoginWithFaceId()
+        //{
+        //    return View();
+        //}
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

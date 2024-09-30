@@ -16,6 +16,7 @@ namespace VeterinerApp.Models.Entity
             MaasOdemeleri = new HashSet<MaasOdemeleri>();
             Muayeneler = new HashSet<Muayene>();
             Hayvanlar = new HashSet<SahipHayvan>();
+            UserFaces = new HashSet<UserFace>();
         }
         public string InsanTckn { get; set; }
         public string InsanAdi { get; set; }
@@ -30,5 +31,7 @@ namespace VeterinerApp.Models.Entity
         public virtual ICollection<MaasOdemeleri> MaasOdemeleri { get; set; }
         public virtual ICollection<Muayene> Muayeneler { get; set; }
         public virtual ICollection<SahipHayvan> Hayvanlar { get; set; }
+        public ICollection<UserFace> UserFaces { get; set; }
+
     }
 }

@@ -1,5 +1,8 @@
-﻿using FluentValidation.Results;
+﻿using Emgu.CV.Structure;
+using Emgu.CV;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +19,12 @@ using VeterinerApp.Models.Validators.User;
 using VeterinerApp.Models.ViewModel.Account;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.ViewModel.User;
+using System.Drawing;
+using System.Diagnostics;
+using System.Threading;
+
+
+
 
 namespace VeterinerApp.Controllers
 {
@@ -358,6 +367,60 @@ namespace VeterinerApp.Controllers
             await _userManager.DeleteAsync(user);
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult FaceId()
+        {
+            return View();
+        }
+
+        public IActionResult FaceId(IFormFile[] filePhoto, int id)
+        {
+            var faceImages = new List<Image<Gray, byte>>();
+
+            foreach (var photo in filePhoto)
+            {
+
+                if (photo != null && photo.Length > 0)
+                {
+                    // Fotoğrafı geçici bir konuma kaydetme
+                    var tempFilePath = Path.Combine(Path.GetTempPath(), photo.FileName);
+
+                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                    {
+                        photo.CopyTo(stream);
+                    }
+
+                    // Fotoğrafı EmguCV Image nesnesine dönüştürme
+                    var image = new Image<Bgr, byte>(tempFilePath);
+
+                    // Yüz tespiti için gri ölçekli hale getirme
+                    var grayImage = image.Convert<Gray, byte>();
+
+                    // Yüz tespiti
+                    var faceCascade = new CascadeClassifier("wwwroot\\haarcascade_frontalface_default.xml");
+                    var faces = faceCascade.DetectMultiScale(grayImage, 1.1, 10, Size.Empty, Size.Empty);
+
+                    // Bulunan yüzleri listeye ekleme
+                    foreach (var face in faces)
+                    {
+                        var faceImage = grayImage.Copy(face);
+                        faceImages.Add(faceImage);
+                    }
+                }
+
+            }
+
+
+            
+            if (faceImages.Count < 10)
+            {
+                return Json(new { success = false, message = "Yüz bulunamadı. Lütfen tekrar deneyin." });
+            }
+
+            // Yüz tanıma veya giriş yapma işlemi burada yapılacak
+            return Json(new { success = true, message = $"Yüz tanıma işlemi başarı ile sonuçlandı." });
         }
     }
 }
