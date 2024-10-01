@@ -13,6 +13,10 @@ using VeterinerApp.Fonksiyonlar;
 using System.IO;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using FaceRecognitionDotNet;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Text;
 
 namespace VeterinerApp.Controllers
 {
@@ -24,6 +28,11 @@ namespace VeterinerApp.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly VeterinerDBContext _context;
         private readonly IEmailSender _emailSender;
+        private readonly FaceRecognition _faceRecognition;
+        private const string ModelDirectory = "wwwroot/models";
+        private const string ShapePredictorPath = "wwwroot/models/shape_predictor_68_face_landmarks.dat";
+        private const string FaceRecognitionModelPath = "wwwroot/models/dlib_face_recognition_resnet_model_v1.dat";
+
 
         public AccountController(UserManager<AppUser> userManager, VeterinerDBContext context, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IEmailSender emailSender)
         {
@@ -32,6 +41,7 @@ namespace VeterinerApp.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _faceRecognition = FaceRecognition.Create(ModelDirectory);
         }
 
         [HttpGet]
@@ -314,15 +324,97 @@ namespace VeterinerApp.Controllers
         }
 
 
-        //public IActionResult LoginWithFaceId()
+        public IActionResult LoginWithFaceId()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> LoginWithFaceId(IFormFile[] filePhotos)
         //{
-        //    return View();
+        //    if (filePhotos == null || filePhotos.Length == 0)
+        //    {
+        //        return Json(new { success = false, message = "Fotoğraf çekme işlemi başarızı oldu. Lütfen tekrar deneyiniz." });
+        //    }
+
+        //    // Veritabanından tüm kullanıcı yüz verilerini getirme
+        //    var userFaceDatas = await _context.UserFaces
+        //        .SelectMany(us => us.FaceData)
+        //        .ToArrayAsync();
+
+        //    var userFaceDatasDouble = Convertor.ConvertByteArrayToDoubleArray(userFaceDatas);
+
+        //    foreach (var filePhoto in filePhotos)
+        //    {
+        //        // Geçici dosya yolu
+        //        var tempFilePath = Path.Combine(Path.GetTempPath(), filePhoto.FileName);
+
+        //        using (var stream = new FileStream(tempFilePath, FileMode.Create))
+        //        {
+        //            filePhoto.CopyTo(stream);
+        //        }
+
+        //        try
+        //        {
+        //            using (var faceImage = FaceRecognition.LoadImageFile(tempFilePath, Mode.Greyscale))
+        //            {
+        //                // Yüzleri tespit etme ve encoding alma
+        //                var faceLocations = _faceRecognition.FaceLocations(faceImage).ToArray();
+        //                if (faceLocations.Length == 0) continue; // Yüz bulunamadı
+
+        //                var faceEncodings = _faceRecognition.FaceEncodings(faceImage, faceLocations).ToList();
+        //                // Eğer faceEncodings boş ise, bir sonraki fotoğrafa geç
+        //                if (faceEncodings.Count == 0) continue;
+
+
+        //                foreach (var faceEncoding in faceEncodings)
+        //                {
+        //                    // Her tespit edilen yüz encoding'i ile veritabanındaki yüzleri karşılaştırma
+        //                    foreach (var userFaceData in userFaceDatasDouble)
+        //                    {
+        //                        var faceEncodingDb = FaceRecognition.LoadFaceEncoding(userFaceDatasDouble);
+        //                        // byte[]'den Image oluşturma
+
+        //                        var isMatch = FaceRecognition.CompareFace(faceEncoding, faceEncodingDb, 0.6);
+
+        //                        if (isMatch)
+        //                        {
+        //                            var user = await _context.Users.FindAsync(userFaceData); // Kullanıcı bilgilerini getir
+
+        //                            if (await _signInManager.CanSignInAsync(user))
+        //                            {
+        //                                await _signInManager.SignInAsync(user, false, null);
+        //                                return RedirectToAction("Index", "Home");
+        //                            }
+        //                            else
+        //                            {
+        //                                return Json(new { success = false, message = "Yüz tanıma ile giriş yapılamadı." });
+        //                            }
+
+        //                        }
+
+        //                    }
+        //                }
+
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Hata mesajını loglayın veya geri döndürün
+        //            return Json(new { success = false, message = ex.Message });
+        //        }
+        //        finally
+        //        {
+        //            // Geçici dosyayı silme
+        //            System.IO.File.Delete(tempFilePath);
+        //        }
+        //    }
+        //    return Json(new { success = false, message = "Yüz tanıma işlemi başarısız. Lütfen tekrar deneyin." });
+
         //}
 
-        //public IActionResult LoginWithFaceId()
-        //{
-        //    return View();
-        //}
+
+
 
 
 

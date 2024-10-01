@@ -33,6 +33,7 @@ namespace VeterinerApp.Data
         public virtual DbSet<StokHareket> StokHareketler { get; set; }
         public virtual DbSet<Tedavi> Tedaviler { get; set; }
         public virtual DbSet<Tur> Turler { get; set; }
+        public virtual DbSet<UserFace> UserFaces { get; set; }
 
         //Ara tablolar
         public virtual DbSet<CinsTur> CinsTur { get; set; }

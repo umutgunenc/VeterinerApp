@@ -1,5 +1,4 @@
-﻿using Emgu.CV.Features2D;
-using System;
+﻿
 
 namespace VeterinerApp.Models.Entity
 {
@@ -7,7 +6,7 @@ namespace VeterinerApp.Models.Entity
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public byte[] FaceData { get; set; }
+        public string FaceImgUrl { get; set; }
 
         public AppUser User { get; set; }
     }

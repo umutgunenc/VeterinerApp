@@ -1,6 +1,4 @@
-﻿using Emgu.CV.Structure;
-using Emgu.CV;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,8 +18,11 @@ using VeterinerApp.Models.ViewModel.Account;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.ViewModel.User;
 using System.Drawing;
-using System.Diagnostics;
-using System.Threading;
+using FaceRecognitionDotNet;
+using static System.Net.WebRequestMethods;
+using VeterinerApp.Fonksiyonlar;
+using FaceRecognitionDotNet.Extensions;
+
 
 
 
@@ -35,6 +36,10 @@ namespace VeterinerApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly FaceRecognition _faceRecognition;
+        private const string ModelDirectory = "wwwroot/models";
+        private const string ShapePredictorPath = "wwwroot/models/shape_predictor_68_face_landmarks.dat";
+        private const string FaceRecognitionModelPath = "wwwroot/models/dlib_face_recognition_resnet_model_v1.dat";
 
         public UserController(VeterinerDBContext context, UserManager<AppUser> userManager, IEmailSender emailSender, SignInManager<AppUser> signInManager)
         {
@@ -42,6 +47,7 @@ namespace VeterinerApp.Controllers
             _userManager = userManager;
             _emailSender = emailSender;
             _signInManager = signInManager;
+            _faceRecognition = FaceRecognition.Create(ModelDirectory);
         }
         [HttpGet]
         public async Task<IActionResult> Information()
@@ -375,52 +381,121 @@ namespace VeterinerApp.Controllers
             return View();
         }
 
-        public IActionResult FaceId(IFormFile[] filePhoto, int id)
+        public async Task<IActionResult> FaceId(IFormFile[] filePhotos)
         {
-            var faceImages = new List<Image<Gray, byte>>();
+            if (filePhotos == null || filePhotos.Length == 0)
+                return Json(new { success = false, message = "Fotoğraf çekme işlemi başarızı oldu. Lütfen tekrar deneyiniz." });
 
-            foreach (var photo in filePhoto)
+            var userFaceImages = new List<FaceRecognitionDotNet.Image>();
+
+            // Kullanıcıyı alma
+            var user = await _userManager.GetUserAsync(User);
+
+
+            // Yüz fotoğraflarını işle
+            foreach (var filePhoto in filePhotos)
             {
-
-                if (photo != null && photo.Length > 0)
+                // Fotoğrafı geçici bir konuma kaydetme
+                var tempFilePath = Path.Combine(Path.GetTempPath(), filePhoto.FileName);
+                using (var stream = new FileStream(tempFilePath, FileMode.Create))
                 {
-                    // Fotoğrafı geçici bir konuma kaydetme
-                    var tempFilePath = Path.Combine(Path.GetTempPath(), photo.FileName);
-
-                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                    {
-                        photo.CopyTo(stream);
-                    }
-
-                    // Fotoğrafı EmguCV Image nesnesine dönüştürme
-                    var image = new Image<Bgr, byte>(tempFilePath);
-
-                    // Yüz tespiti için gri ölçekli hale getirme
-                    var grayImage = image.Convert<Gray, byte>();
-
-                    // Yüz tespiti
-                    var faceCascade = new CascadeClassifier("wwwroot\\haarcascade_frontalface_default.xml");
-                    var faces = faceCascade.DetectMultiScale(grayImage, 1.1, 10, Size.Empty, Size.Empty);
-
-                    // Bulunan yüzleri listeye ekleme
-                    foreach (var face in faces)
-                    {
-                        var faceImage = grayImage.Copy(face);
-                        faceImages.Add(faceImage);
-                    }
+                    await filePhoto.CopyToAsync(stream);
                 }
 
+                try
+                {
+                    // Fotoğrafı FaceRecognition nesnesine dönüştürme
+                    using (var faceImage = FaceRecognition.LoadImageFile(tempFilePath, Mode.Rgb))
+                    {
+                        // Yüzleri tespit etme
+                        var faceLocations = _faceRecognition.FaceLocations(faceImage).ToArray();
+
+                        // Yüz tespit edilirse, userFaceImages listesine ekle
+                        if (faceLocations.Length > 0)
+                        {
+                            var croppedImages = FaceRecognition.CropFaces(faceImage, faceLocations);
+                            userFaceImages.AddRange(croppedImages);
+                        }
+                    }
+                }
+                finally
+                {
+                    // Geçici dosyayı silme
+                    System.IO.File.Delete(tempFilePath);
+                }
             }
 
+            if (userFaceImages.Count < 10)
+                return Json(new { success = false, message = "Yüz tanıma işlemi başarısız oldu. Tekrar deneyiniz." });
 
-            
-            if (faceImages.Count < 10)
+            // Yüz görüntüleri klasörünü oluşturma ve eski fotoğrafları silme
+            string faceImageKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\FaceImages", user.Id.ToString());
+            if (!Directory.Exists(faceImageKlasoru))
             {
-                return Json(new { success = false, message = "Yüz bulunamadı. Lütfen tekrar deneyin." });
+                Directory.CreateDirectory(faceImageKlasoru);
+            }
+            else
+            {
+                // Eski fotoğrafları silme
+                var eskiFotograflar = Directory.GetFiles(faceImageKlasoru);
+                foreach (var eskiFotograf in eskiFotograflar)
+                {
+                    System.IO.File.Delete(eskiFotograf);
+                }
             }
 
-            // Yüz tanıma veya giriş yapma işlemi burada yapılacak
-            return Json(new { success = true, message = $"Yüz tanıma işlemi başarı ile sonuçlandı." });
+            // Fotoğrafları kaydetme ve veritabanına ekleme işlemi
+            try
+            {
+                int counter = 1;
+                foreach (var userFaceImg in userFaceImages)
+                {
+                    // Bitmap nesnesine dönüştürme ve dosya yolunu oluşturma
+                    using (var bitmap = userFaceImg.ToBitmap())
+                    {
+                        // Benzersiz bir dosya adı oluştur
+                        string dosyaAdi = $"facephoto{counter}.bmp";
+                        counter++;
+
+                        // Dosya yolunu oluştur
+                        string filePath = Path.Combine(faceImageKlasoru, dosyaAdi);
+
+                        // Aynı isimde dosya varsa tekrar oluşturma
+                        while (System.IO.File.Exists(filePath))
+                        {
+                            dosyaAdi = $"facephoto{counter}.bmp";
+                            filePath = Path.Combine(faceImageKlasoru, dosyaAdi);
+                            counter++;
+                        }
+
+                        // Bitmap'i belirtilen yola kaydetme
+                        bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                        // Dosya yolunu veritabanı için oluşturma
+                        var fileUrl = $"/img/FaceImages/{user.Id}/{dosyaAdi}";
+
+                        // UserFace nesnesini oluşturma ve veritabanına ekleme
+                        var userFace = new UserFace
+                        {
+                            UserId = user.Id,
+                            FaceImgUrl = fileUrl
+                        };
+
+                        _context.UserFaces.Add(userFace);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Hata oluşursa, hata mesajını döndür
+                return Json(new { success = false, message = ex.Message });
+            }
+
+            return Json(new { success = true, message = "Yüz tanıma işlemi başarılı oldu." });
         }
+
+
     }
+
 }

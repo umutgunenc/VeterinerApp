@@ -189,7 +189,7 @@ namespace VeterinerApp.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "8040350d-1dbf-4e5a-8bee-520e63a99201",
+                            ConcurrencyStamp = "706a7803-c87a-4615-8ae7-574c5cc20076",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -297,7 +297,7 @@ namespace VeterinerApp.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "d593069b-b6c0-4988-9f3e-4197a61e3daf",
+                            ConcurrencyStamp = "bfe7dd21-d5ee-429e-9405-e8b0c67b5c37",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -306,12 +306,12 @@ namespace VeterinerApp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAİL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKhw1OMTo3Rf21oo/pzj96tH4iYnTl4EthC9icWy2zUGZnp++A+v0QGJUiCj7oprzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEENghBAqOgiDXu/JxzK942kUExJg8dY9MH7D2YyLOK8pymQq623+EoXxTFNBNZt2zQ==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "af509222-a3d6-4b87-942a-f7a194d249c8",
-                            SifreGecerlilikTarihi = new DateTime(3023, 9, 24, 15, 58, 32, 439, DateTimeKind.Local).AddTicks(2291),
-                            SifreOlusturmaTarihi = new DateTime(2024, 9, 24, 15, 58, 32, 437, DateTimeKind.Local).AddTicks(5570),
+                            SecurityStamp = "ac5f45d8-769f-466f-9092-358b5bc02555",
+                            SifreGecerlilikTarihi = new DateTime(3023, 10, 2, 0, 9, 0, 972, DateTimeKind.Local).AddTicks(3289),
+                            SifreOlusturmaTarihi = new DateTime(2024, 10, 2, 0, 9, 0, 970, DateTimeKind.Local).AddTicks(1051),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -672,6 +672,26 @@ namespace VeterinerApp.Migrations
                     b.ToTable("Turler");
                 });
 
+            modelBuilder.Entity("VeterinerApp.Models.Entity.UserFace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("FaceImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFaces");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("VeterinerApp.Models.Entity.AppRole", null)
@@ -903,6 +923,17 @@ namespace VeterinerApp.Migrations
                     b.Navigation("Stok");
                 });
 
+            modelBuilder.Entity("VeterinerApp.Models.Entity.UserFace", b =>
+                {
+                    b.HasOne("VeterinerApp.Models.Entity.AppUser", "User")
+                        .WithMany("UserFaces")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("VeterinerApp.Models.Entity.AppUser", b =>
                 {
                     b.Navigation("Hayvanlar");
@@ -910,6 +941,8 @@ namespace VeterinerApp.Migrations
                     b.Navigation("MaasOdemeleri");
 
                     b.Navigation("Muayeneler");
+
+                    b.Navigation("UserFaces");
                 });
 
             modelBuilder.Entity("VeterinerApp.Models.Entity.Birim", b =>

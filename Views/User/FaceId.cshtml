@@ -19,7 +19,7 @@
     </div>
 
     <!-- Fotoğraf dosyasını gizli inputa aktarmak için multiple file input -->
-    <input type="file" id="filePhoto" name="filePhoto" style="display: none;" multiple>
+    <input type="file" id="filePhoto" name="filePhotos" style="display: none;" multiple>
 </form>
 
 @if (TempData["EditUser"] != null)
@@ -49,7 +49,7 @@
                         photos = [];  // Yeni fotoğraflar için diziyi sıfırla
                         let photoCount = 20;  // Çekilecek fotoğraf sayısı
                         let interval = 250;  // Her fotoğraf arasında bekleme süresi (ms)
-                        let totalTime = 5000; // Toplam süre (ms)
+                        let totalTime = 5100; // Toplam süre (ms)
                         let remainingTime = totalTime; // Kalan süre
 
                         // Kalan zamanı gösteren sayaç
@@ -62,7 +62,8 @@
                                 timerDisplay.innerHTML = `Kalan Süre: ${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(2, '0')}`;
                             } else {
                                 cameraDiv.style.display = 'none'; // Divi gizle
-                                timerDisplay.innerHTML = "Lütfen Bekleyiniz"; // Süre dolunca mesajı göster
+                                timerDisplay.innerHTML = 'Lütfen Bekleyiniz. <i class="fa-solid fa-spinner fa-spin-pulse"></i>'; // Süre dolunca mesajı göster
+
                                 clearInterval(timerInterval);
                                 uploadPhotos();  // Fotoğraflar çekildikten sonra yükle
                             }
@@ -109,7 +110,7 @@
 
             // Tüm fotoğrafları FormData'ya ekle
             photos.forEach((photo) => {
-                formData.append('filePhoto', photo, photo.name);
+                formData.append('filePhotos', photo, photo.name);
             });
 
             // Fetch API ile POST isteği yapın
@@ -125,7 +126,7 @@
                 })
                 .catch((error) => {
                     console.error('Hata:', error);
-                    timerDisplay.innerHTML = "Fotoğraflar yüklenirken bir hata oluştu."; // Hata mesajını göster
+                    timerDisplay.innerHTML = error ; // Hata mesajını göster
                 });
         }
     </script>
