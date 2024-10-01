@@ -17,11 +17,7 @@ using VeterinerApp.Models.Validators.User;
 using VeterinerApp.Models.ViewModel.Account;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.ViewModel.User;
-using System.Drawing;
 using FaceRecognitionDotNet;
-using static System.Net.WebRequestMethods;
-using VeterinerApp.Fonksiyonlar;
-using FaceRecognitionDotNet.Extensions;
 
 
 
