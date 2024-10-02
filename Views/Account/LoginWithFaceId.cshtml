@@ -120,9 +120,15 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    // Sunucudan gelen mesajı göstermek için kalan süre alanını güncelle
+                    if (data.success) {
+                        timerDisplay.innerHTML = `${data.message} <i class="fa-solid fa-spinner fa-spin-pulse"></i>`;
+                        setTimeout(() => {
+                            window.location.href = "/Home/Index";
+                        }, 3000);
+                    }
                     timerDisplay.innerHTML = data.message;
                     takePhotoButton.disabled = false;
+
                 })
                 .catch((error) => {
                     console.error('Hata:', error);
@@ -131,3 +137,4 @@
         }
     </script>
 }
+

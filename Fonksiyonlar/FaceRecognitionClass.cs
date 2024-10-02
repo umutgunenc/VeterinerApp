@@ -1,5 +1,6 @@
 ﻿using FaceRecognitionDotNet;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -32,7 +33,7 @@ namespace VeterinerApp.Fonksiyonlar
         {
             ValidFacesEncodingList = new();
             FaceLocations = new();
-            if (filePhotos.Length == 0)
+            if (filePhotos.Length <= 10)
                 return (ValidFacesEncodingList, false);
 
             foreach (var photo in filePhotos)
@@ -57,14 +58,46 @@ namespace VeterinerApp.Fonksiyonlar
                 }
 
             }
-            if(ValidFacesEncodingList.Count==0)
+            if (ValidFacesEncodingList.Count <= 10)
                 return (ValidFacesEncodingList, false);
             return (ValidFacesEncodingList, true);
         }
 
+        public async Task<(bool,AppUser User)> CompareFaces(List<FaceEncoding> userFaceEncodingList, VeterinerDBContext context)
+        {
+            var dbFaceEncodingListByte =await  context.UserFaces.Select(uf => uf.FaceData).ToListAsync();
+            var dbFaceEncocingList = new List<double[]>();
+            foreach (var item in dbFaceEncodingListByte)
+            {
+                double[] encodingDouble = Convertor.ConvertByteArrayToDoubleArray(item);
+                dbFaceEncocingList.Add(encodingDouble);
+            }
+
+            foreach (var userFaceEncoing in userFaceEncodingList)
+            {
+                foreach (var dbFaceEncocig in dbFaceEncocingList)
+                {
+                    var dbEncoding = FaceRecognition.LoadFaceEncoding(dbFaceEncocig);
+
+                    bool result = FaceRecognition.CompareFace(userFaceEncoing, dbEncoding, 0.6);
+                    if (result)
+                    {
+                        byte[] faceData = Convertor.ConvertDoubleArrayToByteArray(dbFaceEncocig);
+
+                        UserFace userFace = await context.UserFaces.Where(uf => uf.FaceData == faceData).FirstOrDefaultAsync();
+                        AppUser appUser = await context.AppUsers.Where(au => au.Id == userFace.UserId).FirstOrDefaultAsync();
+                        return (true, appUser);
+
+                    }
+                }
+            }
+            return (false,null);
+        }
+
+
         public async Task SaveFaceEncodingToDatabaseAsync(int userId, FaceEncoding validFaceEncoding, VeterinerDBContext context)
         {
-            
+
             var userFace = new UserFace
             {
                 UserId = userId,

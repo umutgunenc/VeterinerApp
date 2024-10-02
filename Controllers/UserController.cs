@@ -381,8 +381,8 @@ namespace VeterinerApp.Controllers
 
         public async Task<IActionResult> FaceId(IFormFile[] filePhotos)
         {
-            if (filePhotos == null || filePhotos.Length < 19)
-                return Json(new { success = false, message = "Fotoğraf çekme işlemi başarızı oldu" });
+            if (filePhotos == null || filePhotos.Length <=10)
+                return Json(new { success = false, message = "Fotoğraf çekme işlemi başarısız oldu" });
 
             try
             {
@@ -399,7 +399,6 @@ namespace VeterinerApp.Controllers
                 foreach (var faceEncoding in result.Item1)
                 {
                     await faceRecognitionClass.SaveFaceEncodingToDatabaseAsync(user.Id, faceEncoding, _context);
-
                 }
 
                 return Json(new { success = true, message = "Yüz tanıma işlemi başarılı oldu." });
