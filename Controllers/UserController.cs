@@ -18,6 +18,8 @@ using VeterinerApp.Models.ViewModel.Account;
 using VeterinerApp.Models.ViewModel.Animal;
 using VeterinerApp.Models.ViewModel.User;
 using FaceRecognitionDotNet;
+using System.Drawing;
+using VeterinerApp.Fonksiyonlar;
 
 
 
@@ -379,116 +381,34 @@ namespace VeterinerApp.Controllers
 
         public async Task<IActionResult> FaceId(IFormFile[] filePhotos)
         {
-            if (filePhotos == null || filePhotos.Length == 0)
-                return Json(new { success = false, message = "Fotoğraf çekme işlemi başarızı oldu. Lütfen tekrar deneyiniz." });
+            if (filePhotos == null || filePhotos.Length < 19)
+                return Json(new { success = false, message = "Fotoğraf çekme işlemi başarızı oldu" });
 
-            var userFaceImages = new List<FaceRecognitionDotNet.Image>();
-
-            // Kullanıcıyı alma
-            var user = await _userManager.GetUserAsync(User);
-
-
-            // Yüz fotoğraflarını işle
-            foreach (var filePhoto in filePhotos)
-            {
-                // Fotoğrafı geçici bir konuma kaydetme
-                var tempFilePath = Path.Combine(Path.GetTempPath(), filePhoto.FileName);
-                using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                {
-                    await filePhoto.CopyToAsync(stream);
-                }
-
-                try
-                {
-                    // Fotoğrafı FaceRecognition nesnesine dönüştürme
-                    using (var faceImage = FaceRecognition.LoadImageFile(tempFilePath, Mode.Rgb))
-                    {
-                        // Yüzleri tespit etme
-                        var faceLocations = _faceRecognition.FaceLocations(faceImage).ToArray();
-
-                        // Yüz tespit edilirse, userFaceImages listesine ekle
-                        if (faceLocations.Length > 0)
-                        {
-                            var croppedImages = FaceRecognition.CropFaces(faceImage, faceLocations);
-                            userFaceImages.AddRange(croppedImages);
-                        }
-                    }
-                }
-                finally
-                {
-                    // Geçici dosyayı silme
-                    System.IO.File.Delete(tempFilePath);
-                }
-            }
-
-            if (userFaceImages.Count < 10)
-                return Json(new { success = false, message = "Yüz tanıma işlemi başarısız oldu. Tekrar deneyiniz." });
-
-            // Yüz görüntüleri klasörünü oluşturma ve eski fotoğrafları silme
-            string faceImageKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\FaceImages", user.Id.ToString());
-            if (!Directory.Exists(faceImageKlasoru))
-            {
-                Directory.CreateDirectory(faceImageKlasoru);
-            }
-            else
-            {
-                // Eski fotoğrafları silme
-                var eskiFotograflar = Directory.GetFiles(faceImageKlasoru);
-                foreach (var eskiFotograf in eskiFotograflar)
-                {
-                    System.IO.File.Delete(eskiFotograf);
-                }
-            }
-
-            // Fotoğrafları kaydetme ve veritabanına ekleme işlemi
             try
             {
-                int counter = 1;
-                foreach (var userFaceImg in userFaceImages)
+                FaceRecognitionClass faceRecognitionClass = new();
+
+
+                var result = (new List<FaceEncoding>(), false);
+                result = await faceRecognitionClass.DetectFacesAsync(filePhotos);
+
+                if (result.Item2 == false)
+                    return Json(new { success = false, message = "Yüz tespit işlemi başarısız oldu." });
+                var user = await _userManager.GetUserAsync(User);
+
+                foreach (var faceEncoding in result.Item1)
                 {
-                    // Bitmap nesnesine dönüştürme ve dosya yolunu oluşturma
-                    using (var bitmap = userFaceImg.ToBitmap())
-                    {
-                        // Benzersiz bir dosya adı oluştur
-                        string dosyaAdi = $"facephoto{counter}.bmp";
-                        counter++;
+                    await faceRecognitionClass.SaveFaceEncodingToDatabaseAsync(user.Id, faceEncoding, _context);
 
-                        // Dosya yolunu oluştur
-                        string filePath = Path.Combine(faceImageKlasoru, dosyaAdi);
-
-                        // Aynı isimde dosya varsa tekrar oluşturma
-                        while (System.IO.File.Exists(filePath))
-                        {
-                            dosyaAdi = $"facephoto{counter}.bmp";
-                            filePath = Path.Combine(faceImageKlasoru, dosyaAdi);
-                            counter++;
-                        }
-
-                        // Bitmap'i belirtilen yola kaydetme
-                        bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
-
-                        // Dosya yolunu veritabanı için oluşturma
-                        var fileUrl = $"/img/FaceImages/{user.Id}/{dosyaAdi}";
-
-                        // UserFace nesnesini oluşturma ve veritabanına ekleme
-                        var userFace = new UserFace
-                        {
-                            UserId = user.Id,
-                            FaceImgUrl = fileUrl
-                        };
-
-                        _context.UserFaces.Add(userFace);
-                        await _context.SaveChangesAsync();
-                    }
                 }
+
+                return Json(new { success = true, message = "Yüz tanıma işlemi başarılı oldu." });
             }
             catch (Exception ex)
             {
-                // Hata oluşursa, hata mesajını döndür
                 return Json(new { success = false, message = ex.Message });
             }
 
-            return Json(new { success = true, message = "Yüz tanıma işlemi başarılı oldu." });
         }
 
 
