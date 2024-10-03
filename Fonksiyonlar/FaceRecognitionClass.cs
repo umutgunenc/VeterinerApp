@@ -65,24 +65,24 @@ namespace VeterinerApp.Fonksiyonlar
 
         public async Task<(bool,AppUser User)> CompareFaces(List<FaceEncoding> userFaceEncodingList, VeterinerDBContext context)
         {
-            var dbFaceEncodingListByte =await  context.UserFaces.Select(uf => uf.FaceData).ToListAsync();
-            var dbFaceEncocingList = new List<double[]>();
+            var dbFaceEncodingListByte =await context.UserFaces.Select(uf => uf.FaceData).ToListAsync();
+            var dbFaceEncodingList = new List<double[]>();
             foreach (var item in dbFaceEncodingListByte)
             {
                 double[] encodingDouble = Convertor.ConvertByteArrayToDoubleArray(item);
-                dbFaceEncocingList.Add(encodingDouble);
+                dbFaceEncodingList.Add(encodingDouble);
             }
 
-            foreach (var userFaceEncoing in userFaceEncodingList)
+            foreach (var dbFaceEncodig in dbFaceEncodingList)
             {
-                foreach (var dbFaceEncocig in dbFaceEncocingList)
-                {
-                    var dbEncoding = FaceRecognition.LoadFaceEncoding(dbFaceEncocig);
+                var dbEncoding = FaceRecognition.LoadFaceEncoding(dbFaceEncodig);
 
-                    bool result = FaceRecognition.CompareFace(userFaceEncoing, dbEncoding, 0.6);
+                foreach (var userFaceEncoding in userFaceEncodingList)
+                {
+                    bool result = FaceRecognition.CompareFace(userFaceEncoding, dbEncoding,0.5);
                     if (result)
                     {
-                        byte[] faceData = Convertor.ConvertDoubleArrayToByteArray(dbFaceEncocig);
+                        byte[] faceData = Convertor.ConvertDoubleArrayToByteArray(dbFaceEncodig);
 
                         UserFace userFace = await context.UserFaces.Where(uf => uf.FaceData == faceData).FirstOrDefaultAsync();
                         AppUser appUser = await context.AppUsers.Where(au => au.Id == userFace.UserId).FirstOrDefaultAsync();
@@ -93,7 +93,6 @@ namespace VeterinerApp.Fonksiyonlar
             }
             return (false,null);
         }
-
 
         public async Task SaveFaceEncodingToDatabaseAsync(int userId, FaceEncoding validFaceEncoding, VeterinerDBContext context)
         {
