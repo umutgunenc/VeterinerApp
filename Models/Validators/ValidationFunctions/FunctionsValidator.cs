@@ -49,15 +49,20 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return _context.CinsTur.Any(x => x.CinsId == cinsId && x.TurId == turId);
         }
-        public static bool BeSameCins(Hayvan model, int? parentID)
+        public static bool BeSameCins(AddAnimalViewModel model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
 
-            var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
-            return parent != null && parent.CinsTur.CinsId == model.CinsTur.CinsId;
+            var parent = _context.Hayvanlar.Where(h => h.HayvanId == parentID).FirstOrDefault();
+            if (parent == null)
+                return false;
+
+            var parentCinsId = _context.CinsTur.Where(ct => ct.Id == parent.CinsTurId).Select(ct => ct.CinsId).FirstOrDefault();
+
+            return parentCinsId == model.SecilenCinsId;
         }
-        public static bool BeOlder(Hayvan model, int? parentID)
+        public static bool BeOlder(AddAnimalViewModel model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
@@ -65,6 +70,34 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
             return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
         }
+        //TODO BeSameCins ve BeOlder foksiyonlarını yenile
+        //ViewModele secilenCinsId ekle
+        //Anne ve baba kontrollerini yap, hayvan ile aynı cinste olmalı ve büyük olmalı
+        //wievde degisiklik yap
+        //Db de erkek veya dişi hayvan kaydı yok ise anne veya baba listesi oluşturulurken hata vermekte
+        //add animaldaki kontrolün aynısını yap
+        // T ile yapılır mı araştır, yapılır ise aynı isimde farklı fonksiyonlara gerek yok
+        //public static bool BeSameCins(EditAnimalViewModel model, int? parentID)
+        //{
+        //    if (!parentID.HasValue)
+        //        return true;
+
+        //    var parent = _context.Hayvanlar.Where(h => h.HayvanId == parentID).FirstOrDefault();
+        //    if (parent == null)
+        //        return false;
+
+        //    var parentCinsId = _context.CinsTur.Where(ct => ct.Id == parent.CinsTurId).Select(ct => ct.CinsId).FirstOrDefault();
+
+        //    return parentCinsId == model.SecilenCinsId;
+        //}
+        //public static bool BeOlder(EditAnimalViewModel model, int? parentID)
+        //{
+        //    if (!parentID.HasValue)
+        //        return true;
+
+        //    var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
+        //    return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
+        //}
         public static bool BeGirl(int? anneId)
         {
             if (!anneId.HasValue)
@@ -419,9 +452,9 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
         {
             return !_context.CinsTur.Any(x => x.CinsId == cinsId);
         }
-        public static bool BeNotMatchTurCins(int cinsId)
+        public static bool BeNotMatchTurCins(int turId)
         {
-            return !_context.CinsTur.Where(x => x.CinsId == cinsId).Any();
+            return !_context.CinsTur.Where(x => x.TurId == turId).Any();
         }
         public static bool BeNotMatchedTur(int turId)
         {

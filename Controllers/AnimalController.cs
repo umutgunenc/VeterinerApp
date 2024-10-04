@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal.Account.Manage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -33,35 +34,35 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddAnimal()
+        public async Task<IActionResult> AddAnimal()
         {
-            AddAnimalViewModel model = new(_context);
+            AddAnimalViewModel model = new();
 
-            model.HayvanAnneListesi = model.AnnelerListesiOlustur();
-            model.HayvanBabaListesi = model.BabalarListesiOlustur();
-            model.RenklerListesi = model.RenkListesiOlustur();
-            model.TurlerListesi = model.TurListesiOlustur();
-            model.CinslerListesi = model.CinsListesiOlustur();
+            model.HayvanAnneListesi = await model.AnnelerListesiOlusturAsync(_context);
+            model.HayvanBabaListesi = await model.BabalarListesiOlusturAsync(_context);
+            model.RenklerListesi = await model.RenkListesiOlusturAsync(_context);
+            model.TurlerListesi = await model.TurListesiOlusturAsync(_context);
+            model.CinslerListesi = await model.CinsListesiOlusturAsync(_context);
             model.CinsiyetListesi = model.CinsiyetListesiOlustur();
 
             return View(model);
 
         }
 
-        public JsonResult CinsleriGetir(int turId)
+        public async Task<JsonResult> TurleriGetir(int cinsId)
         {
-            var cinsler = _context.CinsTur
-                .Where(ct => ct.TurId == turId)
-                .Join(_context.Cinsler,
-                      ct => ct.CinsId,
-                      c => c.CinsId,
-                      (ct, c) => new SelectListItem
+            var turler = await _context.CinsTur
+                .Where(ct => ct.CinsId == cinsId)
+                .Join(_context.Turler,
+                      ct => ct.TurId,
+                      t => t.TurId,
+                      (ct, t) => new SelectListItem
                       {
-                          Text = c.CinsAdi,
-                          Value = c.CinsId.ToString()
-                      }).ToList();
+                          Text = t.TurAdi,
+                          Value = t.TurId.ToString()
+                      }).ToListAsync();
 
-            return Json(cinsler);
+            return Json(turler);
         }
 
         [HttpPost]
@@ -78,11 +79,11 @@ namespace VeterinerApp.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                model.HayvanAnneListesi = model.AnnelerListesiOlustur();
-                model.HayvanBabaListesi = model.BabalarListesiOlustur();
-                model.RenklerListesi = model.RenkListesiOlustur();
-                model.TurlerListesi = model.TurListesiOlustur();
-                model.CinslerListesi = model.CinsListesiOlustur();
+                model.HayvanAnneListesi = await model.AnnelerListesiOlusturAsync(_context);
+                model.HayvanBabaListesi = await model.BabalarListesiOlusturAsync(_context);
+                model.RenklerListesi = await model.RenkListesiOlusturAsync(_context);
+                model.TurlerListesi = await model.TurListesiOlusturAsync(_context);
+                model.CinslerListesi = await model.CinsListesiOlusturAsync(_context);
                 model.CinsiyetListesi = model.CinsiyetListesiOlustur();
 
                 return View(model);
@@ -99,9 +100,9 @@ namespace VeterinerApp.Controllers
             hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
             hayvan.HayvanAnneId = model.HayvanAnneId;
             hayvan.HayvanBabaId = model.HayvanBabaId;
-            var cinsTur = _context.CinsTur
+            var cinsTur = await _context.CinsTur
                                     .Where(ct => ct.CinsId == model.SecilenCinsId && ct.TurId == model.SecilenTurId)
-                                    .FirstOrDefault();
+                                    .FirstOrDefaultAsync();
             hayvan.CinsTur = cinsTur;
             hayvan.RenkId = model.RenkId;
 
@@ -137,13 +138,18 @@ namespace VeterinerApp.Controllers
                 hayvan.ImgUrl = null;
 
             }
-
-            SahipHayvan sahipHayvan = new SahipHayvan();
-            sahipHayvan.SahiplenmeTarihi = model.SahiplenmeTarihi;
-            sahipHayvan.SahipId = _userManager.GetUserAsync(User).Result.Id;
-            sahipHayvan.HayvanId = hayvan.HayvanId;
-
             await _context.Hayvanlar.AddAsync(hayvan);
+            await _context.SaveChangesAsync();
+
+            var user = await _userManager.GetUserAsync(User);
+
+            SahipHayvan sahipHayvan = new SahipHayvan()
+            {
+                SahipId = user.Id,
+                SahiplenmeTarihi = model.SahiplenmeTarihi,
+                HayvanId = hayvan.HayvanId
+            };
+
             await _context.SahipHayvan.AddAsync(sahipHayvan);
             await _context.SaveChangesAsync();
 
@@ -159,17 +165,17 @@ namespace VeterinerApp.Controllers
             var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
             var kullanici = await _userManager.GetUserAsync(User);
 
-            var kullaniciHayvani = await _context.SahipHayvan
+            var kullaniciHayvanlari = await _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.SahipId == kullanici.Id)
                 .FirstOrDefaultAsync();
 
-            if (kullaniciHayvani == null)
+            if (kullaniciHayvanlari == null)
             {
                 return View("BadRequest");
             }
 
-            HayvanlarBilgiViewModel model = new(_context);
-            model = model.HayvanBilgileriniGetir(hayvan, kullanici);
+            HayvanlarBilgiViewModel model = new();
+            model = await model.HayvanBilgileriniGetirAsync(hayvan, kullanici, _context);
 
             return View(model);
 
@@ -182,16 +188,16 @@ namespace VeterinerApp.Controllers
             var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
             var user = await _userManager.GetUserAsync(User);
 
-            var userHayvan = _context.SahipHayvan
+            var userHayvan = await _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (userHayvan == null)
             {
                 return View("BadRequest");
             }
-            EditAnimalViewModel model = new(_context);
-            model = model.ModelOlustur(hayvan, user);
+            EditAnimalViewModel model = new();
+            model = await model.ModelOlusturAsync(hayvan, user, _context);
             return View(model);
 
         }
@@ -214,9 +220,9 @@ namespace VeterinerApp.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                EditAnimalViewModel returnModel = new(_context);
+                EditAnimalViewModel returnModel = new();
 
-                return View("EditAnimal", returnModel.ModelOlustur(model, user));
+                return View("EditAnimal", await returnModel.ModelOlusturAsync(model, user, _context));
             }
 
 
@@ -256,43 +262,44 @@ namespace VeterinerApp.Controllers
 
             }
             else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
-            {
                 hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
-            }
             else if (model.PhotoOption == "deletePhoto")
-            {
                 hayvan.ImgUrl = null;
-            }
             else if (model.PhotoOption == "keepPhoto")
-            {
                 hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
-            }
 
-            var hayvanSahibi = _context.SahipHayvan
-                .Where(sh => sh.HayvanId == model.HayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
-                .FirstOrDefault();
+
 
             if (model.SahiplikCikisTarihi != null)
             {
-                var sahipSayisi = _context.SahipHayvan.Count(sh => sh.HayvanId == model.HayvanId);
-                if (sahipSayisi > 1)
-                {
-                    _context.SahipHayvan.Remove(hayvanSahibi);
-                    _context.SaveChanges();
+                var hayvanSahibi = await _context.SahipHayvan
+                    .Where(sh => sh.HayvanId == model.HayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
+                    .FirstOrDefaultAsync();
 
-                    return RedirectToAction("Information", "User");
-                }
+                var CocukListesi = await model.CocuklariGetirAsync(hayvan, _context);
+
+                var sahipSayisi = _context.SahipHayvan.Count(sh => sh.HayvanId == model.HayvanId);
+
 
                 _context.SahipHayvan.Remove(hayvanSahibi);
-                _context.SaveChanges();
-                _context.Hayvanlar.Remove(hayvan);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+
+                if (sahipSayisi == 1)
+                {
+                    _context.Hayvanlar.Remove(hayvan);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Information", "User");
+                }
                 return RedirectToAction("Information", "User");
+
             }
 
             hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
-            hayvan.CinsTur.CinsId = model.CinsId;
-            hayvan.CinsTur.TurId = model.TurId;
+            int cinsTurId = await _context.CinsTur
+                .Where(ct => ct.CinsId == model.CinsId && ct.TurId == model.TurId)
+                .Select(ct => ct.Id)
+                .FirstOrDefaultAsync();
+            hayvan.CinsTurId = cinsTurId;
             hayvan.RenkId = model.RenkId;
             hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
             hayvan.HayvanKilo = model.HayvanKilo;
@@ -302,11 +309,11 @@ namespace VeterinerApp.Controllers
             hayvan.HayvanBabaId = model.HayvanBabaId;
             hayvan.ImgUrl = model.ImgUrl;
             _context.Hayvanlar.Update(hayvan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             TempData["Edit"] = "Hayvan bilgileri başarıyla güncellendi.";
 
-            EditAnimalViewModel editedModel = new(_context);
-            editedModel = editedModel.ModelOlustur(hayvan, user);
+            EditAnimalViewModel editedModel = new();
+            editedModel = await editedModel.ModelOlusturAsync(hayvan, user, _context);
 
             return View("EditAnimal", editedModel);
 

@@ -38,9 +38,11 @@ namespace VeterinerApp.Models.Validators.Animal
                 .NotNull().WithMessage("Lütfen bir tür seçiniz")
                 .Must(FunctionsValidator.BeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
 
-            RuleFor(x => x.HayvanCinsiyet)
-                .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
-                .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.");
+            //TODO enuma cevir
+            //hayvan ekle validatorde yapıldı
+            //RuleFor(x => x.HayvanCinsiyet)
+            //    .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
+            //    .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.");
 
             RuleFor(x => x.HayvanDogumTarihi)
                 .NotEmpty().WithMessage("Lütfen bir tarih giriniz")
@@ -48,23 +50,24 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.")
                 .LessThanOrEqualTo(x => x.SahiplikTarihi).WithMessage("Hayvanı doğmadan önce sahiplenmezsiniz.");
 
-            RuleFor(x => x.HayvanAnneId)
-                .Must(FunctionsValidator.BeRegisteredParentAnimal)
-                .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
-                .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => FunctionsValidator.BeOlder(model, x))
-                .WithMessage("Hayvan annesi, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
+            //TODO kontrol et
+            //RuleFor(x => x.HayvanAnneId)
+            //    .Must(FunctionsValidator.BeRegisteredParentAnimal)
+            //    .WithMessage("Hayvanın annesi sistemde kayıtlı bir hayvan olmalıdır.")
+            //    .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
+            //    .WithMessage("Hayvan annesi, eklenen hayvan ile aynı cins olmalıdır.")
+            //    .Must((model, x) => FunctionsValidator.BeOlder(model, x))
+            //    .WithMessage("Hayvan annesi, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
+            //    .Must(FunctionsValidator.BeGirl).WithMessage("Hayvan annesi dişi olmalıdır.");
 
-            RuleFor(x => x.HayvanBabaId)
-                .Must(FunctionsValidator.BeRegisteredParentAnimal)
-                .WithMessage("Hayvanın babası sistemde kayıtlı bir hayvan olmalıdır.")
-                .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
-                .WithMessage("Hayvan babası, eklenen hayvan ile aynı cins olmalıdır.")
-                .Must((model, x) => FunctionsValidator.BeOlder(model, x))
-                .WithMessage("Hayvan babası, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
-                .Must(FunctionsValidator.BeBoy).WithMessage("Hayvan babası erkek olmalıdır.");
+            //RuleFor(x => x.HayvanBabaId)
+            //    .Must(FunctionsValidator.BeRegisteredParentAnimal)
+            //    .WithMessage("Hayvanın babası sistemde kayıtlı bir hayvan olmalıdır.")
+            //    .Must((model, x) => FunctionsValidator.BeSameCins(model, x))
+            //    .WithMessage("Hayvan babası, eklenen hayvan ile aynı cins olmalıdır.")
+            //    .Must((model, x) => FunctionsValidator.BeOlder(model, x))
+            //    .WithMessage("Hayvan babası, eklenen hayvandan büyük olmalıdır.Yanlış bir hayvan seçtiniz veya girilen bilgiler hatalı.")
+            //    .Must(FunctionsValidator.BeBoy).WithMessage("Hayvan babası erkek olmalıdır.");
 
             RuleFor(x => x.HayvanKilo)
                 .NotNull().WithMessage("Lütfen hayvanın kilosunu giriniz.")

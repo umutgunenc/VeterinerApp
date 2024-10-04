@@ -2,6 +2,7 @@
 {
     public enum Cinsiyet
     {
+        Seçilmedi,
         Dişi,
         Erkek
     }

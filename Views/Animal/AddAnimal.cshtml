@@ -61,15 +61,6 @@
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
-                        <label asp-for="SecilenTurId" class="col-form-label font-weight-bold text-white px-0">Tür</label>
-                        <select id="tur" asp-for="SecilenTurId" class="form-control" asp-items="Model.TurlerListesi">
-                            <option value="" disabled selected>Tür Seçin</option> 
-                        </select>
-                        <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="SecilenTurId"></span>
-                        </div>
-                    </div>
-                    <div class="col d-flex flex-column px-3 pr-md-0">
                         <label asp-for="SecilenCinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
                         <select id="cins" asp-for="SecilenCinsId" class="form-control" asp-items="Model.CinslerListesi">
                             <option value="" disabled selected>Cins Seçin</option>
@@ -79,9 +70,18 @@
                         </div>
                     </div>
                     <div class="col d-flex flex-column px-3 pr-md-0">
+                        <label asp-for="SecilenTurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
+                        <select id="tur" asp-for="SecilenTurId" class="form-control" disabled>
+                            <option value="" disabled selected>Tür Seçin</option>
+                        </select>
+                        <div class="mt-2">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="SecilenTurId"></span>
+                        </div>
+                    </div>
+                    <div class="col d-flex flex-column px-3 pr-md-0">
                         <label asp-for="RenkId" class="col-form-label font-weight-bold text-white px-0">Rengi</label>
                         <select id="renk" asp-for="RenkId" class="form-control" asp-items="Model.RenklerListesi">
-                            <option value="@Model.RenkId"  disabled selected>Renk Seçin</option>
+                            <option value="@Model.RenkId" disabled selected>Renk Seçin</option>
                         </select>
                         <div class="mt-2">
                             <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="RenkId"></span>
@@ -167,27 +167,36 @@
 
     <script>
 
-
         $(document).ready(function () {
-            $('#tur').change(function () {
-                var turId = $(this).val();
+            // Cins seçildiğinde türleri yükle
+            $('#cins').change(function () {
+                var cinsId = $(this).val(); // Seçilen cinsin ID'sini al
 
-                $.getJSON('@Url.Action("CinsleriGetir", "Animal")', { turId: turId }, function (data) {
+                if (cinsId) { // Cins seçilmişse
+                    $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
+                        var turSelect = $('#tur');
+                        turSelect.empty();
+                        turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
 
-                    var cinsSelect = $('#cins');
-                    cinsSelect.empty();
-                    cinsSelect.append('<option value="" disabled selected>Tür Seçin</option>');
+                        $.each(data, function (index, item) {
+                            turSelect.append($('<option>', {
+                                value: item.value,
+                                text: item.text
+                            }));
+                        });
 
-                    $.each(data, function (index, item) {
-                        cinsSelect.append($('<option>', {
-                            value: item.value,
-                            text: item.text
-                        }));
+                        $('#tur').prop('disabled', false); // Cins seçildiğinde türü aktif hale getir
                     });
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                });
+                } else {
+                    $('#tur').empty(); // Cins seçilmemişse türü temizle
+                    $('#tur').prop('disabled', true); // Cins seçilmediğinde türü devre dışı bırak
+                    $('#tur').append('<option value="" disabled selected>Tür Seçin</option>'); // Varsayılan seçenek ekle
+                }
             });
         });
+
+
+
     </script>
 
     <script>

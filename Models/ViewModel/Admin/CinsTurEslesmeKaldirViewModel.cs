@@ -32,7 +32,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
                 {
                     CinslerTurlerListesi.Add(new SelectListItem
                     {
-                        Text = $"{tur.TurAdi} - {cins.CinsAdi}",
+                        Text = $"{cins.CinsAdi} - {tur.TurAdi}",
                         Value = cinsTur.Id.ToString()
                     });
                 }

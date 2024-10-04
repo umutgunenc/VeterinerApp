@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using VeterinerApp.Models.Validators.ValidateFunctions;
 using Microsoft.EntityFrameworkCore;
+using VeterinerApp.Models.Enum;
 
 
 #nullable disable
@@ -24,8 +25,8 @@ namespace VeterinerApp.Models.Validators.Animal
 
             RuleFor(x => x.HayvanAdi)
                 .MaximumLength(50).WithMessage("Hayvan adı maksimum 50 karakter uzunluğunda olmalı.")
-                .NotEmpty().WithMessage("Lütfen hayvan adı giriniz")
-                .NotNull().WithMessage("Lütfen hayvan adı giriniz");
+                .NotEmpty().WithMessage("Lütfen hayvan adı giriniz.")
+                .NotNull().WithMessage("Lütfen hayvan adı giriniz.");
 
             RuleFor(x => x.RenkId)
                 .NotEmpty().WithMessage("Lütfen bir renk seçiniz.")
@@ -33,13 +34,13 @@ namespace VeterinerApp.Models.Validators.Animal
                 .Must(FunctionsValidator.BeRenk).WithMessage("Seçilen renk sistemde bulunmamaktadır.");
 
             RuleFor(x => x.SecilenCinsId)
-                .NotEmpty().WithMessage("Lütfen bir cins seçiniz")
-                .NotNull().WithMessage("Lütfen bir cins seçiniz")
+                .NotEmpty().WithMessage("Lütfen bir cins seçiniz.")
+                .NotNull().WithMessage("Lütfen bir cins seçiniz.")
                 .Must(FunctionsValidator.BeCins).WithMessage("Seçilen cins sistemde bulunmamaktadır.");
 
             RuleFor(x => x.SecilenTurId)
-                .NotEmpty().WithMessage("Lütfen bir tür seçiniz")
-                .NotNull().WithMessage("Lütfen bir tür seçiniz")
+                .NotEmpty().WithMessage("Lütfen bir tür seçiniz.")
+                .NotNull().WithMessage("Lütfen bir tür seçiniz.")
                 .Must(FunctionsValidator.BeTur).WithMessage("Seçilen tür sistemde bulunmamaktadır.");
 
             RuleFor(x => new { x.SecilenCinsId, x.SecilenTurId })
@@ -47,12 +48,14 @@ namespace VeterinerApp.Models.Validators.Animal
                 .WithMessage("Seçilen cins ve tür eşleşmesi sistemde bulunmamaktadır.");
 
             RuleFor(x => x.HayvanCinsiyet)
+                .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.")
                 .NotNull().WithMessage("Lütfen bir cinsiyet seçiniz.")
-                .NotEmpty().WithMessage("Lütfen bir cinsiyet seçiniz.");
+                .Must(x => !x.Equals( Cinsiyet.Seçilmedi)).WithMessage("Lütfen bir cinsiyet seçiniz.")
+                .Must(x => x.Equals(Cinsiyet.Dişi) || x.Equals(Cinsiyet.Erkek)).WithMessage("Lütfen cinsiyet seçininiz.");
 
             RuleFor(x => x.HayvanDogumTarihi)
-                .NotEmpty().WithMessage("Lütfen bir tarih giriniz")
-                .NotNull().WithMessage("Lütfen bir tarih giriniz")
+                .NotEmpty().WithMessage("Lütfen bir tarih giriniz.")
+                .NotNull().WithMessage("Lütfen bir tarih giriniz.")
                 .Must(x => x <= DateTime.Now).WithMessage("Lütfen geçerli bir tarih giriniz.");
 
             RuleFor(x => x.HayvanAnneId)

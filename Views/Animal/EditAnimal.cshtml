@@ -131,17 +131,6 @@
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="HayvanKilo"></span>
             </div>
         </div>
-
-        <div class="col d-flex flex-column px-4 pr-md-0">
-            <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
-            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.Turler">
-                <option value="@Model.TurId" disabled selected>Tür Seçin</option>
-            </select>
-            <div class="mt-2">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
-
-            </div>
-        </div>
         <div class="col d-flex flex-column px-4 pr-md-0">
             <label asp-for="CinsId" class="col-form-label font-weight-bold text-white px-0">Cinsi</label>
             <select id="cins" asp-for="CinsId" class="form-control" asp-items="Model.Cinsler">
@@ -149,6 +138,16 @@
             </select>
             <div class="mt-2">
                 <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="CinsId"></span>
+
+            </div>
+        </div>
+        <div class="col d-flex flex-column px-4 pr-md-0">
+            <label asp-for="TurId" class="col-form-label font-weight-bold text-white px-0">Türü</label>
+            <select id="tur" asp-for="TurId" class="form-control" asp-items="Model.Turler">
+                <option value="@Model.TurId" disabled selected>Tür Seçin</option>
+            </select>
+            <div class="mt-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded d-table" asp-validation-for="TurId"></span>
 
             </div>
         </div>
@@ -201,59 +200,76 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/
             perjs/1.5.12/cropper.min.js"></script>
     <script>
-        function Onayla(event) {
-            var sahiplikCikisTarihi = document.getElementById('SahiplikCikisTarihi');
-            var button = document.getElementById('button');
-            var form = document.getElementById('editAnimalForm');
-            console.log(sahiplikCikisTarihi.value);
-            if (sahiplikCikisTarihi.value != '') {
-                button.type = 'button';
-                event.preventDefault();
-                if (window.confirm('Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.')) {
-                    form.submit();
-                }
-                else {
-                    sahiplikCikisTarihi.value = '';
-                    button.type = 'submit';
-                };
+        //function Onayla(event) {
+        //    var sahiplikCikisTarihi = document.getElementById('SahiplikCikisTarihi');
+        //    var button = document.getElementById('button');
+        //    var form = document.getElementById('editAnimalForm');
+        //    console.log(sahiplikCikisTarihi.value);
+        //    if (sahiplikCikisTarihi.value != '') {
+        //        button.type = 'button';
+        //        event.preventDefault();
+        //        if (window.confirm('Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.')) {
+        //            form.submit();
+        //        }
+        //        else {
+        //            sahiplikCikisTarihi.value = '';
+        //            button.type = 'submit';
+        //        };
 
-            }
-        }
+        //    }
+        //}
     </script>
     <script>
          $(document).ready(function () {
-             function cinsleriGetir(turId, seciliCinsId) {
-                $.getJSON('@Url.Action("CinsleriGetir", "Animal")', { turId: turId }, function (veri) {
-                    var cinsSecim = $('#cins');
-                    cinsSecim.empty();
-                    cinsSecim.append('<option value="" disabled selected>Cins Seçin</option>');
-
+            function turleriGetir(cinsId, seciliTurId) {
+                $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (veri) {
+                    var turSecim = $('#tur');
+                    turSecim.empty();
+                    turSecim.append('<option value="" disabled selected>Tür Seçin</option>');
+        
+                    // Gelen veriler ile 'tur' dropdown'ını doldur
                     $.each(veri, function (index, item) {
-                        cinsSecim.append($('<option>', {
+                        turSecim.append($('<option>', {
                             value: item.value,
                             text: item.text
                         }));
                     });
-
-                    if (seciliCinsId) {
-                        cinsSecim.val(seciliCinsId);
+        
+                    // Eğer seciliTurId varsa dropdown'ı bu değere set et
+                    if (seciliTurId) {
+                        turSecim.val(seciliTurId);
                     }
+        
+                    // Tür dropdown'ını etkinleştir
+                    turSecim.prop('disabled', veri.length === 0);
                 });
             }
-
-            var ilkTurId = $('#tur').val();
-            var seciliCinsId = '@Model.CinsId';
-
-             if (ilkTurId) {
-                 cinsleriGetir(ilkTurId, seciliCinsId);
+        
+            var cinsSecim = $('#cins');
+            var turSecim = $('#tur');
+        
+            // Başlangıçta tür dropdown'ını boşalt ve devre dışı bırak
+            turSecim.empty().append('<option value="" disabled selected>Tür Seçin</option>').prop('disabled', true);
+        
+            // Form yüklendiğinde seçili bir cins var ise tür listesini getir
+            var seciliCinsId = cinsSecim.val(); // Seçili cinsId
+            var seciliTurId = '@Model.TurId'; // Seçili türId
+            if (seciliCinsId) {
+                turleriGetir(seciliCinsId, seciliTurId);
             }
-
-            $('#tur').change(function () {
-                var turId = $(this).val();
-                cinsleriGetir(turId);
+        
+            // Cins dropdown'ı değiştiğinde tür listesini güncelle
+            cinsSecim.change(function () {
+                var cinsId = $(this).val();
+                if (cinsId) {
+                    turleriGetir(cinsId); // Yeni cinsId'ye göre türleri getir
+                } else {
+                    // Cins seçilmemişse tür dropdown'ını temizle ve devre dışı bırak
+                    turSecim.empty().append('<option value="" disabled selected>Tür Seçin</option>').prop('disabled', true);
+                }
             });
+        });
 
-         });
     </script>
 
     <script>
