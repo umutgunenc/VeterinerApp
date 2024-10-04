@@ -14,12 +14,6 @@ namespace VeterinerApp.Models.Validators.Admin
                 .NotEmpty().WithMessage("Lütfen bir stok seçiniz.")
                 .NotNull().WithMessage("Lütfen bir stok seçiniz.");
 
-
-            RuleFor(x => x.AlisFiyati)
-                .NotEmpty().WithMessage("Lütfen birim alış fiyatı giriniz.")
-                .NotNull().WithMessage("Lütfen birim alış fiyatı giriniz.")
-                .Must(x=>x.HasValue && x.Value >= 0).WithMessage("Birim alış fiyatı 0 veya daha büyük olmaladır.");
-
             RuleFor(x => x.AlisTarihi)
                 .NotNull().WithMessage("Lütfen alış tarihini giriniz.")
                 .NotEmpty().WithMessage("Lütfen alış tarihini giriniz.")

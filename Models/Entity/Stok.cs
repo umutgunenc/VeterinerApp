@@ -9,7 +9,6 @@ namespace VeterinerApp.Models.Entity
     {
         public Stok()
         {
-            FiyatListeleri = new HashSet<FiyatListesi>();
             StokHareketleri = new HashSet<StokHareket>();
             Muayeneler = new HashSet<Muayene>();
         }
@@ -23,7 +22,6 @@ namespace VeterinerApp.Models.Entity
         public virtual Kategori Kategori { get; set; }
         public virtual Birim Birim { get; set; }
 
-        public virtual ICollection<FiyatListesi> FiyatListeleri { get; set; }
         public virtual ICollection<StokHareket> StokHareketleri { get; set; }
         public virtual ICollection<Muayene> Muayeneler { get; set; }
     }

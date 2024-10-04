@@ -38,18 +38,6 @@
         </div>
     </div>
 
-    <div class="form-row">
-        <label asp-for="SatisFiyati" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Birim Fyatı</label>
-
-        <div class="col-md-10">
-            <input type="number" step="0.01" min="0" asp-for="SatisFiyati" class="form-control" placeholder="Satış Birim Fiyatı">
-            <div class="my-2">
-                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SatisFiyati">
-                </span>
-            </div>
-        </div>
-    </div>
-
 
 
     @for (int i = 0; i < Model.ImzaListesi.Count; i++)

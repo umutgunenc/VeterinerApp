@@ -11,9 +11,8 @@ namespace VeterinerApp.Models.Entity
         public DateTime? StokHareketTarihi { get; set; }
         public int StokId { get; set; }
         public DateTime? SatisTarihi { get; set; }
-        public double? SatisFiyati { get; set; }
         public DateTime? AlisTarihi { get; set; }
-        public double? AlisFiyati { get; set; }
+
         public int CalisanId{ get; set; }
         public double? StokGirisAdet { get; set; }
         public double? StokCikisAdet { get; set; }

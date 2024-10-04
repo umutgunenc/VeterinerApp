@@ -88,7 +88,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
             StokHareketTarihi = System.DateTime.Now;
             StokId = model.StokId;
             SatisTarihi = model.SatisTarihi;
-            SatisFiyati = model.SatisFiyati;
             StokCikisAdet = model.StokCikisAdet;
             CalisanId = user.Id;
 

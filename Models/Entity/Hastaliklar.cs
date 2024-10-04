@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace VeterinerApp.Models.Entity
 {
-    public partial class Tedavi
+    public partial class Hastaliklar
     {
-        public Tedavi()
+        public Hastaliklar()
         {
             Muayeneler = new HashSet<Muayene>();
+
         }
-        public int TedaviId { get; set; }
-        public string TedaviAdi { get; set; }
-        public double TedaviUcreti { get; set; }
+        public int HastalikId { get; set; }
+        public string HastalikAdi { get; set; }
 
         public virtual ICollection<Muayene> Muayeneler { get; set; }
     }

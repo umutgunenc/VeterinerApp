@@ -90,7 +90,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
             StokHareketTarihi = System.DateTime.Now;
             StokId = model.StokId;
             AlisTarihi = model.AlisTarihi;
-            AlisFiyati = model.AlisFiyati;
             StokGirisAdet = model.StokGirisAdet;
             CalisanId = user.Id;
 

@@ -12,7 +12,7 @@ namespace VeterinerApp.Data
         private readonly IConfiguration _configuration;
         public VeterinerDBContext()
         {
-            
+
         }
 
         public VeterinerDBContext(DbContextOptions<VeterinerDBContext> options) : base(options)
@@ -23,7 +23,6 @@ namespace VeterinerApp.Data
         public virtual DbSet<AppUser> AppUsers { get; set; }
         public virtual DbSet<Birim> Birimler { get; set; }
         public virtual DbSet<Cins> Cinsler { get; set; }
-        public virtual DbSet<FiyatListesi> FiyatListeleri { get; set; }
         public virtual DbSet<Hayvan> Hayvanlar { get; set; }
         public virtual DbSet<Kategori> Kategoriler { get; set; }
         public virtual DbSet<MaasOdemeleri> MaasOdemeleri { get; set; }
@@ -31,9 +30,10 @@ namespace VeterinerApp.Data
         public virtual DbSet<Renk> Renkler { get; set; }
         public virtual DbSet<Stok> Stoklar { get; set; }
         public virtual DbSet<StokHareket> StokHareketler { get; set; }
-        public virtual DbSet<Tedavi> Tedaviler { get; set; }
+        public virtual DbSet<Hastaliklar> Tedaviler { get; set; }
         public virtual DbSet<Tur> Turler { get; set; }
         public virtual DbSet<UserFace> UserFaces { get; set; }
+        public virtual DbSet<Hastaliklar> Hastaliklar { get; set; }
 
         //Ara tablolar
         public virtual DbSet<CinsTur> CinsTur { get; set; }
@@ -76,7 +76,7 @@ namespace VeterinerApp.Data
             modelBuilder.Entity<SahipHayvan>()
                 .HasOne(sh => sh.AppUser)
                 .WithMany(u => u.Hayvanlar)
-                .HasForeignKey(sh => sh.SahipId); 
+                .HasForeignKey(sh => sh.SahipId);
 
             modelBuilder.Entity<SahipHayvan>()
                 .Property(sh => sh.HayvanId)
@@ -84,10 +84,10 @@ namespace VeterinerApp.Data
 
             modelBuilder.Entity<SahipHayvan>()
                 .Property(sh => sh.SahipId)
-                .HasColumnName("SahiplerId"); 
+                .HasColumnName("SahiplerId");
 
             modelBuilder.Entity<SahipHayvan>()
-                .Property(sh=>sh.SahiplenmeTarihi)
+                .Property(sh => sh.SahiplenmeTarihi)
                 .IsRequired();
 
 

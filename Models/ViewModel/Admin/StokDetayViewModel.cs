@@ -36,7 +36,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
             BirimId = stok.BirimId;
             KategoriId = stok.KategoriId;
             StokSayisi = stokHareketDetay.StokSayisiniHesapla(stok);
-            OrtalamaAlisFiyati = stokHareketDetay.OrtalamaAlisFiyatiniHesapla();
             StokHareketDetayListesi = stokHareketDetay.StokHareketDetayListesi;
             Birim = stok.Birim;
 
@@ -124,26 +123,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
             return stokGiris - stokCikis;
         }
 
-        //TODO LIFO veya FIFO seklinde hesapla
-        public double? OrtalamaAlisFiyatiniHesapla()
-        {
-            double? toplamAlisFiyati = 0.0;
-            double? toplamAlinanAdet = 0;
-            foreach (var StokHareket in StokHarektlerListesi)
-            {
-                if (StokHareket.StokGirisAdet == null || StokHareket.AlisFiyati == null)
-                {
-                    StokHareket.StokGirisAdet = 0;
-                    StokHareket.AlisFiyati = 0;
-                }
-                toplamAlinanAdet += StokHareket.StokGirisAdet;
-                toplamAlisFiyati += StokHareket.StokGirisAdet * StokHareket.AlisFiyati;
-
-            }
-            if (toplamAlinanAdet > 0)
-                return Math.Round((double)(toplamAlisFiyati / toplamAlinanAdet), 2);
-            return null;
-        }
         private async Task<List<StokHareket>> StokHareketListesiniGetirAsync(int stokId)
         {
             var stokHareketler = await _context.StokHareketler.Where(sh => sh.StokId == stokId).ToListAsync();
@@ -155,9 +134,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     StokHareketId = stokHareket.StokHareketId,
                     StokHareketTarihi = stokHareket.StokHareketTarihi,
                     SatisTarihi = stokHareket.SatisTarihi,
-                    SatisFiyati = stokHareket.SatisFiyati,
                     AlisTarihi = stokHareket.AlisTarihi,
-                    AlisFiyati = stokHareket.AlisFiyati,
                     CalisanId = stokHareket.CalisanId,
                     StokGirisAdet = stokHareket.StokGirisAdet,
                     StokCikisAdet = stokHareket.StokCikisAdet
@@ -178,8 +155,6 @@ namespace VeterinerApp.Models.ViewModel.Admin
                     StokHareketId = StokHareket.StokHareketId,
                     SatisTarihi = StokHareket.SatisTarihi,
                     AlisTarihi = StokHareket.AlisTarihi,
-                    AlisFiyati = StokHareket.AlisFiyati,
-                    SatisFiyati = StokHareket.SatisFiyati,
                     StokGirisAdet = StokHareket.StokGirisAdet,
                     StokCikisAdet = StokHareket.StokCikisAdet,
                     CalisanAdi = await _context.AppUsers

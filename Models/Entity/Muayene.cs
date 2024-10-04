@@ -10,7 +10,7 @@ namespace VeterinerApp.Models.Entity
         public Muayene()
         {
             Stoklar = new HashSet<Stok>();
-            Tedaviler = new HashSet<Tedavi>();
+            Hastaliklar = new HashSet<Hastaliklar>();
         }
         public int MuayeneId { get; set; }
         public int TedaviId { get; set; }
@@ -20,10 +20,9 @@ namespace VeterinerApp.Models.Entity
         public string Aciklama { get; set; }
         public int HekimId { get; set; }
         public int StokId { get; set; }
-        public double Gelir { get; set; }
         public virtual Hayvan Hayvan { get; set; }
         public virtual AppUser Hekim { get; set; }
         public virtual ICollection<Stok> Stoklar { get; set; }
-        public virtual ICollection<Tedavi> Tedaviler { get; set; }
+        public virtual ICollection<Hastaliklar> Hastaliklar { get; set; }
     }
 }
